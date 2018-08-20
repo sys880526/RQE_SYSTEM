@@ -91,7 +91,7 @@ public class LoginController {
 			
 		}
 
-		mav.setViewName("redirect:/main.do");
+		mav.setViewName("redirect:/main");
 		logger.info("========LoginController.doLoginUser 종료=======");
 		
 		

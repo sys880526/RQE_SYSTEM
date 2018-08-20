@@ -24,14 +24,14 @@
 <%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li> --%>
 <%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_5.gif" alt="system" /></a></li> --%>
             <c:choose>
-            	<c:when test="${control eq ''}">
-            		<li><a href="#" class="active"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
+            	<c:when test="${control eq 'main'}">
+            		<li><a href="/main" class="active"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
             	</c:when>
             	<c:otherwise>
-            		<li><a href="#"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
+            		<li><a href="/main"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
             	</c:otherwise>
             </c:choose>            
-            <li><a href="#"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
+            	<li><a href="#"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
             <c:choose>
             	<c:when test="${control eq 'datasheet'}">
             		<li>

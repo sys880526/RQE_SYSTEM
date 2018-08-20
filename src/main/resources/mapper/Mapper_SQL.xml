@@ -29,7 +29,8 @@
 		    from admin_user_list 
 		    where userid = #{userid} or adminid = #{userid}
 		    )
-			)
+		) 
+		order by start_day
 	</select>
 	
 

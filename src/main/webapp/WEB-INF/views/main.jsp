@@ -20,6 +20,10 @@
  	<script type="text/javascript" src="../js/fullcalendar.js"></script>
  	<script type="text/javascript" src="../js/locale-all.js"></script>
 
+
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"></script>
+	
+
     <!-- fullCalendar css -->
 	<link rel="stylesheet" type="text/css" href="../css/fullcalendar.css" />
 	
@@ -98,39 +102,24 @@
 	
 	 
 
-   	 var event = ${bmtListEvent};
-	 var events = [
-		 
-		 {
-        title: '',
-        start: '2018-08-10'
-      },
-		{
-        title: '',
-        start: '2018-08-09'
-      },
-		{
-        title: '',
-        start: '2018-08-08'
-      },
-		{
-        title: '',
-        start: '2018-08-07'
-      },
-		{
-        title: '',
-        start: '2018-08-06'
-      },
-    ];	
-	
 	 var event = ${bmtListEvent};
-	 var events = [];	
-	 for(var i=0; i<event.length; i++){
-		 events.push({
-			 title : ''
-			 , start: event[i]
-		 })   
-	}
+	 // controller 로직 수정으로 인해 주석 
+	 // 2018-08-20 ys880526
+// 	 var events = [];
+// 	 for(var i=0; i<event.result.length; i++){
+// 		 var monthSub = 1;
+		 
+		 
+	 // controller 로직 수정으로 인해 주석 
+	 // 2018-08-20 ys880526
+// 		 events.push({
+// 			 title : ''
+// 			 , start: event.result[i]
+// 		 })   
+// 	}
+	 
+	 
+	console.log("debug");
 	 
  	$(document).ready(function() {
  		
@@ -138,23 +127,25 @@
 
 		 
 		 $("#yearText").html(year + "년도");
-		 drawCalendar('calendar_1', '01', events);
-		 drawCalendar('calendar_2', '02', events);
-		 drawCalendar('calendar_3', '03', events);
-		 drawCalendar('calendar_4', '04', events);
-		 drawCalendar('calendar_5', '05', events);
-		 drawCalendar('calendar_6', '06', events);
-		 drawCalendar('calendar_7', '07', events);
-		 drawCalendar('calendar_8', '08', events);
-		 drawCalendar('calendar_9', '09', events);
-		 drawCalendar('calendar_10', '10', events);
-		 drawCalendar('calendar_11', '11', events);
-		 drawCalendar('calendar_12', '12', events);
+		 // controller 로직 수정으로 인해 주석 
+		 // 2018-08-20 ys880526
+// 		 drawCalendar('calendar_1', '01', event.result.month1);
+// 		 drawCalendar('calendar_2', '02', event.result.month2);
+// 		 drawCalendar('calendar_3', '03', event.result.month3);
+// 		 drawCalendar('calendar_4', '04', event.result.month4);
+// 		 drawCalendar('calendar_5', '05', event.result.month5);
+// 		 drawCalendar('calendar_6', '06', event.result.month6);
+// 		 drawCalendar('calendar_7', '07', event.result.month7);
+// 		 drawCalendar('calendar_8', '08', event.result.month8);
+// 		 drawCalendar('calendar_9', '09', event.result.month9);
+// 		 drawCalendar('calendar_10', '10', event.result.month10);
+// 		 drawCalendar('calendar_11', '11', event.result.month11);
+// 		 drawCalendar('calendar_12', '12', event.result.month12);
 		 
-		  $(".fc-left").hide();
-		  $(".fc-right").hide();
+// 		  $(".fc-left").hide();
+// 		  $(".fc-right").hide();
 		  
-// 		  drawAllCalendar();
+		  drawAllCalendar();
 		  
 // 		drawCalendar_header('calendar_head');
 		
@@ -206,21 +197,41 @@
 	 }
 	 
 	 function drawAllCalendar(){
-		 for(var i = 1; i < 13;i++){
-			 if(i <10){
-				 str = '0'+i;
-			 }else{
-				 str= i;
-			 }
-			 drawCalendar('calendar_'+i, str, events);
-			 
-		 }
+		 // controller 로직 수정으로 인해 로직 수정 
+		 // 2018-08-20 ys880526
+		 drawCalendar('calendar_1', '01', event.result.month1);
+		 drawCalendar('calendar_2', '02', event.result.month2);
+		 drawCalendar('calendar_3', '03', event.result.month3);
+		 drawCalendar('calendar_4', '04', event.result.month4);
+		 drawCalendar('calendar_5', '05', event.result.month5);
+		 drawCalendar('calendar_6', '06', event.result.month6);
+		 drawCalendar('calendar_7', '07', event.result.month7);
+		 drawCalendar('calendar_8', '08', event.result.month8);
+		 drawCalendar('calendar_9', '09', event.result.month9);
+		 drawCalendar('calendar_10', '10', event.result.month10);
+		 drawCalendar('calendar_11', '11', event.result.month11);
+		 drawCalendar('calendar_12', '12', event.result.month12);
+		 
 		 $("#yearText").html(year + "년도");
-		  $(".fc-left").hide();
-		  $(".fc-right").hide();
+		 $(".fc-left").hide();
+		 $(".fc-right").hide();
 	 }
 	 
 	 function drawCalendar(div, month, events){
+		 // controller 로직 수정으로 인해 로직 추가 
+		 // 2018-08-20 ys880526 start
+		 var eventSub = [];
+		 if(events != undefined){
+			 for(var i=0; i<events.length; i++){
+		 		 eventSub.push({
+		 			 title : ''
+		 			 , start: events[i]
+		 		 })   
+			 }
+		 }
+		 // end
+		 
+		 
 	 		$('#'+div).fullCalendar({
 	 		      defaultDate: year + '-' + month + '-10',
 	 		      contentHeight:310,
@@ -239,9 +250,11 @@
 //	 				},
 	 		      editable: true,
 	 		      eventLimit: true, // allow "more" link when too many events
-	 		      events: events
+	 		      events: eventSub
 	 		    });
 	 	}
+	 
+	 
 	</script>
 	
 </body>

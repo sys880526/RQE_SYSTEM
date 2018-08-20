@@ -2,6 +2,7 @@ package com.wavem.first.home.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wavem.first.home.service.HomeService;
 
+import net.sf.json.JSONObject;
+
 @Controller
 public class HomeController {
 
@@ -23,23 +26,49 @@ public class HomeController {
 	@Autowired
 	private HomeService homeService;
 	
-	@RequestMapping(value="/main.do", method = RequestMethod.GET)
+	@RequestMapping(value="/main", method = RequestMethod.GET)
 	public ModelAndView home() throws Exception {
 		
 		ModelAndView mv = new ModelAndView("/main");
 		
 		List<Map<String, Object>> result_bmtListEvent = homeService.getBmtListEvent("userid");
 
-//		 List<Map<String,Object>> result_list = new ArrayList<>();
-		 List<String> result_list = new ArrayList<String>();
+		// ----------------------- modify 2018-08-20 ys880526 start ----------------------------------
+		// 아래의 로직은 result_bmtListEvent 에서 가져오는 데이터가 정렬 되어 있다는 가정하에 작업
+		// 월별 구분을 위한 map 생성 ( 키값으로 월을 구분 )
+		Map<String, List<String>> result_map = new HashMap<String, List<String>>();
 		
-		 for(int i =0; i<result_bmtListEvent.size(); i++) {
-			 result_list.add("'" + (Date) result_bmtListEvent.get(i).get("start_day") + "'");
-		 }
+		int month = 0;
+		// 월별 데이터를 담을 리스트 생성
+		List<String> month_div_list = new ArrayList<String>();
+		for(int i =0; i<result_bmtListEvent.size(); i++) {
+			// 데이터의 월을 확인
+			int monthSub = Integer.parseInt(result_bmtListEvent.get(i).get("start_day").toString().substring(5, 7));
+			// 이전 데이터와 현재 데이터의 월을 비교하여 구분
+			if(month != monthSub) {
+				// month 값이 초기 값인 0 이 아니라면 월별 데이터를 구분해야 할수 있으므로 map에 데이터를 저장후 월별 구분 리스트를 초기화 
+				if(month != 0) {
+					result_map.put("month" + month, month_div_list);
+					month_div_list = new ArrayList<String>();
+				}
+				// 이전데이터가 해당 월의 마지막 데이터 이므로 현재 데이터의 월로 변경
+				month = monthSub;
+			}
+			// 월별 구분 리스트에 데이터를 입력
+			month_div_list.add(result_bmtListEvent.get(i).get("start_day").toString());
+			// for 문의 마지막일 경우 map 에 데이터를 입력할수 없으므로 로직 추가
+			if(i == result_bmtListEvent.size() - 1) {
+				result_map.put("month" + month, month_div_list);
+			}
+		}
 		
-		 
-//		mv.addObject("bmtListEvent", result_bmtListEvent);	
-		mv.addObject("bmtListEvent", result_list);	
+		// map 형태의 데이터를 json 형태로 변경 하여 전달하기 위해 선언
+		JSONObject jsonobj = new JSONObject();
+		jsonobj.put("result", result_map);
+		// 메뉴 선택 부분 구분을 위한 control 추가 
+		mv.addObject("control", "main");
+		mv.addObject("bmtListEvent", jsonobj);
+		// ----------------------- modify 2018-08-20 ys880526 end ----------------------------------
 		
 		return mv;
 		
