@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.wavem.frist">
+	<logger name="com.wavem.first">
 		<level value="info" />
 	</logger>
 	

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="synthesize">
+
+	<select id="getDataSheetList" parameterType="hashmap"  resultType="hashmap">
+		select 	a.bmtid
+		, 		a.userid 
+		, 		state_condition
+		, 		cp
+		, 		startpoi
+		, 		endpoi
+		, 		est_time
+		, 		est_distance
+		, 		est_charge
+		, 		driver_tm
+		, 		arrive_distance
+		, 		arrive_charge
+		,		case
+					when 	(case when except_info = 'y' then 1 else 0 end) = 0 then null
+					when 	(case when state_condition like '정상%' then 1 else 0 end) = 0 then null 
+					when 	ss = '동시도착' then ss 
+					when 	driver_tm-min_tm <![CDATA[<=]]> pre_arrival then '선착' else '후착'
+				end as score
+		,		DENSE_RANK() OVER(order by to_date(starttm, 'yyyy-mm-dd')) as page_number
+		from(
+					SELECT 	bmtid
+					, 		except_info
+					, 		state_condition
+					, 		cp
+					, 		startpoi
+					, 		endpoi
+					, 		est_time
+					, 		est_distance
+					, 		est_charge
+					,		to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm
+					,		arrive_distance
+					, 		arrive_charge
+					, 		starttm
+					, 		userid
+					FROM 	bmt_total_info
+					WHERE 	userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+					and 	to_date(substr(bmtid,1,6),'yymmdd') 
+					between to_date(#{start_date},'yyyy-mm-dd') 
+					and 	to_date(#{end_date},'yyyy-mm-dd')
+		) a
+		, (
+			select 
+				bmtid, min(driver_tm) as min_tm
+				, case when max(driver_tm)-min(driver_tm) <![CDATA[<=]]> pre_arrival then '동시도착' else null end as ss
+			from
+			(
+				SELECT 	bmtid
+				, 		state_condition
+				, 		cp
+				, 		startpoi
+				, 		endpoi
+				, 		est_time
+				, 		est_distance
+				, 		est_charge
+				,		to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm
+				,		arrive_distance
+				, 		arrive_charge
+				, 		pre_arrival
+				FROM 	bmt_total_info a
+				, 		setting_value b
+				where 	b.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+				and 	userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+				and 	to_date(substr(bmtid,1,6),'yymmdd') between to_date(#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+			) a
+			group by bmtid, pre_arrival
+		) b
+		, setting_value c
+		where 	c.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+				and	a.bmtid = b.bmtid
+		order by bmtid,	cp
+	</select>
+	
+	<select id="dataSheet_detail" parameterType="hashmap" resultType="hashmap">
+		SELECT 	a.bmtid
+		,       a.userid
+		,       except_info
+		,       state_condition
+		,       cp
+		,       carinfo
+		,       notice
+		,       requesttm
+		,       starttm
+		,       startpoi
+		,       endpoi
+		,       est_time
+		,       est_distance
+		,       est_charge
+		,       real_req_time
+		,       bmt_start_tm
+		,       bmt_end_tm
+		,       arrive_distance
+		,       arrive_charge
+		,       score
+		,       yugoinfo 
+		FROM    (
+					SELECT	q.bmtid
+					,       q.userid
+					,       except_info
+					,       state_condition
+					,       cp
+					,       carinfo
+					,       notice
+					,       requesttm
+					,       starttm
+					,       startpoi
+					,       endpoi
+					,       est_time
+					,       est_distance
+					,       est_charge
+					,       real_req_time
+					,       bmt_start_tm
+					,       bmt_end_tm
+					,       arrive_distance
+					,       arrive_charge
+					,       yugoinfo 
+                    FROM    (
+                    			SELECT 	bmtid
+                    			,       userid
+                    			,       except_info
+                    			,       cp
+                    			,       carinfo
+                    			,       notice
+                    			,       requesttm
+                    			,       starttm
+                    			,       startpoi
+                    			,       endpoi
+                    			,       est_time
+                    			,       est_distance
+                    			,       est_charge
+                    			,       real_req_time
+                    			,       bmt_start_tm
+                    			,       bmt_end_tm
+                    			,       arrive_time
+                    			,       arrive_distance
+                    			,       arrive_charge
+                    			,       state_condition 
+                                FROM   	bmt_total_info 
+                                WHERE  	bmtid = #{bmtid} 
+                                AND    	userid IN
+                               			(
+                               				SELECT 	userid
+                               				FROM   	admin_user_list
+                               				WHERE  	adminid IN
+                               						(
+                               							SELECT 	adminid
+                               							FROM   	admin_user_list
+                               							WHERE  	adminid = #{userid}
+                               							OR     	userid = #{userid}
+                           							)
+                        				) 
+                                AND     cp = #{cp} 
+                            ) q 
+                    LEFT OUTER JOIN 
+                            (
+                            	SELECT	bmtid
+                            	,		userid
+                            	,		Array_to_string(Array_agg(yugotime||', '||yugoinfo||', ('||yugolat||', '||yugolong||')'), ' // ') AS yugoinfo
+                            	FROM    bmt_yugo_list
+                            	WHERE   useyn = 'y'
+                            	AND     bmtid = #{bmtid}
+                            	AND     userid IN
+                            			(
+                            				SELECT userid
+                            				FROM   admin_user_list
+                            				WHERE  adminid IN
+                            					   (
+                            					   		SELECT adminid
+                            					   		FROM   admin_user_list
+                            					   		WHERE  adminid = #{userid}
+                            					   		OR     userid = #{userid}
+                          					   	   )
+                          				) 
+                                GROUP BY bmtid
+                                ,		 userid 
+                            ) w 
+                    ON	    q.bmtid = w.bmtid 
+                    AND     q.userid = w.userid 
+                    ORDER BY bmtid
+                    ,		 userid 
+                ) a , 
+       			( 
+                	SELECT  a.bmtid
+                	,		userid
+                	,		CASE
+                				WHEN (	
+                						CASE
+                								WHEN except_info = 'y' THEN 1
+                								ELSE 0
+                						END) 	= 0 THEN NULL 
+                                WHEN (  
+                                		CASE
+                                				WHEN state_condition LIKE '정상%' THEN 1 
+                                                ELSE 0 
+                                        END) 	= 0 THEN NULL 
+                                WHEN 	ss = '동시도착' THEN ss 
+                                WHEN 	driver_tm-min_tm <![CDATA[<=]]> pre_arrival THEN '선착'                                   
+                                ELSE 	'후착'                          
+                                END AS score                 
+                                FROM     (
+                                			SELECT 	bmtid
+                                			,		userid
+                                			,		except_info
+                                			,		state_condition
+                                			,		cp
+                                			,		startpoi
+                                			,		endpoi
+                                			,		est_time
+                                			,		est_distance
+                                			,		est_charge
+                                			,		to_number(TO_CHAR(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(TO_CHAR(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') AS driver_tm
+                                			,		arrive_distance
+                                			,		arrive_charge
+                                			FROM   	bmt_total_info                                 
+                                			WHERE  	userid IN
+													(
+														SELECT 	userid
+														FROM   	admin_user_list
+														WHERE  	adminid IN
+																(
+																	SELECT adminid
+																	FROM   admin_user_list
+																	WHERE  adminid = #{userid}
+																	OR     userid = #{userid}
+																)
+													)
+										 	AND    bmtid = #{bmtid} 
+										 ) a,
+										 (
+										 	SELECT   bmtid
+										 	,		MIN(driver_tm) AS min_tm
+										 	,		CASE
+										 				WHEN MAX(driver_tm)-MIN(driver_tm) <![CDATA[<=]]> pre_arrival THEN '동시도착'
+										 				ELSE NULL
+										 				END AS ss
+										 	,		pre_arrival
+										 	FROM    (
+										 				SELECT 	bmtid
+										 				,		state_condition
+										 				,		cp
+										 				,		startpoi
+										 				,		endpoi
+										 				,		est_time
+										 				,		est_distance
+										 				,		est_charge
+										 				,		to_number(TO_CHAR(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(TO_CHAR(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') AS driver_tm
+										 				,		arrive_distance
+										 				,		arrive_charge
+										 				,		pre_arrival
+										 				FROM   	bmt_total_info a
+										 				,		setting_value b
+										 				WHERE  	b.adminid IN
+										 						(
+										 							SELECT adminid
+										 							FROM   admin_user_list
+										 							WHERE  userid = #{userid}
+										 							OR     adminid = #{userid}
+										 						)
+										 				AND    	userid IN
+										 						(
+										 							SELECT 	userid
+										 							FROM   	admin_user_list
+										 							WHERE  	adminid IN
+										 									(
+										 										SELECT 	adminid
+										 										FROM   	admin_user_list
+										 										WHERE  	adminid = #{userid}
+										 										OR     	userid = #{userid}
+										 									)
+										 						)
+										 				AND    	bmtid = #{bmtid} 
+										 			) a
+										 	GROUP BY bmtid, pre_arrival
+										 ) b
+							    WHERE    a.bmtid = b.bmtid
+							    ORDER BY bmtid, cp 
+				) b 
+		WHERE  a.userid = b.userid 
+		AND    a.bmtid = b.bmtid	
+	</select>
+</mapper>

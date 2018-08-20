@@ -3,13 +3,13 @@
 
 <mapper namespace="login">
 
-	<resultMap type="com.wavem.frist.login.vo.UserInfoVo" id="login-resultMap">
+	<resultMap type="com.wavem.first.login.vo.UserInfoVo" id="login-resultMap">
 		<result property="userId" column="userid" />
 		<result property="userPass" column="userpw" />
 <!-- 		<result property="userName" column="user_nm" /> -->
 	</resultMap>
 
-	<select id="login" parameterType="com.wavem.frist.login.vo.UserInfoVo"  resultType="com.wavem.frist.login.vo.UserInfoVo">
+	<select id="login" parameterType="com.wavem.first.login.vo.UserInfoVo"  resultType="com.wavem.first.login.vo.UserInfoVo">
 		SELECT 
 			userid
 			, userpw
