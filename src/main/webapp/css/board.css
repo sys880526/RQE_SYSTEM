@@ -1,0 +1,94 @@
+@charset "utf-8";
+
+/* 검색 */
+.search {padding:15px; border:1px solid #cecece; margin-bottom:20px; line-height:1;}
+.search .pd {padding:0 3px 0 10px; color:#333;}
+.search .first {padding-left:0px;}
+.search .date {width:85px; text-align:center; border-right:none;}
+.search .btnSearch {margin-left:3px;}
+
+/* 상태 */
+.state {padding:15px; border:1px solid #cecece; margin-bottom:20px; line-height:1; position:relative; color:#000;}
+.state p {font-size:13px;}
+.state .list {position:absolute; top:15px; right:15px;}
+.state .list li {float:left; padding-left:40px; position:relative;}
+.state .list li:after {content:""; display:block; width:5px; height:5px; background:#46586b; position:absolute; top:5px; left:28px;}
+
+/* 리스트 */
+.boardListStyle th {border:solid 1px #cecece; height:55px; background:url(../images/board/bg_th.gif) repeat-x; color:#555; font-family:"NanumGothicBold";}
+.boardListStyle td {border:solid 1px #cecece; height:27px;}
+.boardListStyle td.alignLeft {padding-left:10px;}
+.boardListStyle td.work span {display:inline-block; width:10px; height:10px; background:#ddd; margin:0 1px;}
+.boardListStyle td.work span.red {background:#c00000;}
+.boardListStyle td.work span.blue {background:#4b7097;}
+.fontSize {font-size:11px;}
+.thSize th {height:27px;}
+.thSize .bottom th {background:url(../images/board/bg_th.gif) repeat-x left bottom;}
+.total td {background:#e6ecf3; color:#333;}
+.boardListStyle tr.over td {background:#f4f7fa;}
+
+/* 상세보기 */
+.boardViewStyle th {border:1px solid #cecece; padding:7px; font-family:"NanumGothicBold"; color:#555; background:#e6ecf3;}
+.boardViewStyle td {border:1px solid #cecece; padding:7px; text-align:left;}
+.boardViewStyle td .fileDown img {padding-left:10px;}
+
+/* 버튼 */
+.btnLeftArea {text-align:right; margin:22px -2px 0 0;}
+.btnLeftArea li {display:inline;}
+
+/* 페이징 */
+.paging {text-align:center; margin:22px 0;}
+.paging li {display:inline;}
+.paging li strong {font-family:"NanumGothicBold"; display:inline-block; padding:0 4px; margin-top:-1px; font-size:13px; text-decoration:underline; color:#3b65a6;}
+.paging li a {display:inline-block; vertical-align:bottom; padding:0 4px;}
+.paging li a:hover {text-decoration:none; color:#3b65a6; font-family:"NanumGothicBold";}
+.paging li.first {padding-left:10px;}
+.paging li.last {padding-right:10px;}
+.paging li.btn a {padding:0 1px;}
+
+
+/* datepicker 달력 */
+.ui-datepicker-trigger {cursor: pointer; width:20px; height:20px;}
+#ui-datepicker-div {border:1px solid #5b84ac; background:#fff; width:280px; padding:3px;/*  border-radius:3px; */ margin-top:5px; display:none;}
+#ui-datepicker-div .ui-datepicker-header {text-align:center; background:#f2f2f2; border:1px solid #5b84ac; height:30px; padding-top:3px; position:relative; margin-bottom:5px; border-radius:3px;}
+#ui-datepicker-div .ui-datepicker-header select {font-family:NanumGothic,"나눔고딕"; margin:2px; border:solid 1px #abadb3; height:22px; width:80px; border-radius:3px;}
+#ui-datepicker-div .ui-datepicker-header .ui-icon-circle-triangle-w {position:absolute; top:6px; left:10px; cursor:pointer; overflow: hidden; text-indent: -99999px; width:20px; height:20px; background:url(../images/board/btn_dat_prev.gif) 0 0 no-repeat;}
+#ui-datepicker-div .ui-datepicker-header .ui-icon-circle-triangle-e {position:absolute; top:6px; right:10px; cursor:pointer; overflow: hidden; text-indent: -99999px; width:20px; height:20px; background:url(../images/board/btn_dat_next.gif) 0 0 no-repeat;}
+#ui-datepicker-div .ui-datepicker-header .ui-icon-circle-triangle-w:hover {background:url(../images/board/btn_dat_prev_hover.gif) 0 0 no-repeat;}
+#ui-datepicker-div .ui-datepicker-header .ui-icon-circle-triangle-e:hover {background:url(../images/board/btn_dat_next_hover.gif) 0 0 no-repeat;}
+#ui-datepicker-div table {width:100%;}
+#ui-datepicker-div table th {text-align:center; font-family: "NanumGothicBold";  color:#555; padding:3px;}
+#ui-datepicker-div table th:first-child {color:#e40000;}
+#ui-datepicker-div table .ui-datepicker-week-end {color:#297588;}
+#ui-datepicker-div table td {text-align:center;}
+#ui-datepicker-div table td a {display:block; margin:1px; padding:3px; background:#f2f2f2; border:1px solid #c2c9d2; font-size:11px; border-radius:2px;}
+#ui-datepicker-div table td a:hover {background:#97b6d3; border:1px solid #e7ecf1; color:#fff; font-family: "NanumGothicBold"; }
+#ui-datepicker-div table td.ui-datepicker-today a {background:#fff; border:1px solid #5b84ac; font-family: "NanumGothicBold";  color:#5b84ac;}
+#ui-datepicker-div table td.ui-datepicker-today a:hover {color:#555;}
+#ui-datepicker-div table td a.ui-state-active {background:#46586b; border:1px solid #46586b; color:#fff; font-family: "NanumGothicBold"; }
+#ui-datepicker-div select {background:#fff url(../images/board/bg_select.gif) 65px 7px no-repeat;}
+
+/* 레이어팝업 */
+#mask {position:fixed; left:0; top:0; z-index:9000; background-color:#000; width:100%; height:100%; z-index:9000; display:none;}
+.layerPopup {position:fixed; top:50%; left:50%; z-index:9001; background:#fff; border:1px solid #1a1a1a; display:none; color:#333;}
+.layerPopup .tit {background:#4b5876; height:40px; position:relative; color:#fff;}
+.layerPopup .tit h3 {font-size:14px; height:40px; line-height:40px; padding-left:20px; font-family: "NanumGothicBold";}
+.layerPopup .tit div {position:absolute; top:0; right:0;}
+.layerPopup .cont {padding:10px; overflow:auto;}
+.layerPopup .cont p.txt {text-align:center; padding:25px 0 15px; font-size:14px; font-family: "NanumGothicBold";}
+.layerPopup .cont .btn {text-align:center; padding:20px 0 10px 0; clear:both;}
+.layerPopup .cont .btn a {background:#999; color:#fff; display:inline-block; width:70px; height:30px; line-height:29px; font-size:13px; font-family: "NanumGothicBold"; box-shadow:1px 2px 0px rgba(0,0,0,0.2);}
+.layerPopup .cont .btn a.active {background-color:#4b5876;}
+.layerPopup .cont .btn a.del {background-color:#b12a2a;}
+
+/*
+.alert .cont p {text-align:center; font-size:13px; padding:40px 0 40px 0;}
+.alert .cont .btn {text-align:center;}
+.alert .cont .btn a {background:#999; color:#fff; display:inline-block; width:70px; height:30px; line-height:29px; font-size:13px; font-family: "NanumGothicBold"; box-shadow:1px 2px 0px rgba(0,0,0,0.2);}
+.alert .cont .btn a.active {background-color:#4b5876;}
+.alert .cont .btn a.del {background-color:#b12a2a;}
+*/
+
+
+.graArea {border:1px solid #cecece;}
+

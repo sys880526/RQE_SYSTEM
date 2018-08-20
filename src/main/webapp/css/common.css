@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+/* #header */
+#header h1 {float:left; padding-left:26px;}
+#header .util {float:right; padding:28px 27px 0 0;}
+#header .util li {float:left; padding-left:4px;}
+#header .util li.name {background:url(../images/common/bg_util_name.gif) 0 0 no-repeat; width:88px; height:21px; font-size:11px; color:#fff; text-align:center; padding-top:4px; padding-left:0;}
+#header .gnb {clear:both; padding-top:15px;}
+#header .gnb li {float:left;}
+
+/*#snbArea*/
+#snbArea .snb {border:1px solid #dadada; border-top:none; padding-bottom:70px;}
+#snbArea li a {display:block; height:28px; line-height:28px; padding-left:18px; font-family: "NanumGothicBold"; color:#3b65a6; letter-spacing:-1px;}
+#snbArea li a:hover {background:#465271; color:#c8d1de;}
+#snbArea li a.active {background:#465271; color:#fff;}
+#snbArea li ul {padding:3px 0 6px 0; background:#fff;}
+#snbArea li li a {font-family: "NanumGothic"; font-size:11px; background:#fff; color:#949494; height:25px; line-height:25px;}
+#snbArea li li a:hover {background:#fff; color:#334367;}
+#snbArea li li a.active {background:#fff; color:#334367; font-family: "NanumGothicBold";}
+
+/* .titContents */
+.titContents {height:26px; background:url(../images/common/bg_tit_cont.gif) 0 bottom no-repeat; margin-bottom:11px;}
+.titContents h2 {font-size:15px; font-family: "NanumGothicBold"; color:#335486; float:left; padding-left:2px;}
+.titContents p {float:right; padding:2px 2px 0 0; color:#90969d;}
+.titContents p strong {color:#465271;}
+
+/* h3.tit */
+h3.tit {border-bottom:solid 1px #afb4b9; font-size:14px; letter-spacing:-1px; font-family: "NanumGothicBold"; color:#6c6c6c; padding-bottom:3px;}
+
+/* 탭 */
+.tabBtn {height:28px; background:url(../images/contents/bg_tab_area.gif) repeat-x 0 bottom; margin-bottom:14px;}
+.tabBtn li {float:left; width:90px; height:28px; line-height:28px; text-align:center; background:url(../images/contents/bg_tab.gif) 0 0 no-repeat; margin-right:2px;}
+.tabBtn li a {display:block; width:90px; height:28px; }
+.tabBtn li.active {background:url(../images/contents/bg_tab_active.gif) 0 0 no-repeat;  font-family: "NanumGothicBold";}
+.tabBtn li.active a {color:#3b65a6;}
+.tabArea .tab {height:265px; border:1px solid #cecece;}

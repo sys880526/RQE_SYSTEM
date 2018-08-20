@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+/*layout*/
+/**
+body {background:#dce1e9;}
+#wrap {width:995px; margin:0 auto; padding:0 10px; background:url(../images/common/bg_wrap.gif) repeat-y;}
+*/
+#header {height:138px;}
+#container {padding:32px 22px 80px 26px;}
+#footer {background:#747f9a; height:20px; padding:5px 25px 0 0;text-align:right; color:#fff; font-size:10px; font-weight:600;}
+#snbArea {float:left; width:124px; background:#e7edf5;}
+#contentsArea {float:right; width:798px;}

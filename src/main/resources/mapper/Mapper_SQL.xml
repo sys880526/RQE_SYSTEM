@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper">
+
+<!-- 	<select id="selectSample" parameterType="HashMap"  resultType="HashMap"> -->
+<!-- 		SELECT  -->
+<!-- 			id -->
+<!-- 			, name -->
+<!-- 			, age -->
+<!-- 		FROM -->
+<!-- 			sample -->
+<!-- 		WHERE -->
+<!-- 			1=1 -->
+<!-- 			<if test="age != null"> -->
+<!-- 			AND age = #{age} -->
+<!-- 			</if> -->
+<!-- 	</select> -->
+
+	
+	<select id="bmtListEvent" parameterType="HashMap"  resultType="HashMap">
+		select DISTINCT(to_date(starttm, 'yyyy-mm-dd hh24:mi:ss')) as start_day
+			from bmt_total_info
+			where userid in (
+			select userid
+	    from admin_user_list
+		where adminid in (
+		    select adminid
+		    from admin_user_list 
+		    where userid = #{userid} or adminid = #{userid}
+		    )
+			)
+	</select>
+	
+
+</mapper>

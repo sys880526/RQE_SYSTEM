@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login">
+
+	<resultMap type="com.wavem.frist.login.vo.UserInfoVo" id="login-resultMap">
+		<result property="userId" column="userid" />
+		<result property="userPass" column="userpw" />
+<!-- 		<result property="userName" column="user_nm" /> -->
+	</resultMap>
+
+	<select id="login" parameterType="com.wavem.frist.login.vo.UserInfoVo"  resultType="com.wavem.frist.login.vo.UserInfoVo">
+		SELECT 
+			userid
+			, userpw
+			, aucode
+		FROM user_id_list
+		WHERE userid = #{userId}
+		AND userpw = #{userPass}
+	</select>
+
+</mapper>

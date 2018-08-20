@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+#login {width:575px; height:315px; background:url(../images/login/bg_login.png) 0 0 no-repeat; position:absolute; top:227px; left:50%; margin-left:-287px;}
+#login ul {position:relative; padding:197px 0 0 102px;}
+#login ul li {padding-bottom:4px;}
+#login label {width:75px; padding-right:8px; display:inline-block; text-align:right; color:#316392; font-family: "NanumGothicBold";}
+#login input.text {padding:0 6px; width:189px; height:29px; line-height:29px; background:url(../images/login/bg_input_text.gif) 0 0 no-repeat; border:none; color:#fff; font-family: "NanumGothicBold";}
+#login input.text.active {background:url(../images/login/bg_input_text_active.gif) 0 0 no-repeat;}
+#login .btn {position:absolute; top:197px; right:102px;}

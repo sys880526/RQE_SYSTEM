@@ -1,0 +1,39 @@
+@charset "utf-8";
+
+/* 메인 */
+.mainContainer {padding-bottom:50px !important;}
+#mainContentsArea h3 {font-size:14px; color:#404040; font-family: "NanumGothicBold"; padding:12px 0 0px 25px; height:28px; background:url(../images/contents/bul_tit_2.gif) 6px 16px no-repeat;}
+#mainContentsArea .left {float:left; width:224px; height:516px;}
+#mainContentsArea .left .inner {}
+#mainContentsArea .right {float:right; width:705px;}
+#mainContentsArea .right .inner {border:1px solid #465271; overflow:auto;}
+#mainContentsArea .right .inner p {text-align:right; height:36px; padding-right:10px; line-height:36px; border-bottom:2px solid #465271; color:#333;}
+#mainContentsArea .right .inner p strong {color:red;}
+#mainContentsArea .right .inner {text-align:center; font-size:11px;}
+#mainContentsArea .right .inner ul {overflow:auto;}
+#mainContentsArea .right .inner li {float:left; width:87px; border:1px solid #bbcadb; border-width:0px 1px 0px 0}
+#mainContentsArea .right .inner li.first {}
+#mainContentsArea .right .inner li.last {border:none;}
+#mainContentsArea .right .inner li .top {border-bottom:1px solid #bbcadb; height:92px; padding-top:10px;}
+#mainContentsArea .right .inner li .top div {padding-bottom:10px;}
+#mainContentsArea .right .inner li .center {border-bottom:1px solid #bbcadb; padding-top:10px; height:130px; position:relative;}
+#mainContentsArea .right .inner li .center .num {font-size:10px;}
+#mainContentsArea .right .inner li .center .ic {position:absolute; bottom:10px; left:0; width:100%;}
+#mainContentsArea .right .inner li .center .txt {height:69px; width:87px; display:table-cell; vertical-align:middle; font-family: "NanumGothicBold";}
+#mainContentsArea .right .inner li.first .center .txt {width:89px;}
+#mainContentsArea .right .inner li.last .center .txt {width:90px;}
+#mainContentsArea .right .inner li .bottom {padding:5px 0; color:#000;}
+#mainContentsArea .right .inner li .bottom strong {color:red;}
+#mainContentsArea .right .inner li.style_1 .top {background:url(../images/contents/ic_car_1.gif) center 53px no-repeat;}
+#mainContentsArea .right .inner li.style_1 .center .txt {color:#b7b7b7;}
+#mainContentsArea .right .inner li.style_2 .top {background:url(../images/contents/ic_car_2.gif) center 53px no-repeat;}
+#mainContentsArea .right .inner li.style_2 .center .txt {color:#1a4ea5;}
+#mainContentsArea .right .inner li.style_3 .top {background:url(../images/contents/ic_car_3.gif) center 53px no-repeat;}
+#mainContentsArea .right .inner li.style_3 .center .txt {color:#be0101;}
+#mainContentsArea .right .inner li.style_4 .top {background:url(../images/contents/ic_car_4.gif) center 53px no-repeat;}
+#mainContentsArea .right .inner li.style_4 .center .txt {color:#1b1b1b;}
+#mainContentsArea .right .inner li.style_5 .top {background:url(../images/contents/ic_car_5.gif) center 53px no-repeat;}
+#mainContentsArea .right .inner li.style_5 .center .txt {color:#575a5e;}
+#mainContentsArea .right .inner .ex {text-align:right; height:26px; padding:10px 10px 0 0; border-top:2px solid #465271; color:#333;}
+#mainContentsArea .right .inner .ex span {display:inline-block; width:7px; height:7px; margin:0 2px 0 12px;}
+
