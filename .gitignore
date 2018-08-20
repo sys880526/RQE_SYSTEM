@@ -53,7 +53,10 @@ local.properties
 # Code Recommenders
 .recommenders/
 
-
+.classpath
+.project
+.settings/
+target/
 ### Java ###
 *.class
 
