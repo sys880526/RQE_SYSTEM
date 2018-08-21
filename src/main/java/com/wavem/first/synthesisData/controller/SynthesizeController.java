@@ -64,6 +64,8 @@ public class SynthesizeController {
 		input.put("userid", "user01");
 		Map<String, Object> out = synthesizeService.getDetailDataSheet(input);
 		mav.addObject("data", out);
+		System.out.println("data >>>>>>>>>>>>>>>>" + out);
+		System.out.println("yugoinfo >>>>>>>>>>>>>>>>" + out.get("yugoinfo"));
 		return mav;		
 	}
 	

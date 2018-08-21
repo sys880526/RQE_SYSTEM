@@ -17,7 +17,8 @@
     <link rel="stylesheet" type="text/css" href="../css/default.css" />
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />    
+    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
 </head>
 <body>
 	<!-- #container -->
@@ -61,7 +62,7 @@
                     </div>
                     <!-- /.search -->
                     <div>
-                        <table id="tbl-data-sheet" class="boardListStyle" cellspacing="0" width="100%" border="0">
+                        <table id="tbl-data-sheet">
                             <thead>
                                 <tr>
                                     <th style="width: 70px">BMT ID</th>
@@ -92,43 +93,53 @@
 		<div id="modal-data-detail" class="modal">
 			<!-- Modal content -->
 			<div class="modal-content">
-				<span class="close">&times;</span>
-				<table id="tbl-modal-data">
-					<thead>
-						<tr>
-							<th>BMT ID</th>
-							<th>USER ID</th>
-							<th>최종 사용 여부</th>
-							<th>CP</th>
-							<th>차량정보</th>
-							<th>공지사항</th>
-							<th>요청시간(공지)</th>
-							<th>출발시간(공지)</th>
-							<th>출발지명</th>
-							<th>도착지명</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					<span class="tooltiptext">닫기</span>
+				</div>
+				<div class="modal-body">
+					<table id="tbl-modal-data1" style="margin-bottom: 10px">
+	                    <tbody>
+	                        <tr style="background-color: #e6f2ff;">
+	                            <td>BMT ID</td>
+	                            <td>USER ID</td>
+	                            <td>최종 사용 여부</td>
+	                            <td>CP</td>
+	                            <td>차량정보</td>
+	                            <td>공지사항</td>
+	                            <td>요청시간(공지)</td>
+	                            <td>출발시간(공지)</td>
+	                            <td>출발지명</td>
+	                            <td>도착지명</td>
+	                        </tr>
+	                        <tr></tr>
+	                        <tr style="background-color: #e6f2ff;">
+	                            <td>실제 요청 시간</td>
+	                            <td>예상 소요 시간</td>
+	                            <td>예상 소요 거리</td>
+	                            <td>예상 소요 요금</td>
+	                            <td>실제 출발 시간</td>
+	                            <td>주행 도착 시간</td>
+	                            <td>실제 소요 거리</td>
+	                            <td>실제 소요 요금</td>
+	                            <td>구간 주행 상태</td>
+	                            <td>선/후착</td>
+	                        </tr>
+	                        <tr></tr>
+	                        <tr style="background-color: #e6f2ff;">
+	                            <td colspan="10">특이사항</td>
+	                        </tr>
+	                        <tr></tr>
+	                    </tbody>
+					</table>
+				</div>
 			</div>
+			<!-- \Modal content -->
 		</div>
-		<!-- \The Modal -->
+		<!-- \The Modal -->		
 		
 	</div>
-	<!-- \#container -->
+	<!-- \#container -->	
 </body>
 <script>
 	$(document).ready(function() {
@@ -149,6 +160,9 @@
 			console.log('detail');
 			var id = $(this).attr('id');
 			var cp = $(this).children('td')[2].innerText;
+			var tr2 = $('#tbl-modal-data1 tr')[1];
+			var tr4 = $('#tbl-modal-data1 tr')[3];
+			var tr6 = $('#tbl-modal-data1 tr')[5];
 			$.ajax({
 				url : '/synthesize/detailData'
 			        , type : 'post'
@@ -159,27 +173,49 @@
 		 			}
 					, processData : true /*querySTring make false*/
 					, success : function(data, stat, xhr) {		
-						
-						data.list.forEach(function(items, index, array) {					
-							var html = [
-								'<tr id = "', items.bmtid ,'">',
-								'<td>', items.userid , '</td>',
-								'<td>', items.state_condition , '</td>',
-								'<td>', items.cp , '</td>',
-								'<td>', items.startpoi , '</td>',
-								'<td>', items.endpoi , '</td>',
-								'<td>', items.est_time , '</td>',
-								'<td>', items.est_distance , '</td>',
-								'<td>', items.est_charge , '</td>',
-								'<td>', items.driver_tm , '</td>',
-								'<td>', items.arrive_distance , '</td>',
-								'<td>', items.arrive_charge , '</td>',
-								'<td>', items.score , '</td>',
-								'</tr>'
-							].join('');
-							list.append(html);
-						});//forEach
+						$('#modal-data-detail').css({ 'display': "block" });
+							$(tr2).empty();
+							$(tr4).empty();
+							$(tr6).empty();
+ 							var html2 = [
+ 								'<td>', data.data.bmtid , '</td>',
+ 								'<td>', data.data.userid , '</td>',
+ 								'<td>', data.data.except_info , '</td>',
+ 								'<td>', data.data.cp , '</td>',
+ 								'<td>', data.data.carinfo , '</td>',
+ 								'<td>', data.data.notice , '</td>',
+ 								'<td>', data.data.requesttm , '</td>',
+ 								'<td>', data.data.starttm , '</td>',
+ 								'<td>', data.data.startpoi , '</td>',
+ 								'<td>', data.data.endpoi , '</td>'							
+ 							].join('');
+							$(tr2).append(html2);
+							//$(tr2).after(html2);
 							
+							var html4 = [
+								'<td>', data.data.real_req_time , '</td>',
+								'<td>', data.data.est_time , '</td>',
+								'<td>', data.data.est_distance , '</td>',
+								'<td>', data.data.est_charge , '</td>',
+								'<td>', data.data.bmt_start_tm , '</td>',
+								'<td>', data.data.bmt_end_tm , '</td>',
+								'<td>', data.data.arrive_distance , '</td>',
+								'<td>', data.data.arrive_charge , '</td>',
+								'<td>', data.data.state_condition , '</td>',
+								'<td>', data.data.score , '</td>'
+							].join('');							
+							$(tr4).append(html4);
+							
+							if (data.data.yugoinfo == null || data.data.yugoinfo == '') {
+								var html6 = [
+									'<td colspan="10">특이사항이 없습니다.</td>'
+								].join('');
+							} else {
+								var html6 = [
+									'<td colspan="10">', data.data.yugoinfo ,'</td>'
+								].join('');
+							}				
+							$(tr6).append(html6);
 					}
 				    , error : function(xhr, stat, err) {
 				    	alert("error");
@@ -187,6 +223,23 @@
 				    }
 			});//ajax
 		});
+		
+		/**
+		* When the user clicks on <span> (x), close the modal
+		*/
+        $('.close').on('click', function() {
+        	$('#modal-data-detail').css({ 'display': "none" });
+        }); 
+		
+		/**
+		* When the user clicks anywhere outside of the modal, close it
+		*/
+        window.onclick = function (event) {
+			var modal = $('#modal-data-detail')[0];
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 		
 	});
 	//<![CDATA[
