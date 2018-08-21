@@ -1,5 +1,5 @@
 package com.wavem.first.bmtListRegistration.vo;
 
-public class bmtListRegistrationVo {
+public class BmtListRegistrationVo {
 
 }

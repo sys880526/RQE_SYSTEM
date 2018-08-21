@@ -31,7 +31,14 @@
             		<li><a href="/main"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
             	</c:otherwise>
             </c:choose>            
-            	<li><a href="#"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
+            <c:choose>
+            	<c:when test="${control eq 'bmtListRegistration'}">
+	            	<li><a href="/bmtListRegistration/bmtListRegistration" class="active"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
+            	</c:when>
+            	<c:otherwise>
+	            	<li><a href="/bmtListRegistration/bmtListRegistration"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
+            	</c:otherwise>
+            </c:choose>            
             <c:choose>
             	<c:when test="${control eq 'datasheet'}">
             		<li>
