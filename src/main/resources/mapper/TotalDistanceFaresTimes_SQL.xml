@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="totalDistanceFaresTimes">
+
+	<select id="getTotalDistanceFaresTimes" parameterType="hashmap"  resultType="hashmap">
+		
+			select a.userid, a.cp, normal_count, abnormal_count, total_count, bmt_count, sum_distance, sum_charge, sum_tm, sub_distance, ratio_distance, sub_charge, ratio_charge
+			from
+			(
+				select userid, cp,
+					case when sum(normal_count) is null then '0' else sum(normal_count) end  as normal_count,
+					case when sum(abnormal_count) is null then '0' else sum(abnormal_count) end as abnormal_count, 
+					case when sum(normal_count) is null then '0' else sum(normal_count) end 
+					+ case when sum(abnormal_count) is null then '0' else sum(abnormal_count) end  as total_count
+				from
+				(
+					select userid, cp, except_info, state_condition, count(driver_tm) ,
+						case when except_info = 'y' and state_condition like('정상%') then count(driver_tm) else null end as normal_count,
+						case when except_info != 'y' or state_condition not like('정상%') then count(driver_tm) else null end as abnormal_count
+					from
+					(
+						select bmtid, userid, except_info, cp, est_time, est_distance, est_charge, 
+						to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm,
+						arrive_distance, arrive_charge, state_condition
+						from bmt_total_info
+						where to_date(SUBSTR(bmtid, 1,6),'yymmdd') between to_date(#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+						and userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+					) a
+					group by userid, cp, except_info, state_condition
+				) a
+				group by userid, cp
+			) a,
+			(
+				select userid, cp, bmt_count, sum_distance, sum_charge, sum_tm, 
+					sum_distance-min_distance as sub_distance,
+					round((sum_distance-min_distance)/min_distance *100,1) as ratio_distance,
+					sum_charge-min_charge as sub_charge,
+					round((sum_charge-min_charge)/min_charge *100,1) as ratio_charge
+				from
+				(
+					select userid, cp, count(bmtid) as bmt_count, sum(arrive_distance) as sum_distance, sum(arrive_charge) as sum_charge, sum(driver_tm) as sum_tm
+					from
+					(
+						select bmtid, userid, except_info, cp, est_time, est_distance, est_charge, 
+							to_number(arrive_distance,'0000.00') as arrive_distance, to_number(arrive_charge,'000000') as arrive_charge, 
+							to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm, state_condition
+						from bmt_total_info
+						where userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+							and bmtid in (
+								select bmtid
+								from
+								(
+									select bmtid, count(userid) as user_count, sum(normal_count) as normal_count
+									from
+									(
+										select bmtid, userid, except_info, cp, est_time, est_distance, est_charge, 
+												to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm,
+												arrive_distance, arrive_charge, state_condition,
+												case when state_condition like '정상%' and except_info = 'y' then '1' else 0 end as normal_count
+										from bmt_total_info
+										where to_date(SUBSTR(bmtid, 1,6),'yymmdd') between to_date(#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+											and userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+									) a
+									group by bmtid
+								) a
+								where user_count = normal_count
+							)
+					)a
+					group by userid, cp
+				) a,
+				(
+					select min(sum_distance) as min_distance, min(sum_charge) as min_charge, min(sum_tm) as min_tm
+					from
+					(
+						select userid, cp, count(bmtid) as bmt_count, sum(arrive_distance) as sum_distance, sum(arrive_charge) as sum_charge, sum(driver_tm) as sum_tm, 'a' as a
+						from
+						(
+							select bmtid, userid, except_info, cp, est_time, est_distance, est_charge, 
+								to_number(arrive_distance,'0000.00') as arrive_distance, to_number(arrive_charge,'000000') as arrive_charge, 
+								to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm, state_condition
+							from bmt_total_info
+							where userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+								and bmtid in (
+									select bmtid
+									from
+									(
+										select bmtid, count(userid) as user_count, sum(normal_count) as normal_count
+										from
+										(
+											select bmtid, userid, except_info, cp, est_time, est_distance, est_charge, 
+													to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'hh24'),'00')*60+to_number(to_char(to_timestamp(bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss')-to_timestamp(bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss'),'mi'),'00') as driver_tm,
+													arrive_distance, arrive_charge, state_condition,
+													case when state_condition like '정상%' and except_info = 'y' then '1' else 0 end as normal_count
+											from bmt_total_info
+											where to_date(SUBSTR(bmtid, 1,6),'yymmdd') between to_date(#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+												and userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = #{userid} or userid = #{userid}))
+										) a
+										group by bmtid
+									) a
+									where user_count = normal_count
+								)
+						) a
+						group by userid, cp
+					) a
+					group by a
+				) b
+			) b
+			where a.userid = b.userid
+				and a.cp = b.cp
+			order by userid, cp
+	</select>
+</mapper>
