@@ -31,7 +31,7 @@ public class BmtListRegistrationController {
 		
 		
 		mv.addObject("control", "bmtListRegistration");
-		mv.addObject("subControl", "bmtListRegistration");
+		mv.addObject("sub_control", "bmtListRegistration.bmtListRegistration");
 		
 		return mv;
 	}

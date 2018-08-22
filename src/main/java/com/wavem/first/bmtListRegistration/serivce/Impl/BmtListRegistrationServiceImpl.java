@@ -27,7 +27,6 @@ public class BmtListRegistrationServiceImpl implements BmtListRegistrationServic
 		// bmt_list_new 테이블에 동일한 bmtid 와 userid  값을 가진 데이터가 존재 하는지 확인한다.
 		for(int i = 0; i < saveData.size(); i++) {
 			Map<String, Object> bmtIdCheck = bmtListRegistrationDao.checkBmtId(saveData.get(i));
-			System.out.println(bmtIdCheck.get("count").toString());
 			// bmtid 와 userid가 동일한 값을 찾아 0이 아닐경우 ( 키값이 겹칠경우 ) insert를 실행하지 않고 오류 코드를 전달한다.
 			if(Integer.parseInt(bmtIdCheck.get("count").toString()) != 0) {
 				return 1;

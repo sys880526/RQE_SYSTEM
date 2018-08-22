@@ -55,11 +55,11 @@
                             <span class="pd">~</span>
                             <span class="pd">종료 날짜</span>
                             <input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" />
-                            <a href="javascript:dataSheetList()" class="btnSearch">
+                            <a href="javascript:getList()" class="btnSearch">
                                 <img src="../images/board/btn_search.gif" alt="search" />
                             </a>
                            	
-                            <a href="javascript:dataSheetList()" class="btnNewReg" id="btnNewReg" style="float : right;">
+                            <a href="#" class="btnNewReg" id="btnNewReg" style="float : right;">
                                 <img src="../images/board/btn_regist_2.gif" alt="newReg" />
                             </a>
                            	
@@ -119,7 +119,7 @@
 						</table>
 					</div>
 					<div class="modal-footer">
-						<a href="javascript:dataSheetList()" class="btnNewBmtSave" id="btnNewBmtSave" style="float : right;">
+						<a href="javascript:#" class="btnNewBmtSave" id="btnNewBmtSave" style="float : right;">
 	               	        <img src="../images/board/btn_regist_2.gif" alt="btnNewBmtSave" />
 	                    </a>
                     </div>
@@ -142,7 +142,7 @@
 		/**
 		* bmtListRegistration list 값 불러오기
 		*/
-		dataSheetList();
+		getList();
 		
 		/**
 		* bmtListRegistration 상세보기
@@ -173,6 +173,7 @@
 			});//forEach
 			$("#modal-data-detail").show();
 		});
+		
 		$('#btnNewBmtSave').on('click', function() {
 			var saveData = [];
 			var checkBmtIndex = [];
@@ -193,7 +194,7 @@
 				var formatDate = new Date($("#bmt-date").val());
 				
 				saveData.push({
-					bmtid : formatDate.format("yymmdd") + "_" + pad($("#bmt_"+i).val(),2)
+					bmtid : formatDate.format("yyMMdd") + "-" + pad($("#bmt_"+i).val(),2)
 					, startpoi : $("#bmt_startpoi_"+i).html()
 					, endpoi : $("#bmt_endpoi_"+i).html()
 					, userid : 'admin01'
@@ -318,7 +319,7 @@
 		modalCal.val(year + '-' + month + '-' + day);
 	} 
 	
-	dataSheetList = function() {
+	getList = function() {
 		var start = $('#bmt-start-date').val();
 		var end = $('#bmt-end-date').val();
 		var list = $('#tbl-data-sheet').children('tbody');
@@ -359,31 +360,10 @@
 		    	console.log(err);
 		    }
 		});
+	}
 
-
 		
 		
-		
-// 		$.ajax({
-// 			url : '/synthesize/datasheetlist',
-// 			type : 'post',
-// 			data : {start : start, end : end},
-// // 			data : $('#search-bmt').serialize(),
-// // 			dataType : 'json',
-// 			contentType: "application/json; charset=utf-8",
-// 			success : function(data) {
-// 				if (data.code == '0') {
-// 					console.log(data.message);
-// 				} else if (data.code == '-1') {
-// 					cosole.log(data.message);
-// 				}				
-// 			},
-// 			error : function() {
-				
-// 			}
-// 		});//ajax
-	}//dataSheetList()
-	
 	/**
 	 * form data 직렬화 
 	 */
