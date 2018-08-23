@@ -33,14 +33,14 @@
             </c:choose>            
             	<li><a href="#"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
             <c:choose>
-            	<c:when test="${control eq 'datasheet'}">
+            	<c:when test="${control eq 'synthesisData'}">
             		<li>
-            			<a href="/synthesize/datasheet" class="active"><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
+            			<a href="/synthesisData/datasheet" class="active"><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
            			</li>
             	</c:when>
             	<c:otherwise>
 		            <li>
-		            	<a href="/synthesize/datasheet" ><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
+		            	<a href="/synthesisData/datasheet" ><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
 	            	</li>
             	</c:otherwise>
             </c:choose>

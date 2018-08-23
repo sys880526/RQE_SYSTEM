@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="statusOfAssessmentSectionForeAftereffect">
+
+	<select id="statusOfAssessmentSectionData" parameterType="hashmap"  resultType="hashmap">
+		SELECT  a.cp
+		,		a.except_info_y
+		,		a.except_info_n
+		,		a.state_condition_y
+		,		a.state_condition_n
+		,		monday_total
+		,		monday_nomal
+		,		tuesday_total
+		,		tuesday_nomal
+		,		wednesday_total
+		,		wednesday_nomal
+		,		thursday_total
+		,		thursday_nomal
+		,		friday_total
+		,		friday_nomal
+		,		saturday_total
+		,		saturday_nomal
+		,		sunday_total
+		,		sunday_nomal
+		,		am_peak_total
+		,		am_peak_normal
+		,		am_non_peak_total
+		,		am_non_peak_normal
+		,		pm_non_peak_total
+		,		pm_non_peak_normal
+		,		pm_peak_total
+		,		pm_peak_normal
+		,		CASE
+					WHEN am_total IS NULL THEN 0 
+					ELSE am_total 
+                	END AS am_total
+        ,		CASE
+        			WHEN am_normal IS NULL THEN 0
+        			ELSE am_normal
+        			END AS am_normal
+        ,		CASE
+        			WHEN pm_total IS NULL THEN 0
+        			ELSE pm_total
+        			END AS pm_total
+ 		,		CASE
+ 					WHEN pm_normal IS NULL THEN 0
+ 					ELSE pm_normal
+ 					END AS pm_normal
+ 		FROM	(
+ 					SELECT	a.cp
+ 					,		CASE
+ 								WHEN a.except_info_y IS NULL THEN 0
+ 								ELSE a.except_info_y
+ 								END AS except_info_y
+ 					,		CASE
+ 								WHEN a.except_info_n IS NULL THEN 0
+ 								ELSE a.except_info_n
+ 								END AS except_info_n
+ 					,		CASE
+ 								WHEN a.state_condition_y IS NULL THEN 0
+ 								ELSE a.state_condition_y
+ 								END AS state_condition_y
+ 					,		CASE
+ 								WHEN a.state_condition_n IS NULL THEN 0
+ 								ELSE a.state_condition_n
+ 								END AS state_condition_n
+ 					,		CASE
+ 								WHEN monday_total IS NULL THEN 0
+ 								ELSE monday_total
+ 								END AS monday_total
+ 					,		CASE
+ 								WHEN monday_nomal IS NULL THEN 0
+ 								ELSE monday_nomal
+ 								END AS monday_nomal
+					,		CASE
+								WHEN tuesday_total IS NULL THEN 0
+								ELSE tuesday_total
+								END AS tuesday_total
+					,		CASE
+								WHEN tuesday_nomal IS NULL THEN 0
+								ELSE tuesday_nomal
+								END AS tuesday_nomal
+					,		CASE
+								WHEN wednesday_total IS NULL THEN 0
+								ELSE wednesday_total
+								END AS wednesday_total
+					,		CASE
+								WHEN wednesday_nomal IS NULL THEN 0
+								ELSE wednesday_nomal
+								END AS wednesday_nomal
+					,		CASE
+								WHEN thursday_total IS NULL THEN 0
+								ELSE thursday_total
+								END AS thursday_total
+					,		CASE
+								WHEN thursday_nomal IS NULL THEN 0
+								ELSE thursday_nomal
+								END AS thursday_nomal
+					,		CASE
+								WHEN friday_total IS NULL THEN 0
+								ELSE friday_total
+								END AS friday_total
+					,		CASE
+								WHEN friday_nomal IS NULL THEN 0
+								ELSE friday_nomal
+								END AS friday_nomal
+					,		CASE
+								WHEN saturday_total IS NULL THEN 0
+								ELSE saturday_total
+								END AS saturday_total
+					,		CASE
+								WHEN saturday_nomal IS NULL THEN 0
+								ELSE saturday_nomal
+								END AS saturday_nomal
+					,		CASE
+								WHEN sunday_total IS NULL THEN 0
+								ELSE sunday_total
+								END AS sunday_total
+					,		CASE
+								WHEN sunday_nomal IS NULL THEN 0
+								ELSE sunday_nomal
+								END AS sunday_nomal
+					,		CASE
+								WHEN am_peak_total IS NULL THEN 0
+								ELSE am_peak_total
+								END AS am_peak_total
+					,		CASE
+								WHEN am_peak_normal IS NULL THEN 0
+								ELSE am_peak_normal
+								END AS am_peak_normal
+					,		CASE
+								WHEN am_non_peak_total IS NULL THEN 0
+								ELSE am_non_peak_total
+								END AS am_non_peak_total
+					,		CASE
+								WHEN am_non_peak_normal IS NULL THEN 0
+								ELSE am_non_peak_normal
+								END AS am_non_peak_normal
+					,		CASE
+								WHEN pm_non_peak_total IS NULL THEN 0
+								ELSE pm_non_peak_total
+								END AS pm_non_peak_total
+					,		CASE
+								WHEN pm_non_peak_normal IS NULL THEN 0
+								ELSE pm_non_peak_normal
+								END AS pm_non_peak_normal
+					,		CASE
+								WHEN pm_peak_total IS NULL THEN 0
+								ELSE pm_peak_total
+								END AS pm_peak_total
+					,		CASE
+								WHEN pm_peak_normal IS NULL THEN 0
+								ELSE pm_peak_normal
+								END AS pm_peak_normal
+					FROM	(
+								SELECT	cp
+								,		Sum( except_info_y )     AS except_info_y
+								,		Sum( except_info_n )     AS except_info_n
+								,		Sum( state_condition_y ) AS state_condition_y
+								,		Sum( state_condition_n ) AS state_condition_n
+								,		Sum( monday_total )      AS monday_total
+								,		Sum( monday_nomal )      AS monday_nomal
+								,		Sum( tuesday_total )     AS tuesday_total
+								,		Sum( tuesday_nomal )     AS tuesday_nomal
+								,		Sum( wednesday_total )   AS wednesday_total
+								,		Sum( wednesday_nomal )   AS wednesday_nomal
+								,		Sum( thursday_total )    AS thursday_total
+								,		Sum( thursday_nomal )    AS thursday_nomal
+								,		Sum( friday_total )      AS friday_total
+								,		Sum( friday_nomal )      AS friday_nomal
+								,		Sum( saturday_total )    AS saturday_total
+								,		Sum( saturday_nomal )    AS saturday_nomal
+								,		Sum( sunday_total )      AS sunday_total
+								,		Sum( sunday_nomal )      AS sunday_nomal
+								FROM	(
+											SELECT	bmtid
+											,		userid
+											,		cp
+											,		except_info
+											,		state_condition
+											,		start_day
+											,		except_info_y
+											,		except_info_n
+											,		state_condition_y
+											,		state_condition_n
+											,		monday AS monday_total
+											,		CASE
+														WHEN monday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END  AS monday_nomal
+											,		tuesday AS tuesday_total
+											,		CASE
+														WHEN tuesday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	 AS tuesday_nomal
+											,		wednesday AS wednesday_total
+											,		CASE
+														WHEN wednesday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	AS wednesday_nomal
+											,		thursday AS thursday_total
+											,		CASE
+														WHEN thursday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	AS thursday_nomal
+											,		friday AS friday_total
+											,		CASE
+														WHEN friday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	AS friday_nomal
+											,		saturday AS saturday_total
+											,		CASE
+														WHEN saturday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	AS saturday_nomal
+											,		sunday AS sunday_total
+											,		CASE
+														WHEN sunday = 1
+														AND	 except_info_y = 1
+														AND	 state_condition_y = 1 THEN 1
+														ELSE NULL
+														END	 AS sunday_nomal
+											FROM	(
+														SELECT	bmtid
+														,		userid
+														,		cp
+														,		except_info
+														,		state_condition
+														,		To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') AS start_day
+														,		CASE
+																	WHEN except_info = 'y' THEN 1
+																	ELSE NULL
+																	END AS except_info_y
+														,		CASE
+																	WHEN except_info = 'y' THEN NULL
+																	ELSE 1
+																	END	 AS except_info_n
+														,		CASE
+																	WHEN state_condition LIKE '정상%' THEN 1
+																	ELSE NULL
+																	END AS state_condition_y
+														,		CASE
+																	WHEN state_condition LIKE '정상%' THEN NULL
+																	ELSE 1
+																	END  AS state_condition_n
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010101', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS monday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010102', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS tuesday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010103', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS wednesday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010104', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS thursday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010105', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS friday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010106', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS saturday
+														,		CASE
+																	WHEN To_char(To_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') = To_char(To_date('00010107', 'yyyymmdd'),'day') THEN 1
+																	ELSE NULL
+																	END AS sunday
+														FROM	bmt_total_info
+														WHERE	userid 
+														IN		(
+																	SELECT	userid
+																	FROM	admin_user_list
+																	WHERE	adminid 
+																	IN		(
+																				SELECT	adminid
+																				FROM	admin_user_list
+																				WHERE	adminid = #{userid}
+																				OR		userid = #{userid}
+																			)
+																)
+														AND		To_date(Substr(bmtid,1,6),'yymmdd') 
+														BETWEEN To_date(#{start_date}, 'yyyy-mm-dd') 
+														AND		To_date(#{end_date}, 'yyyy-mm-dd') 
+													) a 
+										) a
+								GROUP BY cp 
+							) a
+					LEFT OUTER JOIN	(
+										SELECT	cp
+										,		Sum(except_info_y)      AS except_info_y
+										,		Sum(except_info_n)      AS except_info_n
+										,		Sum(state_condition_y)  AS state_condition_y
+										,		Sum(state_condition_n)  AS state_condition_n
+										,		Sum(am_peak_total)      AS am_peak_total
+										,		Sum(am_peak_normal)     AS am_peak_normal
+										,		Sum(am_non_peak_total)  AS am_non_peak_total
+										,		Sum(am_non_peak_normal) AS am_non_peak_normal
+										,		Sum(pm_non_peak_total)  AS pm_non_peak_total
+										,		Sum(pm_non_peak_normal) AS pm_non_peak_normal
+										,		Sum(pm_peak_total)      AS pm_peak_total
+										,		Sum(pm_peak_normal)     AS pm_peak_normal
+										FROM	(
+													SELECT	cp
+													,		except_info_y
+													,		except_info_n
+													,		state_condition_y
+													,		state_condition_n
+													,		am_peak AS am_peak_total
+													,		CASE
+																WHEN except_info_y = 1
+																AND	 state_condition_y = 1
+																AND	 am_peak = 1 THEN 1
+																ELSE NULL
+																END	 AS am_peak_normal
+													,		am_non_peak AS am_non_peak_total
+													,		CASE
+																WHEN except_info_y = 1
+																AND	 state_condition_y = 1
+																AND  am_non_peak = 1 THEN 1
+																ELSE NULL
+																END	 AS am_non_peak_normal
+													,		pm_non_peak AS pm_non_peak_total
+													,		CASE
+																WHEN except_info_y = 1
+																AND	 state_condition_y = 1
+																AND	 pm_non_peak = 1 THEN 1
+																ELSE NULL
+																END	 AS pm_non_peak_normal
+													,		pm_peak AS pm_peak_total
+													,		CASE
+																WHEN except_info_y = 1
+																AND	 state_condition_y = 1
+																AND	 pm_peak = 1 THEN 1
+																ELSE NULL
+																END AS pm_peak_normal
+													FROM	(
+																SELECT	bmtid
+																,		userid
+																,		cp
+																,		except_info
+																,		state_condition
+																,		starttm
+																,		CASE
+																			WHEN except_info = 'y' THEN 1
+																			ELSE NULL
+																			END AS except_info_y
+																,		CASE
+																			WHEN except_info = 'y' THEN NULL
+																			ELSE 1
+																			END AS except_info_n
+																,		CASE
+																			WHEN state_condition LIKE '정상%' THEN 1
+																			ELSE NULL
+																			END AS state_condition_y
+																,		CASE
+																			WHEN state_condition LIKE '정상%' THEN NULL
+																			ELSE 1
+																			END AS state_condition_n
+																,		CASE
+																			WHEN 	To_char(To_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN To_char(am_peak_start,'hh24:mi:ss') 
+																			AND    	To_char(am_peak_end, 'hh24:mi:ss') THEN 1
+																			ELSE 	NULL
+																			END AS am_peak
+																,		CASE
+																			WHEN 	To_char(To_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN To_char(am_non_peak_start,'hh24:mi:ss') 
+																			AND    	To_char(am_non_peak_end, 'hh24:mi:ss')
+																			OR     	To_char(To_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> TO_CHAR(am_peak_start,'hh24:mi:ss') THEN 1
+																			ELSE	NULL
+																			END 	AS am_non_peak
+																,		CASE
+																			WHEN	TO_CHAR(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN TO_CHAR(pm_non_peak_start,'hh24:mi:ss') 
+																			AND		TO_CHAR(pm_non_peak_end, 'hh24:mi:ss')
+																			OR		TO_CHAR(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> TO_CHAR(pm_peak_end,'hh24:mi:ss') THEN 1
+																			ELSE	NULL
+																			END AS pm_non_peak
+																,		CASE
+																			WHEN 	TO_CHAR(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN TO_CHAR(pm_peak_start,'hh24:mi:ss') 
+																			AND    	TO_CHAR(pm_peak_end, 'hh24:mi:ss') THEN 1
+																			ELSE 	NULL
+																			END AS pm_peak
+																FROM	bmt_total_info a
+																,		setting_value b
+																WHERE	b.adminid 
+																IN		(
+																			SELECT	adminid
+																			FROM	admin_user_list
+																			WHERE	userid = #{userid}
+																			OR		adminid = #{userid}
+																		)
+																AND		userid 
+																IN		(
+																			SELECT	userid
+																			FROM	admin_user_list
+																			WHERE	adminid 
+																			IN		(
+																						SELECT	adminid
+																						FROM	admin_user_list
+																						WHERE	adminid = #{userid}
+																						OR		userid = #{userid}
+																					)
+																		)
+																AND		to_date(SUBSTR(bmtid,1,6),'yymmdd') 
+																BETWEEN to_date(#{start_date}, 'yyyy-mm-dd') 
+																AND		to_date(#{end_date}, 'yyyy-mm-dd')
+																AND		TO_CHAR(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+																IN		(TO_CHAR(to_date('00010101', 'yyyymmdd'),'day')
+																,		TO_CHAR(to_date('00010102', 'yyyymmdd'),'day')
+																,		TO_CHAR(to_date('00010103', 'yyyymmdd'),'day')
+																,		TO_CHAR(to_date('00010104', 'yyyymmdd'),'day')
+																,		TO_CHAR(to_date('00010105', 'yyyymmdd'),'day')) 
+														    ) a 
+												) a
+										GROUP BY cp 
+									) b
+					ON	a.cp = b.cp 
+				) a 
+		LEFT OUTER JOIN	(
+							SELECT	cp
+							,		SUM(except_info_y) AS except_info_y
+							,		SUM(except_info_n) AS except_info_n
+							,		SUM(state_condition_y) AS state_condition_y
+							,		SUM(state_condition_n) AS state_condition_n
+							,		SUM(am_total) AS am_total
+							,		SUM(am_normal) AS am_normal
+							,		SUM(pm_total) AS pm_total
+							,		SUM(pm_normal) AS pm_normal
+							FROM	(
+										SELECT	cp
+										,		except_info_y
+										,		except_info_n
+										,		state_condition_y
+										,		state_condition_n
+										,		am AS am_total
+										,		CASE
+													WHEN except_info_y = 1
+													AND	 state_condition_y = 1
+													AND	 am = 1 THEN 1
+													ELSE 0
+													END AS am_normal
+										,		pm  AS pm_total
+										,		CASE
+													WHEN except_info_y = 1
+													AND	 state_condition_y = 1
+													AND	 pm = 1 THEN 1
+													ELSE 0
+													END AS pm_normal
+													FROM	(
+																SELECT	bmtid
+																,		userid
+																,		cp
+																,		except_info
+																,		state_condition
+																,		starttm
+																,		CASE
+																			WHEN except_info = 'y' THEN 1
+																			ELSE 0
+																			END AS except_info_y
+																,		CASE
+																			WHEN except_info = 'y' THEN 0
+																			ELSE 1
+																			END AS except_info_n
+																,		CASE
+																			WHEN state_condition LIKE '정상%' THEN 1
+																			ELSE 0
+																			END AS state_condition_y
+																,		CASE
+																			WHEN state_condition LIKE '정상%' THEN 0
+																			ELSE 1
+																			END AS state_condition_n
+																,		CASE
+																			WHEN	TO_CHAR(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN TO_CHAR(am_start,'hh24:mi:ss') 
+																			AND		TO_CHAR(am_end, 'hh24:mi:ss') THEN 1
+																			ELSE 	0
+																			END AS am
+																,		CASE
+																			WHEN	TO_CHAR(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																			BETWEEN TO_CHAR(pm_start,'hh24:mi:ss') 
+																			AND		TO_CHAR(pm_end, 'hh24:mi:ss') THEN 1
+																			ELSE 	0
+																			END AS pm
+																			FROM   bmt_total_info a
+																,		setting_value b
+																WHERE	b.adminid 
+																IN		(
+																			SELECT adminid
+																			FROM   admin_user_list
+																			WHERE  userid = #{userid}
+																			OR     adminid = #{userid}
+																		)
+																AND		userid 
+																IN		(
+																			SELECT	userid
+																			FROM	admin_user_list
+																			WHERE	adminid 
+																			IN		(
+																						SELECT	adminid
+																						FROM	admin_user_list
+																						WHERE	adminid = #{userid}
+																						OR		userid = #{userid}
+																					)
+																		)
+																AND		to_date(SUBSTR(bmtid,1,6),'yymmdd') 
+																BETWEEN to_date(#{start_date}, 'yyyy-mm-dd') 
+																AND		to_date(#{end_date}, 'yyyy-mm-dd')
+																AND		TO_CHAR(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+																IN		(
+																			TO_CHAR(to_date('00010106', 'yyyymmdd'),'day')
+																,			TO_CHAR(to_date('00010107', 'yyyymmdd'),'day')
+																		) 
+															) a 
+									) a
+							GROUP BY cp 
+						) b 
+		ON	a.cp = b.cp 
+		ORDER BY a.cp	
+	</select>
+	
+	<select id="foreAftereffectData" parameterType="hashmap" resultType="hashmap">
+			SELECT	cp
+			,		sum( except_info ) as total_count
+			,		sum( state_condition_n )+sum( except_info_n ) as etc_count
+			,		'100% ('||sum( state_condition )||'개)' as total_nomal
+			,		round(((sum( arrive_first )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_first )||'개)' as arrive_first
+			,		round(((sum( arrive_together )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_together )||'개)' as arrive_together
+			,		round(((sum( arrive_later )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_later )||'개)' as arrive_later
+			from	(
+						select	bmtid
+						, 		cp
+						,		except_info
+						,		except_info_n
+						,		state_condition
+						,		state_condition_n
+						,		case when score = '선착' then 1 else 0 end as arrive_first
+						,		case when score = '후착' then 1 else 0 end as arrive_later
+						,		case when score = '동시도착' then 1 else 0 end as arrive_together
+						from	(
+									SELECT	a.bmtid
+									,		a.userid
+									,		cp
+									,		case when except_info = 'y' then 1 else 0 end as except_info
+									,		case when except_info = 'y' then 0 else 1 end as except_info_n
+									,		case when state_condition like '정상%' then 1 else 0 end as state_condition
+									,		case when state_condition like '정상%' then 0 else 1 end as state_condition_n
+									,		CASE
+												when (case when except_info = 'y' then 1 else 0 end) = 0 then null
+												when (case when state_condition like '정상%' then 1 else 0 end) = 0 then null
+												WHEN ss = '동시도착' THEN s
+												WHEN driver_tm - min_tm <![CDATA[<=]]> pre_arrival THEN '선착' ELSE '후착' END AS score
+									FROM	(
+												SELECT	bmtid
+												,		except_info
+												,		state_condition
+												,		cp
+												,		startpoi
+												,		endpoi
+												,		est_time
+												,		est_distance
+												,		est_charge
+												,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+												,		arrive_distance
+												,		arrive_charge
+												,		starttm
+												,		userid
+												FROM	bmt_total_info
+												WHERE	userid 
+												IN		(
+															SELECT	userid
+															FROM	admin_user_list 
+															WHERE	adminid
+															IN		(
+																		SELECT	adminid
+																		FROM	admin_user_list 
+																		WHERE	adminid = #{userid} or userid = #{userid}
+																	)
+														)
+												AND		to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+												BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
+												and to_date(#{end_date},'yyyy-mm-dd') 
+											) a,
+											(
+												SELECT	bmtid
+												,		min( driver_tm ) AS min_tm
+												,		CASE 
+															WHEN max( driver_tm ) - min( driver_tm ) <![CDATA[<=]]> pre_arrival THEN '동시도착' 
+															ELSE NULL  
+															END AS ss
+												FROM	(
+															SELECT	bmtid
+															,		state_condition
+															,		cp
+															,		startpoi
+															,		endpoi
+															,		est_time
+															,		est_distance
+															,		est_charge
+															,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+															,		arrive_distance
+															,		arrive_charge
+															,		pre_arrival
+															FROM	bmt_total_info a
+															,		setting_value b
+															where	b.adminid 
+															in		(
+																		select	adminid 
+																		from	admin_user_list 
+																		where	userid = #{userid} 
+																		or adminid = #{userid}
+																	)
+															and		userid
+															IN		(
+																		SELECT	userid
+																		FROM	admin_user_list 
+																		WHERE	adminid
+																		IN		(
+																					SELECT	adminid
+																					FROM	admin_user_list 
+																					WHERE	adminid = #{userid} 
+																					or		userid = #{userid}
+																				)
+																	)
+															AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+														) a 
+												GROUP BY	bmtid
+												,			pre_arrival 
+											) b,
+											setting_value c
+									where	c.adminid
+									in		(
+												select	adminid
+												from	admin_user_list
+												where	userid = #{userid} 
+												or		adminid = #{userid}
+											)
+									and		a.bmtid = b.bmtid 
+								) a
+					) a
+			group by cp
+			order by cp
+	</select>
+		
+</mapper>

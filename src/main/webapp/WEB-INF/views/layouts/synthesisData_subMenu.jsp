@@ -4,38 +4,38 @@
     <img src="../images/snb/h2_work.gif" alt="bmt_list"/>                  
     <ul class="snb">
       	<c:choose>
-	    	<c:when test="${control eq 'synthesisData_dataSheet'}">
-				<li><a href="/synthesize/datasheet" class="active">DataSheet</a></li>
+	    	<c:when test="${sub_Control eq 'synthesisData_dataSheet'}">
+				<li><a href="/synthesisData/datasheet" class="active">DataSheet</a></li>
 	      	</c:when>
 	        <c:otherwise>
-	       		<li><a href="/synthesize/datasheet">DataSheet</a></li>
+	       		<li><a href="/synthesisData/datasheet">DataSheet</a></li>
 	      	</c:otherwise>
 	     </c:choose>
 	    
 	     <c:choose>
-	      <c:when test="${control eq 'synthesisData_totalDistanceFaresTimes'}">
-	        <li><a href="/synthesize/totalDistanceFaresTimes" class="active">건수/거리/요금/시간 집계</a></li>
+	      <c:when test="${sub_Control eq 'synthesisData_totalDistanceFaresTimes'}">
+	        <li><a href="/synthesisData/totalDistanceFaresTimes" class="active">건수/거리/요금/시간 집계</a></li>
 	       </c:when>
 	        <c:otherwise>
-	        <li><a href="/synthesize/totalDistanceFaresTimes">건수/거리/요금/시간 집계</a></li>
+	        <li><a href="/synthesisData/totalDistanceFaresTimes">건수/거리/요금/시간 집계</a></li>
 	        </c:otherwise>
 	      </c:choose>
 	   
 	     <c:choose>
-	      <c:when test="${control eq 'synthesisData_statusOfAssessmentSectionForeAftereffect'}">
-	        <li><a href="/synthesize/statusOfAssessmentSectionForeAftereffect" class="active">평가 구간 현황 및 선후착 집계</a></li>
+	      <c:when test="${sub_Control eq 'synthesisData_statusOfAssessmentSectionForeAftereffect'}">
+	        <li><a href="/synthesisData/statusOfAssessmentSectionForeAftereffect" class="active">평가 구간 현황 및 선후착 집계</a></li>
 	       </c:when>
 	        <c:otherwise>
-	        <li><a href="/synthesize/statusOfAssessmentSectionForeAftereffect">평가 구간 현황 및 선후착 집계</a></li>
+	        <li><a href="/synthesisData/statusOfAssessmentSectionForeAftereffect">평가 구간 현황 및 선후착 집계</a></li>
 	        </c:otherwise>
 	      </c:choose>
 	      
 	     <c:choose>
-	      <c:when test="${control eq 'synthesisData_sumOfArrivalDelayTimesErrors'}">
-	        <li><a href="/synthesize/sumOfArrivalDelayTimesErrors" class="active">도착 지연 시간 및 오차 집계</a></li>
+	      <c:when test="${sub_Control eq 'synthesisData_sumOfArrivalDelayTimesErrors'}">
+	        <li><a href="/synthesisData/sumOfArrivalDelayTimesErrors" class="active">도착 지연 시간 및 오차 집계</a></li>
 	       </c:when>
 	        <c:otherwise>
-	        <li><a href="/synthesize/sumOfArrivalDelayTimesErrors">도착 지연 시간 및 오차 집계</a></li>
+	        <li><a href="/synthesisData/sumOfArrivalDelayTimesErrors">도착 지연 시간 및 오차 집계</a></li>
 	        </c:otherwise>
 	      </c:choose>
     </ul>

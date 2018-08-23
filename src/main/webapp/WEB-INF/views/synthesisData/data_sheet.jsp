@@ -164,7 +164,7 @@
 			var tr4 = $('#tbl-modal-data1 tr')[3];
 			var tr6 = $('#tbl-modal-data1 tr')[5];
 			$.ajax({
-				url : '/synthesize/detailData'
+				url : '/synthesisData/detailData'
 			        , type : 'post'
 					, dataType : 'json'
 		 			, data : {
@@ -211,8 +211,9 @@
 									'<td colspan="10">특이사항이 없습니다.</td>'
 								].join('');
 							} else {
+								var yugoinfo = data.data.yugoinfo;								
 								var html6 = [
-									'<td colspan="10">', data.data.yugoinfo ,'</td>'
+									'<td colspan="10">', yugoinfo.replace(/[//]/g, '<br/>') ,'</td>'
 								].join('');
 							}				
 							$(tr6).append(html6);
@@ -315,7 +316,7 @@
 		var jsonStr = JSON.stringify($('#search-bmt').serialize());
 
 		$.ajax({
-			url : '/synthesize/datasheetlist'
+			url : '/synthesisData/datasheetlist'
 	        , type : 'post'
 			, dataType : 'json'
  			, data : $('#search-bmt').serializeObject()
