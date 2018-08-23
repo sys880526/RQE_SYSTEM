@@ -1,5 +1,6 @@
 package com.wavem.first.synthesisData.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,9 @@ public class TotalDistanceFaresTimesController {
 	@RequestMapping(value = "/synthesize/totalDistanceFaresTimes", method = RequestMethod.GET)
 	public ModelAndView getTotalDistanceFaresTimes(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();		
-		mav.addObject("control", "totalDistanceFaresTimes");
-		mav.setViewName("synthesize/totalDistanceFaresTimes");		
+		mav.addObject("control", "synthesisData");
+		mav.addObject("sub_Control", "synthesisData_totalDistanceFaresTimes");
+		mav.setViewName("synthesize/totalDistanceFaresTimes");	
 		return mav;
 	}
 	
@@ -40,19 +42,17 @@ public class TotalDistanceFaresTimesController {
 	public ModelAndView getTotalDistanceFaresTimesData(HttpServletRequest request, HttpSession session) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("code", "0");
-		String startDate = request.getParameter("start_date");
-		String endDate = request.getParameter("end_date");
+		String startDate = request.getParameter("bmt-start-date");
+		String endDate = request.getParameter("bmt-end-date");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "0");
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
 		map.put("userid", "user01");
-		map.put("sub_Control", "synthesisData_dataSheet");
-		map.put("sub_Control", "synthesisData_totalDistanceFaresTimes");
-		map.put("sub_Control", "synthesisData_statusOfAssessmentSectionForeAftereffect");
-		map.put("sub_Control", "synthesisData_sumOfArrivalDelayTimesErrors");
+		
 		List<Map<String, Object>> out = totalDistanceFaresTimesService.getTotalDistanceFaresTimesData(map);
 		mav.addObject("list", out);
+		System.out.println("Query Total Data  :::" + out);
 		return mav;
 	}
 	

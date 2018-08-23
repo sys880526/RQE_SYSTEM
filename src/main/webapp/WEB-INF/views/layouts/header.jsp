@@ -40,7 +40,7 @@
             	</c:otherwise>
             </c:choose>            
             <c:choose>
-            	<c:when test="${control eq 'datasheet'}">
+            	<c:when test="${control eq 'synthesisData'}">
             		<li>
             			<a href="/synthesize/datasheet" class="active"><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
            			</li>
