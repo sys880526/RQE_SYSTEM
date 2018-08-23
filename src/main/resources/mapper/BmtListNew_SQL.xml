@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bmtListNew">
+
+	<select id="getBmtNewHistoryList" parameterType="hashmap"  resultType="hashmap">
+		select 
+			bmtid
+			, userid
+			, startpoi
+			, startlat
+			, startlong
+			, endpoi
+			, endlat
+			, endlong
+		from bmt_list_new
+		where userid in (
+							select 
+								userid 
+							from user_id_list 
+							where userid in (
+												select 
+													userid 
+												from admin_user_list 
+												where adminid = #{userid}
+												or userid = #{userid}
+											)
+							or userid = #{userid}
+						)
+		AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) = to_date (#{date},'yyyy-mm-dd')			
+		order by bmtid
+	</select>
+	
+	<delete id="deleteBmtNewList" parameterType="hashmap">
+		delete from bmt_list_new
+		where userid = #{userid}
+		and bmtid = #{bmtid}
+	</delete>
+	
+	<insert id="bmtNewListsInsert" parameterType="hashmap">
+		INSERT INTO public.bmt_list_new
+		(bmtid, userid, startpoi, endpoi)
+		VALUES
+		(#{bmtid}, #{userid}, #{startpoi}, #{endpoi})
+		;
+		
+ 
+	</insert>
+	
+</mapper>

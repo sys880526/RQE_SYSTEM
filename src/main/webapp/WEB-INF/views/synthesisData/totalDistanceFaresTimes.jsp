@@ -18,6 +18,10 @@
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
+    
+    <!-- Google Chart -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 	<!-- #container -->
@@ -34,15 +38,15 @@
 			<div id="contentsArea">
 				<!-- .titContents -->
 				<div class="titContents">
-					<h2>Data Sheet</h2>
+					<h2>건수/거리/요금/시간 집계</h2>
 					<p>
 						Home > 종합데이터 >
-						<strong>Data Sheet</strong>
+						<strong>건수/거리/요금/시간 집계</strong>
 					</p>
 				</div>
 				<!-- \.titContents -->
 				<!-- .contents -->
-                <div class="contents" width=100%>
+                <div class="contents" style="width:100%">
                     <!-- .search -->
                     <!--
                         board.css : box-sizing: content-box 추가
@@ -54,29 +58,74 @@
                             <span class="pd">~</span>
                             <span class="pd">종료 날짜</span>
                             <input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" />
-                            <a href="javascript:dataSheetList()" class="btnSearch">
+                            <a href="javascript:getList()" class="btnSearch">
                                 <img src="../images/board/btn_search.gif" alt="search" />
                             </a>
                         </form>
                     </div>
                     <!-- /.search -->
-                    <div>
-                        <table id="tbl-data-sheet" class="boardListStyle" cellspacing="0" width="100%" border="0">
+					<div style="width:100%; padding-bottom: 20px; padding-top: 20px">
+						<table style="width:100%; padding-bottom: 20px">
+							<tbody>
+								<tr>
+									<td id="Comprehensive_distanceGraph" style="width:33%; height: 250px"></td>
+									<td id="Comprehensive_timeGraph" style="width:33%; height: 250px"></td>
+									<td id="Comprehensive_chargeGraph" style="width:33%; height: 250px"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+                    
+                    <div style="padding-bottom: 20px">
+                        <table id="EvaluationSectionStatus" cellspacing="0" width="100%" border="0">
                             <thead>
+<!-- 								<tr style="background-color: #e6f2ff;"> -->
+								<tr>
+										<th>평가 구간 현황</th>
+								</tr>		
+<!--                                 <tr style="background-color: #e6f2ff;"> -->
                                 <tr>
-                                    <th style="width: 70px">BMT ID</th>
-                                    <th style="width: 100px">구간 주행 상태</th>
-                                    <th style="width: 50px">CP</th>
-                                    <th style="width: 70px">출발지명</th>
-                                    <th style="width: 70px">도착지명</th>
-                                    <th>예상 시간(분)</th>
-                                    <th>예상 거리(Km)</th>
-                                    <th>예상 요금(원)</th>
-                                    <th>실제 소요 시간(분)</th>
-                                    <th>실제 소요 거리(Km)</th>
-                                    <th>실제 소요 요금(원)</th>
-                                    <th>선/후착/동시도착</th>
+										<th rowspan="2">평가 대상명</th>
+										<th>정상 주행</th>
+										<th>기타(경로이탈 등)</th>
+										<th>총 구간</th>
                                 </tr>
+                                <tr>
+                                <th>단위 : 개</th>
+                                <th>단위 : 개</th>
+                                <th>단위 : 개</th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                      </div>
+                      
+                      
+                      <div>  
+                           <table id="PathCostStatus" cellspacing="0" width="100%" border="0">
+                            <thead>
+								<tr style="background-color: #e6f2ff;">
+										<th>경로 비용 현황</th>
+								</tr>		
+                                <tr style="background-color: #e6f2ff;">
+										<th rowspan="2">평가 대상명</th>
+										<th>대상 구간</th>
+										<th>총 경로 거리</th>
+										<th>총 통행 요금</th>
+										<th>총 통행 시간</th>
+										<th colspan="3">총 통행 거리</th>
+										<th colspan="3">총 통행 요금</th>
+                                </tr>
+                                <tr style="background-color: #e6f2ff;">
+                                <th>단위 : 개</th>
+                                <th>단위 : km</th>
+                                <th>단위 : 원</th>
+                                <th>단위 : 분</th>
+                                <th>총계(∑)</th>
+                                <th>차이(∆c)</th>
+                                <th>차이(∆c/cmin)</th>
+                                <th>총계(∑)</th>
+                                <th>차이(∆c)</th>
+                                <th>차이(∆c/cmin)</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -87,48 +136,7 @@
 			<!-- \#contentArea -->
 		</div>
 		<!-- \.body clearFix -->
-		
-		<!-- The Modal -->
-		<div id="modal-data-detail" class="modal">
-			<!-- Modal content -->
-			<div class="modal-content">
-				<span class="close">&times;</span>
-				<table id="tbl-modal-data">
-					<thead>
-						<tr>
-							<th>BMT ID</th>
-							<th>USER ID</th>
-							<th>최종 사용 여부</th>
-							<th>CP</th>
-							<th>차량정보</th>
-							<th>공지사항</th>
-							<th>요청시간(공지)</th>
-							<th>출발시간(공지)</th>
-							<th>출발지명</th>
-							<th>도착지명</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<!-- \The Modal -->
-		
 	</div>
-	<!-- \#container -->
 </body>
 <script>
 	$(document).ready(function() {
@@ -140,53 +148,53 @@
 		/**
 		* data sheet list 값 불러오기
 		*/
-		dataSheetList();
+		getList();
 		
 		/**
 		* data sheet 상세보기
 		*/
-		$(document).on('click', '#tbl-data-sheet tbody tr', function() {
-			console.log('detail');
-			var id = $(this).attr('id');
-			var cp = $(this).children('td')[2].innerText;
-			$.ajax({
-				url : '/synthesize/detailData'
-			        , type : 'post'
-					, dataType : 'json'
-		 			, data : {
-		 				bmtid : id,
-		 				cp : cp
-		 			}
-					, processData : true /*querySTring make false*/
-					, success : function(data, stat, xhr) {		
+// 		$(document).on('click', '#tbl-data-sheet tbody tr', function() {
+// 			console.log('detail');
+// 			var id = $(this).attr('id');
+// 			var cp = $(this).children('td')[2].innerText;
+// 			$.ajax({
+// 				url : '/synthesize/detailData'
+// 			        , type : 'post'
+// 					, dataType : 'json'
+// 		 			, data : {
+// 		 				bmtid : id,
+// 		 				cp : cp
+// 		 			}
+// 					, processData : true /*querySTring make false*/
+// 					, success : function(data, stat, xhr) {		
 						
-						data.list.forEach(function(items, index, array) {					
-							var html = [
-								'<tr id = "', items.bmtid ,'">',
-								'<td>', items.userid , '</td>',
-								'<td>', items.state_condition , '</td>',
-								'<td>', items.cp , '</td>',
-								'<td>', items.startpoi , '</td>',
-								'<td>', items.endpoi , '</td>',
-								'<td>', items.est_time , '</td>',
-								'<td>', items.est_distance , '</td>',
-								'<td>', items.est_charge , '</td>',
-								'<td>', items.driver_tm , '</td>',
-								'<td>', items.arrive_distance , '</td>',
-								'<td>', items.arrive_charge , '</td>',
-								'<td>', items.score , '</td>',
-								'</tr>'
-							].join('');
-							list.append(html);
-						});//forEach
+// 						data.list.forEach(function(items, index, array) {					
+// 							var html = [
+// 								'<tr id = "', items.bmtid ,'">',
+// 								'<td>', items.userid , '</td>',
+// 								'<td>', items.state_condition , '</td>',
+// 								'<td>', items.cp , '</td>',
+// 								'<td>', items.startpoi , '</td>',
+// 								'<td>', items.endpoi , '</td>',
+// 								'<td>', items.est_time , '</td>',
+// 								'<td>', items.est_distance , '</td>',
+// 								'<td>', items.est_charge , '</td>',
+// 								'<td>', items.driver_tm , '</td>',
+// 								'<td>', items.arrive_distance , '</td>',
+// 								'<td>', items.arrive_charge , '</td>',
+// 								'<td>', items.score , '</td>',
+// 								'</tr>'
+// 							].join('');
+// 							list.append(html);
+// 						});//forEach
 							
-					}
-				    , error : function(xhr, stat, err) {
-				    	alert("error");
-				    	console.log(err);
-				    }
-			});//ajax
-		});
+// 					}
+// 				    , error : function(xhr, stat, err) {
+// 				    	alert("error");
+// 				    	console.log(err);
+// 				    }
+// 			});//ajax
+// 		});
 		
 	});
 	//<![CDATA[
@@ -226,72 +234,161 @@
 		var start = $('#bmt-start-date');
 		var end = $('#bmt-end-date');
 		
-		/*var year = new Date().getFullYear();
-		
-		var month1 = new Date().getMonth() + 1;
-		var month2 = null;
-		if (month1 < 10) {
-			month2 = '-0' + month1;
-		} else {
-			month2 = '-' + month1;
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		if (month < 10) {
+			month = '0' + month;
+		}
+		var day = date.getDate();
+		if (day < 10) {
+			day = '0' + day;
+		}
+
+		var prevDate = new Date(date.setDate(date.getDate()-30));
+		var prevYear = prevDate.getFullYear();
+		var prevMonth = prevDate.getMonth() + 1;
+		if (prevMonth < 10) {
+			prevMonth = '0' + prevMonth;
+		}
+		var prevDay = prevDate.getDate();
+		if (prevDay < 10) {
+			prevDay = '0' + prevDay;
 		}
 		
-		var day1 = new Date().getDate();
-		var day2 = null;
-		
-		if (day1 < 10) {
-			day2 = '-0' + day1;
-		} else {
-			day2 = '-' + day1;
-		}
-		
-		start.val(year + month2 + day2);
-		end.val(year + month2 + day2); */
-		start.val('2018-08-01');
-		end.val('2018-08-31');
-		
+		start.val(prevYear + '-' + prevMonth + '-' + prevDay);
+		end.val(year + '-' + month + '-' + day);
 	} 
 	
-	dataSheetList = function() {
+	 google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart1);
+     function drawChart1() {
+       var data = google.visualization.arrayToDataTable([
+         ['Task', 'Hours per Day'],
+         ['Work',     11.1],
+         ['Eat',      2],
+         ['Commute',  2],
+         ['Watch TV', 2],
+         ['Sleep',    7]
+       ]);
+
+       var options = {
+         title: '총 경로 거리 (단위:km)',
+         is3D: true,
+       };
+
+       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_distanceGraph'));
+       chart.draw(data, options);
+     }
+     
+     
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart2);
+     function drawChart2() {
+       var data = google.visualization.arrayToDataTable([
+         ['Task', 'Hours per Day'],
+         ['Work',     11.1],
+         ['Eat',      2],
+         ['Commute',  2],
+         ['Watch TV', 2],
+         ['Sleep',    7]
+       ]);
+
+       var options = {
+         title: '총 통행 요금 (단위:원)',
+         is3D: true,
+       };
+
+       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_timeGraph'));
+       chart.draw(data, options);
+     }
+	
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart3);
+     function drawChart3() {
+       var data = google.visualization.arrayToDataTable([
+         ['Task', 'Hours per Day'],
+         ['Work',     11],
+         ['Eat',      2],
+         ['Commute',  2],
+         ['Watch TV', 2],
+         ['Sleep',    7]
+       ]);
+
+       var options = {
+         title: '총 통행 시간 (단위:분)',
+         is3D: true,
+       };
+
+       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_chargeGraph'));
+       chart.draw(data, options);
+     }
+     
+	
+	getList = function() {
 		var start = $('#bmt-start-date').val();
 		var end = $('#bmt-end-date').val();
-		var list = $('#tbl-data-sheet').children('tbody');
 		if (start == null || start == '' || end == null || end == '') {
 			return false;
 		}
 		var jsonStr = JSON.stringify($('#search-bmt').serialize());
 
 		$.ajax({
-			url : '/synthesize/datasheetlist'
+			url : '/synthesize/totalDistanceFaresTimesData'
 	        , type : 'post'
 			, dataType : 'json'
  			, data : $('#search-bmt').serializeObject()
 			, processData : true /*querySTring make false*/
 			, success : function(data, stat, xhr) {
-				list.empty();
-				if (data.list.length === 0) {				
-					list.append('<tr><td colspan="12">검색된 값이 없습니다</tr>');					
-					return;
-				}				
-				data.list.forEach(function(items, index, array) {					
-					var html = [
-						'<tr id = "', items.bmtid ,'">',
-						'<td>', items.userid , '</td>',
-						'<td>', items.state_condition , '</td>',
-						'<td>', items.cp , '</td>',
-						'<td>', items.startpoi , '</td>',
-						'<td>', items.endpoi , '</td>',
-						'<td>', items.est_time , '</td>',
-						'<td>', items.est_distance , '</td>',
-						'<td>', items.est_charge , '</td>',
-						'<td>', items.driver_tm , '</td>',
-						'<td>', items.arrive_distance , '</td>',
-						'<td>', items.arrive_charge , '</td>',
-						'<td>', items.score , '</td>',
-						'</tr>'
-					].join('');
-					list.append(html);
-				});//forEach
+				
+				var evaluationSectionStatusHtml = '';
+				var pathCostStatusHtml = '';
+// 				var timeGraphListHtml = '';
+// 				var distanceGraphHtml = '';
+// 				var chargeGraphHtml = '';
+				
+				for(var i = 0; i < data.list.length; i++){				
+					evaluationSectionStatusHtml += '<tr>';
+					evaluationSectionStatusHtml += '<td>'+data.list[i].cp+'</td>';
+					evaluationSectionStatusHtml += '<td>'+data.list[i].normal_count+'</td>';
+					evaluationSectionStatusHtml += '<td>'+data.list[i].abnormal_count+'</td>';
+					evaluationSectionStatusHtml += '<td>'+data.list[i].total_count+'</td>';
+					evaluationSectionStatusHtml += '</tr>';
+					
+					pathCostStatusHtml += '<tr>'
+					pathCostStatusHtml += '<td>'+data.list[i].cp+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].bmt_count+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_charge+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_tm+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+'km'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sub_distance+'km'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].ratio_distance+'%'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_charge+'원'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sub_charge+'원'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].ratio_charge+'%'+'</td>';
+					pathCostStatusHtml += '</tr>'
+					
+// 					graphData1.push({
+// 						test1 : data.list[i].normal_count
+// 						, test2 : list[i].abnormal_count				
+// 					});
+				}
+				$('#EvaluationSectionStatus > tbody').html(evaluationSectionStatusHtml);
+				$('#PathCostStatus > tbody').html(pathCostStatusHtml);
+
+// 기존 김지은 사원 foreach 소스
+// 				data.list.forEach(function(items, index, array) {					
+// 					var html = [
+// 						'<tr>',
+// 						'<td>', items.cp , '</td>',
+// 						'<td>', items.normal_count , '</td>',
+// 						'<td>', items.abnormal_count , '</td>',
+// 						'<td>', items.total_count , '</td>',
+// 						'</tr>'
+// 					].join('');
+// 					list.append(html);
+// 				});//forEach
 					
 			}
 		    , error : function(xhr, stat, err) {
@@ -305,11 +402,11 @@
 		
 		
 // 		$.ajax({
-// 			url : '/synthesize/datasheetlist',
+// 			url : '/synthesize/totalDistanceFaresTimesData',
 // 			type : 'post',
 // 			data : {start : start, end : end},
-// // 			data : $('#search-bmt').serialize(),
-// // 			dataType : 'json',
+// 			data : $('#search-bmt').serialize(),
+// 			dataType : 'json',
 // 			contentType: "application/json; charset=utf-8",
 // 			success : function(data) {
 // 				if (data.code == '0') {
@@ -322,7 +419,7 @@
 				
 // 			}
 // 		});//ajax
-	}//dataSheetList()
+ 	}//dataSheetList()
 	
 	/**
 	 * form data 직렬화 
