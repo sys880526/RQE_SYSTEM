@@ -28,17 +28,17 @@ public class TotalDistanceFaresTimesController {
 	@Resource(name = "TotalDistanceFaresTimesService")
 	private TotalDistanceFaresTimesService totalDistanceFaresTimesService;
 	
-	@RequestMapping(value = "/synthesize/totalDistanceFaresTimes", method = RequestMethod.GET)
+	@RequestMapping(value = "/synthesisData/totalDistanceFaresTimes", method = RequestMethod.GET)
 	public ModelAndView getTotalDistanceFaresTimes(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();		
 		mav.addObject("control", "synthesisData");
 		mav.addObject("sub_Control", "synthesisData_totalDistanceFaresTimes");
-		mav.setViewName("synthesize/totalDistanceFaresTimes");	
+		mav.setViewName("synthesisData/totalDistanceFaresTimes");	
 		return mav;
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/synthesize/totalDistanceFaresTimesData", method = RequestMethod.POST)
+	@RequestMapping(value = "/synthesisData/totalDistanceFaresTimesData", method = RequestMethod.POST)
 	public ModelAndView getTotalDistanceFaresTimesData(HttpServletRequest request, HttpSession session) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("code", "0");
