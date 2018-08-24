@@ -1,5 +1,8 @@
 package com.wavem.first.detailsData.service;
 
-public interface PathDistanceService {
+import java.util.List;
+import java.util.Map;
 
+public interface PathDistanceService {
+	List<Map<String, Object>> getPathDistanceData(Map<String, Object> input);
 }
