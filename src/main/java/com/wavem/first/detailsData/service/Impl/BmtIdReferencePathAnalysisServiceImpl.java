@@ -1,5 +1,5 @@
 package com.wavem.first.detailsData.service.Impl;
 
-public class detailsDataServiceImpl {
+public class BmtIdReferencePathAnalysisServiceImpl {
 
 }

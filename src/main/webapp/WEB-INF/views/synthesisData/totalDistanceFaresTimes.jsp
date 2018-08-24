@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
     
     <!-- Google Chart -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 	<!-- #container -->
@@ -153,48 +153,6 @@
 		/**
 		* data sheet 상세보기
 		*/
-// 		$(document).on('click', '#tbl-data-sheet tbody tr', function() {
-// 			console.log('detail');
-// 			var id = $(this).attr('id');
-// 			var cp = $(this).children('td')[2].innerText;
-// 			$.ajax({
-// 				url : '/synthesize/detailData'
-// 			        , type : 'post'
-// 					, dataType : 'json'
-// 		 			, data : {
-// 		 				bmtid : id,
-// 		 				cp : cp
-// 		 			}
-// 					, processData : true /*querySTring make false*/
-// 					, success : function(data, stat, xhr) {		
-						
-// 						data.list.forEach(function(items, index, array) {					
-// 							var html = [
-// 								'<tr id = "', items.bmtid ,'">',
-// 								'<td>', items.userid , '</td>',
-// 								'<td>', items.state_condition , '</td>',
-// 								'<td>', items.cp , '</td>',
-// 								'<td>', items.startpoi , '</td>',
-// 								'<td>', items.endpoi , '</td>',
-// 								'<td>', items.est_time , '</td>',
-// 								'<td>', items.est_distance , '</td>',
-// 								'<td>', items.est_charge , '</td>',
-// 								'<td>', items.driver_tm , '</td>',
-// 								'<td>', items.arrive_distance , '</td>',
-// 								'<td>', items.arrive_charge , '</td>',
-// 								'<td>', items.score , '</td>',
-// 								'</tr>'
-// 							].join('');
-// 							list.append(html);
-// 						});//forEach
-							
-// 					}
-// 				    , error : function(xhr, stat, err) {
-// 				    	alert("error");
-// 				    	console.log(err);
-// 				    }
-// 			});//ajax
-// 		});
 		
 	});
 	//<![CDATA[
@@ -260,68 +218,73 @@
 		end.val(year + '-' + month + '-' + day);
 	} 
 	
-	 google.charts.load("current", {packages:["corechart"]});
-     google.charts.setOnLoadCallback(drawChart1);
-     function drawChart1() {
-       var data = google.visualization.arrayToDataTable([
-         ['Task', 'Hours per Day'],
-         ['Work',     11.1],
-         ['Eat',      2],
-         ['Commute',  2],
-         ['Watch TV', 2],
-         ['Sleep',    7]
-       ]);
-
-       var options = {
-         title: '총 경로 거리 (단위:km)',
-         is3D: true,
-       };
-
-       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_distanceGraph'));
-       chart.draw(data, options);
-     }
+	
+	// Load the Visualization API and the piechart package.
+	google.charts.load('current', {'packages':['corechart']});
+  
+	// Set a callback to run when the Google Visualization API is loaded.
+// 	google.charts.setOnLoadCallback(drawChart1);
+// 	google.charts.setOnLoadCallback(drawChart2);
+// 	google.charts.setOnLoadCallback(drawChart3);
      
+	//총 경로 거리 차트 function
+     function drawChart1(data) {
+    	 // Create the data table.
+    	 var graphData1 = new google.visualization.DataTable();
+    	 
+         graphData1.addColumn('string', 'cp 명');
+         graphData1.addColumn('number', '총 경로 거리');
+         
+         for(var i = 0; i < data.list.length; i++){
+            graphData1.addRow([data.list[i].cp, data.list[i].sum_distance]);
+            
+         }
+         
+          var options = {
+            title: '총 경로 거리 (단위:km)',
+            is3D: true,
+          };
+
+          var chart1 = new google.visualization.PieChart(document.getElementById('Comprehensive_distanceGraph'));
+          chart1.draw(graphData1, options);
+        }
      
-     google.charts.load("current", {packages:["corechart"]});
-     google.charts.setOnLoadCallback(drawChart2);
-     function drawChart2() {
-       var data = google.visualization.arrayToDataTable([
-         ['Task', 'Hours per Day'],
-         ['Work',     11.1],
-         ['Eat',      2],
-         ['Commute',  2],
-         ['Watch TV', 2],
-         ['Sleep',    7]
-       ]);
+ 	//총 통행 요금 차트 function
+     function drawChart2(data) {
+       var graphData2 = new google.visualization.DataTable();
+    	   graphData2.addColumn('string', 'cp 명');
+           graphData2.addColumn('number', '총 통행 요금');
+           
+           for(var i = 0; i < data.list.length; i++){
+              graphData2.addRow([data.list[i].cp, data.list[i].sum_charge]);
+              
+           }
 
        var options = {
          title: '총 통행 요금 (단위:원)',
          is3D: true,
        };
 
-       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_timeGraph'));
-       chart.draw(data, options);
+       var chart2 = new google.visualization.PieChart(document.getElementById('Comprehensive_chargeGraph'));
+       chart2.draw(graphData2, options);
      }
-	
-     google.charts.load("current", {packages:["corechart"]});
-     google.charts.setOnLoadCallback(drawChart3);
-     function drawChart3() {
-       var data = google.visualization.arrayToDataTable([
-         ['Task', 'Hours per Day'],
-         ['Work',     11],
-         ['Eat',      2],
-         ['Commute',  2],
-         ['Watch TV', 2],
-         ['Sleep',    7]
-       ]);
-
+ 	//총 통행 시간 차트 function
+     function drawChart3(data) {
+       var graphData3 = new google.visualization.DataTable();
+           graphData3.addColumn('string', 'cp 명');
+           graphData3.addColumn('number', '총 통행 시간');
+           
+           for(var i = 0; i < data.list.length; i++){
+                  graphData3.addRow([data.list[i].cp, data.list[i].sum_tm]);
+               }
+    	   
        var options = {
          title: '총 통행 시간 (단위:분)',
          is3D: true,
        };
 
-       var chart = new google.visualization.PieChart(document.getElementById('Comprehensive_chargeGraph'));
-       chart.draw(data, options);
+       var chart3 = new google.visualization.PieChart(document.getElementById('Comprehensive_timeGraph'));
+       chart3.draw(graphData3, options);
      }
      
 	
@@ -334,7 +297,7 @@
 		var jsonStr = JSON.stringify($('#search-bmt').serialize());
 
 		$.ajax({
-			url : '/synthesize/totalDistanceFaresTimesData'
+			url : '/synthesisData/totalDistanceFaresTimesData'
 	        , type : 'post'
 			, dataType : 'json'
  			, data : $('#search-bmt').serializeObject()
@@ -343,9 +306,6 @@
 				
 				var evaluationSectionStatusHtml = '';
 				var pathCostStatusHtml = '';
-// 				var timeGraphListHtml = '';
-// 				var distanceGraphHtml = '';
-// 				var chargeGraphHtml = '';
 				
 				for(var i = 0; i < data.list.length; i++){				
 					evaluationSectionStatusHtml += '<tr>';
@@ -358,26 +318,25 @@
 					pathCostStatusHtml += '<tr>'
 					pathCostStatusHtml += '<td>'+data.list[i].cp+'</td>';
 					pathCostStatusHtml += '<td>'+data.list[i].bmt_count+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+' km'+'</td>';
 					pathCostStatusHtml += '<td>'+data.list[i].sum_charge+'</td>';
 					pathCostStatusHtml += '<td>'+data.list[i].sum_tm+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+'km'+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].sub_distance+'km'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_distance+' km'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sub_distance+' km'+'</td>';
 					pathCostStatusHtml += '<td>'+data.list[i].ratio_distance+'%'+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].sum_charge+'원'+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].sub_charge+'원'+'</td>';
-					pathCostStatusHtml += '<td>'+data.list[i].ratio_charge+'%'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sum_charge+' 원'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].sub_charge+' 원'+'</td>';
+					pathCostStatusHtml += '<td>'+data.list[i].ratio_charge+' %'+'</td>';
 					pathCostStatusHtml += '</tr>'
 					
-// 					graphData1.push({
-// 						test1 : data.list[i].normal_count
-// 						, test2 : list[i].abnormal_count				
-// 					});
 				}
 				$('#EvaluationSectionStatus > tbody').html(evaluationSectionStatusHtml);
 				$('#PathCostStatus > tbody').html(pathCostStatusHtml);
+				drawChart1(data);
+				drawChart2(data);
+				drawChart3(data);
 
-// 기존 김지은 사원 foreach 소스
+				// 기존 김지은 사원 foreach 소스
 // 				data.list.forEach(function(items, index, array) {					
 // 					var html = [
 // 						'<tr>',
@@ -402,7 +361,7 @@
 		
 		
 // 		$.ajax({
-// 			url : '/synthesize/totalDistanceFaresTimesData',
+// 			url : '/synthesisData/totalDistanceFaresTimesData',
 // 			type : 'post',
 // 			data : {start : start, end : end},
 // 			data : $('#search-bmt').serialize(),

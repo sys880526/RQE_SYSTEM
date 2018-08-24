@@ -1,5 +1,5 @@
 package com.wavem.first.detailsData.dao;
 
-public interface detailsDataDao {
+public interface PathDistanceDao {
 
 }
