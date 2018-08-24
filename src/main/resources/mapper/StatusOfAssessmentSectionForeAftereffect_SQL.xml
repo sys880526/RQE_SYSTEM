@@ -540,126 +540,58 @@
 	</select>
 	
 	<select id="foreAftereffectData" parameterType="hashmap" resultType="hashmap">
-			SELECT	cp
-			,		sum( except_info ) as total_count
-			,		sum( state_condition_n )+sum( except_info_n ) as etc_count
-			,		'100% ('||sum( state_condition )||'개)' as total_nomal
-			,		round(((sum( arrive_first )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_first )||'개)' as arrive_first
-			,		round(((sum( arrive_together )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_together )||'개)' as arrive_together
-			,		round(((sum( arrive_later )+0.0)/(sum( state_condition )+0.0))*100,1)||'% ('||sum( arrive_later )||'개)' as arrive_later
-			from	(
-						select	bmtid
-						, 		cp
-						,		except_info
-						,		except_info_n
-						,		state_condition
-						,		state_condition_n
-						,		case when score = '선착' then 1 else 0 end as arrive_first
-						,		case when score = '후착' then 1 else 0 end as arrive_later
-						,		case when score = '동시도착' then 1 else 0 end as arrive_together
-						from	(
-									SELECT	a.bmtid
-									,		a.userid
-									,		cp
-									,		case when except_info = 'y' then 1 else 0 end as except_info
-									,		case when except_info = 'y' then 0 else 1 end as except_info_n
-									,		case when state_condition like '정상%' then 1 else 0 end as state_condition
-									,		case when state_condition like '정상%' then 0 else 1 end as state_condition_n
-									,		CASE
-												when (case when except_info = 'y' then 1 else 0 end) = 0 then null
-												when (case when state_condition like '정상%' then 1 else 0 end) = 0 then null
-												WHEN ss = '동시도착' THEN s
-												WHEN driver_tm - min_tm <![CDATA[<=]]> pre_arrival THEN '선착' ELSE '후착' END AS score
-									FROM	(
-												SELECT	bmtid
-												,		except_info
-												,		state_condition
-												,		cp
-												,		startpoi
-												,		endpoi
-												,		est_time
-												,		est_distance
-												,		est_charge
-												,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
-												,		arrive_distance
-												,		arrive_charge
-												,		starttm
-												,		userid
-												FROM	bmt_total_info
-												WHERE	userid 
-												IN		(
-															SELECT	userid
-															FROM	admin_user_list 
-															WHERE	adminid
-															IN		(
-																		SELECT	adminid
-																		FROM	admin_user_list 
-																		WHERE	adminid = #{userid} or userid = #{userid}
-																	)
-														)
-												AND		to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
-												BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
-												and to_date(#{end_date},'yyyy-mm-dd') 
-											) a,
-											(
-												SELECT	bmtid
-												,		min( driver_tm ) AS min_tm
-												,		CASE 
-															WHEN max( driver_tm ) - min( driver_tm ) <![CDATA[<=]]> pre_arrival THEN '동시도착' 
-															ELSE NULL  
-															END AS ss
-												FROM	(
-															SELECT	bmtid
-															,		state_condition
-															,		cp
-															,		startpoi
-															,		endpoi
-															,		est_time
-															,		est_distance
-															,		est_charge
-															,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
-															,		arrive_distance
-															,		arrive_charge
-															,		pre_arrival
-															FROM	bmt_total_info a
-															,		setting_value b
-															where	b.adminid 
-															in		(
-																		select	adminid 
-																		from	admin_user_list 
-																		where	userid = #{userid} 
-																		or adminid = #{userid}
-																	)
-															and		userid
-															IN		(
-																		SELECT	userid
-																		FROM	admin_user_list 
-																		WHERE	adminid
-																		IN		(
-																					SELECT	adminid
-																					FROM	admin_user_list 
-																					WHERE	adminid = #{userid} 
-																					or		userid = #{userid}
-																				)
-																	)
-															AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
-														) a 
-												GROUP BY	bmtid
-												,			pre_arrival 
-											) b,
-											setting_value c
-									where	c.adminid
-									in		(
-												select	adminid
-												from	admin_user_list
-												where	userid = #{userid} 
-												or		adminid = #{userid}
-											)
-									and		a.bmtid = b.bmtid 
-								) a
-					) a
-			group by cp
-			order by cp
+				SELECT
+		cp,
+		sum( normal ) as normal_count, -- 정상 구간 건수
+		round( avg( delay_time ), 1 ) AS avg_delay_time, -- 평균 지연 시간
+		max( delay_time ) as max_delay_time, -- 최대 지연 시간
+		round( stddev( delay_time ), 1 ) as standard_deviation_delay, -- 지연시간 표준편차
+		round( avg( delay_ratio ), 1 ) AS avg_delay_ratio, -- 평균 지연 비율
+		max( delay_ratio ) as max_delay_ratio, -- 최대 지연 비율
+		round( stddev( delay_ratio ), 1 ) as standard_deviation_ratio -- 지연비율 표준편차
+	from
+	(
+		SELECT
+			a.bmtid,
+			userid,
+			cp,
+			except_info,
+			state_condition,
+			case when except_info = 'y' and state_condition like '정상%' 
+				then 1 else 0 end as normal,
+			driver_tm,
+			min_driver_tm,
+			case when except_info = 'y' and state_condition like '정상%' 
+				then driver_tm - min_driver_tm else null end as delay_time,
+			case when except_info = 'y' and state_condition like '정상%' 
+				then round(((driver_tm - min_driver_tm) / min_driver_tm)*100,1) else null end as delay_ratio	
+		from
+		(
+			SELECT
+				bmtid,
+				userid,
+				cp,
+				except_info,
+				state_condition,
+				to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+			FROM bmt_total_info 
+			WHERE userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
+				AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd') 
+		) a,
+		(
+			select bmtid, min(driver_tm) as min_driver_tm
+			from
+			(
+				SELECT bmtid,
+					to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+				FROM bmt_total_info
+			) a
+			group by bmtid
+		) b
+		where a.bmtid = b.bmtid
+	) a
+	group by cp
+	order by cp
 	</select>
 		
 </mapper>
