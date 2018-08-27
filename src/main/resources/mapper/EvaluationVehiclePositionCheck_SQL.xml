@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="evaluationVehiclePositionCheck">
+
+	<select id="getEvaluationVehiclePositionCheck" parameterType="hashmap"  resultType="hashmap">
+		select a.userid, bmtid, gpstm, lat, lon, speed, cp, carinfo
+		from
+			gps_info a, 
+			(
+				SELECT userid, max(gpstm) as max_gpstm
+				FROM gps_info
+		 		where to_date(gpstm, 'yyyy-mm-dd hh24:mi:ss') = current_date
+				group by userid
+			) b,
+			(
+				select a.userid, cp, carinfo
+				from
+					cp_list a,
+					(
+						SELECT userid, max(reg_date) as reg_date
+						FROM cp_list
+						group by userid
+					) b
+				where a.userid = b.userid
+					and a.reg_date = b.reg_date
+			) c
+		where a.userid = b.userid
+			and a.gpstm = b.max_gpstm
+			and a.userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = 'user01' or userid = 'user01'))
+			and a.userid = c.userid
+		order by userid
+	</select>
+</mapper>

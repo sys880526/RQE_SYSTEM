@@ -38,5 +38,14 @@
 	        <li><a href="/synthesisData/sumOfArrivalDelayTimesErrors">도착 지연 시간 및 오차 집계</a></li>
 	        </c:otherwise>
 	      </c:choose>
+	      
+	      <c:choose>
+	      <c:when test="${sub_Control eq 'synthesisData_evaluationVehiclePositionCheck'}">
+	        <li><a href="/synthesisData/evaluationVehiclePositionCheck" class="active">각 평가 차량 위치 확인</a></li>
+	       </c:when>
+	        <c:otherwise>
+	        <li><a href="/synthesisData/evaluationVehiclePositionCheck">각 평가 차량 위치 확인</a></li>
+	        </c:otherwise>
+	      </c:choose>
     </ul>
 </div>

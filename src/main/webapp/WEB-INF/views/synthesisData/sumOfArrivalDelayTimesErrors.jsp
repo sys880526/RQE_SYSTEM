@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>평가 구간 현황 및 선후착 집계</title>
+	<title>도착 지연 시간 및 오차 집계</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
