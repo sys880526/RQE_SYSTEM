@@ -19,7 +19,6 @@
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />    
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
-<title>Insert title here</title>
 </head>
 <body>
 	<!-- #container -->
@@ -120,7 +119,7 @@
                             	</tr>                                
                                 <tr>
                                     <th colspan="5" style="height: 25PX;">정상 주행</th>
-                                    <th style="height: 25PX;">기타(경로 이탈 등</th>
+                                    <th style="height: 25PX;">기타(경로 이탈 등)</th>
                                     <th style="height: 25PX;">총 구간</th>
                                 </tr>
                                 <tr>

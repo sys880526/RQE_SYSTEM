@@ -49,6 +49,7 @@ public class StatusOfAssessmentSectionForeAftereffectController {
 		List<Map<String, Object>> foreAfter =  statusOfAssessmentSectionForeAftereffectService.getForeAftereffectData(map);
 		mav.addObject("dayTime", dayTime);
 		mav.addObject("foreAfter", foreAfter);
+		System.out.println("foreAfter>>>>>>>" + foreAfter.toString());
 		return mav;
 	}
 }

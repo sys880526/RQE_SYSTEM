@@ -32,7 +32,7 @@
 		<!-- .body clearFix -->
 		<div class="body clearFix">
 			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
+			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
 			<!-- \#snbArea -->
 			<!-- #contentArea -->
 			<div id="contentsArea">

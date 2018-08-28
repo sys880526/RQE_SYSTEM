@@ -51,7 +51,14 @@
 	            	</li>
             	</c:otherwise>
             </c:choose>
-            <li><a href="#" ><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>
+            <c:choose>
+            	<c:when test="${control eq 'detailsData'}">
+            		<li><a href="/detailsData/pathDistance" class="active"><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>	
+            	</c:when>
+            	<c:otherwise>
+            		<li><a href="/detailsData/pathDistance" ><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>
+            	</c:otherwise>
+            </c:choose>            
             <li><a href="#" ><img src="../images/common/gnb_5.gif" alt="system" /></a></li>
         </ul>
   	  </div>
