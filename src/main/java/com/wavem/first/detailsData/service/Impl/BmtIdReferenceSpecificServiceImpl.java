@@ -1,5 +1,8 @@
 package com.wavem.first.detailsData.service.Impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,4 +17,9 @@ public class BmtIdReferenceSpecificServiceImpl implements BmtIdReferenceSpecific
 
 	@Autowired
 	private BmtIdReferenceSpecificDao bmtIdReferenceSpecificDao;
+
+	@Override
+	public List<Map<String, Object>> getBmtIdReferenceSpecificData(Map<String, Object> input) {
+		return bmtIdReferenceSpecificDao.getBmtIdReferenceSpecificData(input);
+	}
 }

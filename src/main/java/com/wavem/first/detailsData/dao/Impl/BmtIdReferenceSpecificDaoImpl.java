@@ -1,5 +1,8 @@
 package com.wavem.first.detailsData.dao.Impl;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -19,4 +22,9 @@ public class BmtIdReferenceSpecificDaoImpl implements BmtIdReferenceSpecificDao 
 	
 	@Resource(name = "sqlSessionTemplate")
 	private SqlSessionTemplate sqlSessionTemplate;
+
+	@Override
+	public List<Map<String, Object>> getBmtIdReferenceSpecificData(Map<String, Object> input) {
+		return sqlSessionTemplate.selectList("bmtIdReferenceSpecific.getBmtIdReferenceSpecificData", input);
+	}
 }

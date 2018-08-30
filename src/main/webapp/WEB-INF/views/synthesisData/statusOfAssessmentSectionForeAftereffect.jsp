@@ -51,7 +51,7 @@
                             <span class="pd">~</span>
                             <span class="pd">종료 날짜</span>
                             <input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" />
-                            <a href="javascript:statusOfAssessmentSectionForeAftereffecta()" class="btnSearch">
+                            <a href="javascript:statusOfAssessmentSectionForeAftereffect()" class="btnSearch">
                                 <img src="../images/board/btn_search.gif" alt="search" />
                             </a>
                         </form>
@@ -200,7 +200,7 @@
 	/**
 	* 평가구간 현황 가져오기
 	*/
-	statusOfAssessmentSectionForeAftereffecta = function() {
+	statusOfAssessmentSectionForeAftereffect = function() {
 		var start = $('#bmt-start-date').val();
 		var end = $('#bmt-end-date').val();
 		var list1 = $('#tbl-evaluation-day').children('tbody');

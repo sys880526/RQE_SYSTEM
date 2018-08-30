@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bmtIdReferenceSpecific">
+
+	<select id="getBmtIdReferenceSpecificData" parameterType="hashmap"  resultType="hashmap">
+select 
+	a.bmtid, 
+	a.yugocode, -- 유고 코드
+	c.cp,
+	c.startpoi, -- 출발지명
+	c.endpoi, -- 도착지명
+	-- 현재 하단 주소 앞에 uw.iptime.org:4322 붙여서 테스트 하시면 됩니다.
+	-- ex) uw.iptime.org:4322/bmt/yugo/list/img/171221-01_user01_yugo_01.jpg
+	'/bmt/yugo/list/img/'||a.bmtid||'_'||a.userid||'_'||a.separators||'_'||a.yugocode||'.'||a.extension as yugo_img_filenm,
+	yugotime, -- 발생시간
+	yugolat, -- 유고 경위도
+	yugolong, -- 유고 경위도
+	yugoinfo
+from bmt_yugo_img_list a, bmt_yugo_list b, 
+	(
+			SELECT
+				*
+			from
+			(
+				SELECT
+					*,
+					case when except_info = 'y' and state_condition like '정상%' then 1 else 0 end as normal_count,
+					case 
+						when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010101','yyyymmdd'),'day'),to_char(to_date('00010102','yyyymmdd'),'day'),to_char(to_date('00010103','yyyymmdd'),'day'),to_char(to_date('00010104','yyyymmdd'),'day'),to_char(to_date('00010105','yyyymmdd'),'day')) 
+						then 
+							(case 
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss') 
+									then 'am_peak' 
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss') 
+									then 'am_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss') 
+									then 'am_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss') 
+									then 'pm_non_peak' 
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss') 
+									then 'pm_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss') 
+									then 'pm_peak'
+							else null end)
+						when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010106','yyyymmdd'),'day'),to_char(to_date('00010107','yyyymmdd'),'day')) 
+						then 
+							(case 
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss') 
+									then 'am'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss') 
+									then 'pm'	
+							else null end)
+						else null end as by_time,
+					case 
+						when to_number(arrive_distance,'0000.00') between shortest_distance_start and shortest_distance_end 
+							then 'shortest_distance'
+						when to_number(arrive_distance,'0000.00') between short_distance_start and short_distance_end 
+							then 'short_distance'
+						when to_number(arrive_distance,'0000.00') between medium_distance_start and medium_distance_end 
+							then 'medium_distance'
+						when to_number(arrive_distance,'0000.00') between long_distance_start and long_distance_end 
+							then 'long_distance'	
+						when to_number(arrive_distance,'0000.00') >= longest_distance_start 
+							then 'longest_distance'
+						else null end as by_distance,
+						to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+				from bmt_total_info a, setting_value b
+				where b.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+			) a
+			where 
+				userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid})) -- userid
+				AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+				
+				-- 상세 조건 부분 해당 부분은 검색 조건에 따라 변경
+				and by_time 
+					in 
+					<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">
+						#{item}
+					</foreach>					
+				and by_distance 
+					in 
+					<foreach item="item" index="index" collection="list_distance" open="(" separator="," close=")">
+						#{item}
+					</foreach>	
+-- 				and bmtid
+-- 					in (
+-- 						select bmtid
+-- 						from
+-- 						(
+-- 							select bmtid, sum(total_count) as total_count, sum(normal_count) as normal_count
+-- 							from
+-- 							(
+-- 								select bmtid, 
+-- 									case when cp is not null then 1 else null end as total_count,
+-- 									case when except_info = 'y' and state_condition like '정상%' then 1 else null end as normal_count
+-- 								from bmt_total_info
+-- 							) a
+-- 							group by bmtid
+-- 						) a
+-- 						where total_count = normal_count
+-- 					)
+	) c
+where a.useyn = 'y'
+	and a.bmtid = b.bmtid
+	and a.userid = b.userid
+	and a.yugocode = b.yugocode
+	and a.bmtid = c.bmtid
+	and a.userid = c.userid
+	</select>
+	
+</mapper>
