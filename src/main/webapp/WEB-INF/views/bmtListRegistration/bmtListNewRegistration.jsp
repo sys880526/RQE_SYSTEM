@@ -212,8 +212,8 @@
 						html += '<tr>';		
 						html += '<td><input type="checkbox" name="chkBmtId" value="' + dataList[dataIndex].bmtid +'||'+dataList[dataIndex].userid+ '"/></td>';
 						html += '<td><input type="text" id="bmtid_' + i + '" value = "' + dataList[dataIndex].bmtid + '" readonly/></td>'
-						html += '<td><input type="text" id="startpoi_' + i + '" value = "' + dataList[dataIndex].startpoi + '"/></td>'
-						html += '<td><input type="text" id="endpoi_' + i + '" value = "' + dataList[dataIndex].endpoi + '"/></td>'
+						html += '<td><input type="text" id="startpoi_' + i + '" value = "' + dataList[dataIndex].startpoi + '" readonly/></td>'
+						html += '<td><input type="text" id="endpoi_' + i + '" value = "' + dataList[dataIndex].endpoi + '" readonly/></td>'
 						html += '<input type="hidden" id="bmtSaveFlag_'+i+'" value="Y" />';
 						html += '</tr>';
 						dataIndex++;		
