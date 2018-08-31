@@ -1,5 +1,9 @@
 package com.wavem.first.detailsData.dao;
 
-public interface TollsChargeDao {
+import java.util.List;
+import java.util.Map;
 
+public interface TollsChargeDao {
+	List<Map<String, Object>> getTollsChargeData(Map<String, Object> input);
+	
 }

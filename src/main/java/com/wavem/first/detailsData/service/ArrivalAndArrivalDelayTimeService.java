@@ -1,5 +1,8 @@
 package com.wavem.first.detailsData.service;
 
-public interface ArrivalAndArrivalDelayTimeService {
+import java.util.List;
+import java.util.Map;
 
+public interface ArrivalAndArrivalDelayTimeService {
+	List<Map<String, Object>> getArrivalAndArrivalDelayTimeData(Map<String, Object> input);
 }
