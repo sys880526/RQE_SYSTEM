@@ -48,7 +48,6 @@ public class BmtIdReferenceSpecificController {
 		map.put("userid", "user01");
 		
 		//bmt id 기준 특이사항 by_time sql 		
-		StringBuffer str_time = new StringBuffer();
 		ArrayList<String> list_time = new ArrayList<String>();
 		Map<String, Object> by_time = new HashMap<String, Object>();
 		
@@ -89,19 +88,10 @@ public class BmtIdReferenceSpecificController {
 		
 		map.put("list_time", list_time);
 		
-		/*str_time.append(list_time.get(0));
-		for (int i = 1; i < list_time.size(); i++) {
-			str_time.append("," + list_time.get(i));
-		}
-		
-		map.put("str_time", str_time.toString());*/
-		
 		System.out.println("by_time >>>>>>>>>>>" + by_time.toString());
 		System.out.println("list_time >>>>>>>>>>>" + list_time.toString());
-		System.out.println("str_time >>>>>>>>>>>" + str_time.toString());
 		
 		//bmt id 기준 특이사항 by_distance sql 		
-		StringBuffer str_distance = new StringBuffer();
 		ArrayList<String> list_distance = new ArrayList<String>();
 		Map<String, Object> by_distance = new HashMap<String, Object>();
 		
@@ -137,16 +127,8 @@ public class BmtIdReferenceSpecificController {
 		
 		map.put("list_distance", list_distance);
 		
-		/*str_distance.append(list_distance.get(0));
-		for (int i = 1; i < list_distance.size(); i++) {
-			str_distance.append("," + list_distance.get(i));
-		}
-		
-		map.put("str_distance", str_distance.toString());*/
-		
 		System.out.println("by_distance >>>>>>>>>>>" + by_distance.toString());
 		System.out.println("list_distance >>>>>>>>>>>" + list_distance.toString());
-		System.out.println("str_distance >>>>>>>>>>>" + str_distance.toString());
 		System.out.println("map >>>>>>>>>>>" + map);
 		
 		List<Map<String, Object>> result = bmtIdReferenceSpecificService.getBmtIdReferenceSpecificData(map);
