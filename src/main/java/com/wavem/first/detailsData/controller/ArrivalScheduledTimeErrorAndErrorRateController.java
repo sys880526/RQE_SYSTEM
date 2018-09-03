@@ -51,7 +51,6 @@ public class ArrivalScheduledTimeErrorAndErrorRateController {
 		
 		List<Map<String, Object>> out = arrivalScheduledTimeErrorAndErrorRateService.getArrivalScheduledTimeErrorAndErrorRateData(map);
 		mav.addObject("list", out);
-		System.out.println("Query Total Data  :::" + out);
 		return mav;
 	}
 }
