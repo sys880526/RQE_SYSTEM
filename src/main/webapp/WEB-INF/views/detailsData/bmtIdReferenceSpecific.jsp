@@ -262,7 +262,7 @@
 		start.val(prevYear + '-' + prevMonth + '-' + prevDay);
 		end.val(year + '-' + month + '-' + day);
 		modalCal.val(year + '-' + month + '-' + day);
-	}
+	};
 	
 	
 	/**
@@ -471,14 +471,16 @@
      	
     }
     
-    
+    /**
+    * 검색된 값이 없는 경우
+    */
     notFoundResult = function() {
     	$('#tbl-specific-list').children('tbody').append('<tr><td colspan="3">검색된 값이 없습니다</tr>');
     	$('#tbl-specific-info').children('tbody').append('<tr><td colspan="5">검색된 값이 없습니다</tr>');					
 		$('#tbl-specific-etc1').text('검색된 값이 없습니다');
 		$('#tbl-specific-etc2').text('검색된 값이 없습니다');
 		$('#tbl-specific-etc3').text('검색된 값이 없습니다');
-    }
+    };
     
     /**
 	 * form data 직렬화 

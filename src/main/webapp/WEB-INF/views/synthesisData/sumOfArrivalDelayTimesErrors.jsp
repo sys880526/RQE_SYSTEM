@@ -96,8 +96,8 @@
                     	<table id="tbl-arrival-schedule" style="border-style: none;">
                     		<thead>
                                 <tr>
-                                    <th style="background-color: #e6e6ff;">도착 예정 시간 오차</th> 
-                                    <th colspan="7" style="background-color: white;border-style: none"></th>
+                                    <th colspan="2" style="background-color: #e6e6ff;">도착 예정 시간 오차</th> 
+                                    <th colspan="6" style="background-color: white;border-style: none"></th>
                                 </tr>
                                 <tr style="background-color: #e6f2ff">
                                     <th rowspan="2" style="height: 25PX;">평가 대상명</th>
