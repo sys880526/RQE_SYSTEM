@@ -52,7 +52,6 @@ public class TotalDistanceFaresTimesController {
 		
 		List<Map<String, Object>> out = totalDistanceFaresTimesService.getTotalDistanceFaresTimesData(map);
 		mav.addObject("list", out);
-		System.out.println("Query Total Data  :::" + out);
 		return mav;
 	}
 	

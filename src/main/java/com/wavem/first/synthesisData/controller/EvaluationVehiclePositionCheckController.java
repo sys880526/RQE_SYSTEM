@@ -50,7 +50,6 @@ public class EvaluationVehiclePositionCheckController {
 		
 		List<Map<String, Object>> out = evaluationVehiclePositionCheckService.getEvaluationVehiclePositionCheckData(map);
 		mav.addObject("EvaluationVehiclePositionCheck", out);
-		System.out.println("Query Total Data  :::" + out);
 		return mav;
 	}
 	

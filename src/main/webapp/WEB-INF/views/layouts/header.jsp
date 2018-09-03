@@ -9,7 +9,7 @@
 <%-- 	<c:set var="Depth1" value="<%=Depth1%>"/>	 --%>
 
 	<div id="header">
-          <a href="#">
+          <a href="/main">
               <img src="../images/common/logo.gif" alt="wavem_logo" />
           </a>
           <ul class="util">
