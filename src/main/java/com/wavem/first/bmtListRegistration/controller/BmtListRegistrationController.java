@@ -44,6 +44,7 @@ public class BmtListRegistrationController {
 		mav.addObject("code", "0");
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+		String userid = request.getParameter("userid");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "0");
 		map.put("start_date", startDate);
