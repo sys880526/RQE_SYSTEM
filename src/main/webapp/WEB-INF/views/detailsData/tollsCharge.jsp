@@ -8,7 +8,6 @@
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
     <script type="text/javascript" src="../js/style.js"></script>
-
     <!-- chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
