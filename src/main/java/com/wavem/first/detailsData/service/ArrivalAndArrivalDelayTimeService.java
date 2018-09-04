@@ -9,4 +9,6 @@ public interface ArrivalAndArrivalDelayTimeService {
 
 	List<Map<String, Object>> getDataScoreGraphInfo(Map<String, Object> map);
 
+	List<Map<String, Object>> getDataDelayGraphInfo(Map<String, Object> map);
+
 }

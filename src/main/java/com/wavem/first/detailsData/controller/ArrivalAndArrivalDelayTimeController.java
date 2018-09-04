@@ -132,8 +132,12 @@ public class ArrivalAndArrivalDelayTimeController {
 				
 		List<Map<String, Object>> score = arrivalAndArrivalDelayTimeService.getDataScoreDelayInfo(map);
 		List<Map<String, Object>> ampm = arrivalAndArrivalDelayTimeService.getDataScoreGraphInfo(map);
+		List<Map<String, Object>> delay = arrivalAndArrivalDelayTimeService.getDataDelayGraphInfo(map);
 		mav.addObject("out", score);
 		mav.addObject("ampm", ampm);
+		mav.addObject("delay", delay);
+		mav.addObject("control", "detailsData");
+		mav.addObject("sub_Control", "detailsData_arrivalAndArrivalDelayTime");
 		return mav;
 	}
 	

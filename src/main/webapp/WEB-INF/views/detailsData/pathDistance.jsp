@@ -35,15 +35,15 @@
     <!-- .body clearFix -->
     <div class="body clearFix">
         <!-- #snbArea -->
-        <jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
+        <jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
         <!-- \#snbArea -->
         <!-- #contentArea -->
         <div id="contentsArea">
             <div class="titContents">
-                <h2>선/후착 및 도착 지연 시간</h2>
+                <h2>경로 거리</h2>
                 <p>
                     Home > 상세데이터 >
-                    <strong>선/후착 및 도착 지연 시간</strong>
+                    <strong>경로 거리</strong>
                 </p>
             </div>
             <!-- \.titContents -->

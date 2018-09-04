@@ -139,6 +139,8 @@ public class BmtIdReferencePathAnalysisController {
 		
 		List<Map<String, Object>> result = bmtIdReferencePathAnalysisService.getBmtIdList(map);
 		mav.addObject("list", result);
+		mav.addObject("control", "detailsData");
+		mav.addObject("sub_Control","detailsData_bmtIdReferencePathAnalysis");
 		System.out.println("result >>>>>>>>>>>" + result);
 		return mav;
 	}

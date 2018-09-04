@@ -26,6 +26,11 @@ public class ArrivalAndArrivalDelayTimeServiceImpl implements ArrivalAndArrivalD
 	@Override
 	public List<Map<String, Object>> getDataScoreGraphInfo(Map<String, Object> input) {
 		return arrivalAndArrivalDelayTimeDao.getDataScoreGraphInfo(input);
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataDelayGraphInfo(Map<String, Object> input) {
+		return arrivalAndArrivalDelayTimeDao.getDataDelayGraphInfo(input);
 	} 
 	
 }

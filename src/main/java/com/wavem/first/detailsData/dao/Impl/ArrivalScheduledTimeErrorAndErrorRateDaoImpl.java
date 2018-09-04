@@ -20,7 +20,12 @@ public class ArrivalScheduledTimeErrorAndErrorRateDaoImpl implements ArrivalSche
 	
 	@Override
 	public List<Map<String, Object>> getArrivalScheduledTimeErrorAndErrorRateData(Map<String, Object> input) {
-		return sqlSessionTemplate.selectList("arrivalScheduledTimeErrorAndErrorRate.getArrivalScheduledTimeErrorAndErrorRate", input);
+		return sqlSessionTemplate.selectList("arrivalScheduledTimeErrorAndErrorRate.getArrivalScheduledTimeErrorAndErrorRateData", input);
+	}
+
+	@Override
+	public List<Map<String, Object>> getArrivalScheduledTimeErrorAndErrorRateGraphData(Map<String, Object> input) {
+		return sqlSessionTemplate.selectList("arrivalScheduledTimeErrorAndErrorRate.getArrivalScheduledTimeErrorAndErrorRateGraphData", input);
 	}
 	
 }
