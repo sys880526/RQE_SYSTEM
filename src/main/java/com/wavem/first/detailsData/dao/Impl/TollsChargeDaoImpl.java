@@ -23,4 +23,8 @@ public class TollsChargeDaoImpl implements TollsChargeDao {
 		return sqlSessionTemplate.selectList("tollsCharge.getTollsCharge", input);
 	}
 
+	@Override
+	public List<Map<String, Object>> getTollsChargeChartData(Map<String, Object> input) {
+		return sqlSessionTemplate.selectList("tollsCharge.getTollsChargeChartData", input);
+	}
 }

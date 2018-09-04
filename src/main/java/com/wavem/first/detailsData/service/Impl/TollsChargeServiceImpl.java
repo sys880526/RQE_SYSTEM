@@ -19,4 +19,9 @@ public class TollsChargeServiceImpl implements TollsChargeService {
 	public List<Map<String, Object>> getTollsChargeData(Map<String, Object> input) {
 		return (List<Map<String, Object>>) tollsChargeDao.getTollsChargeData(input);
 	}
+
+	@Override
+	public List<Map<String, Object>> getTollsChargeChartData(Map<String, Object> input) {
+		return (List<Map<String, Object>>) tollsChargeDao.getTollsChargeChartData(input);
+	}
 }

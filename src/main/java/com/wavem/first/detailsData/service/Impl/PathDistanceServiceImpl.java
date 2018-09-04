@@ -24,4 +24,8 @@ public class PathDistanceServiceImpl implements PathDistanceService {
 		return (List<Map<String, Object>>) pathDistanceDao.getPathDistanceData(input);
 	}
 
+	@Override
+	public List<Map<String, Object>> getPathDistanceChartData(Map<String, Object> input) {
+		return (List<Map<String, Object>>) pathDistanceDao.getPathDistanceChartData(input);
+	}
 }

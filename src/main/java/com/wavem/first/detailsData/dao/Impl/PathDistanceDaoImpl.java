@@ -23,4 +23,8 @@ public class PathDistanceDaoImpl implements PathDistanceDao {
 		return sqlSessionTemplate.selectList("pathDistance.getPathDistance", input);
 	}
 
+	@Override
+	public List<Map<String, Object>> getPathDistanceChartData(Map<String, Object> input) {
+		return sqlSessionTemplate.selectList("pathDistance.getPathDistanceChartData", input);
+	}
 }

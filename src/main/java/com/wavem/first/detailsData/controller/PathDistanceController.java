@@ -1,5 +1,6 @@
 package com.wavem.first.detailsData.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,21 +38,77 @@ public class PathDistanceController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/detailsData/pathDistanceData", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailsData/pathDistanceData", method = RequestMethod.GET)
 	public ModelAndView getPathDistanceData(HttpServletRequest request, HttpSession session) {
+
 		ModelAndView mav = new ModelAndView("jsonView");
+
 		mav.addObject("code", "0");
+
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+
+		//시간대 특성 파라미터 셋팅
+		List timeList = new ArrayList();
+
+		if (request.getParameter("am_peak") != null && request.getParameter("am_peak") != ""){
+			timeList.add("am_peak");
+		}
+		if (request.getParameter("pm_peak") != null && request.getParameter("pm_peak") != ""){
+			timeList.add("pm_peak");
+		}
+		if (request.getParameter("am") != null && request.getParameter("am") != ""){
+			timeList.add("am");
+		}
+		if (request.getParameter("am_non_peak") != null && request.getParameter("am_non_peak") != ""){
+			timeList.add("am_non_peak");
+		}
+		if (request.getParameter("pm_non_peak") != null && request.getParameter("pm_non_peak") != ""){
+			timeList.add("pm_non_peak");
+		}
+		if (request.getParameter("pm") != null && request.getParameter("pm") != ""){
+			timeList.add("pm");
+		}
+
+		//거리별 특성 파라미터 셋팅
+		List distanceList = new ArrayList();
+
+		if (request.getParameter("shortest_distance") != null && request.getParameter("shortest_distance") != ""){
+			distanceList.add("shortest_distance");
+		}
+		if (request.getParameter("short_distance") != null && request.getParameter("short_distance") != ""){
+			distanceList.add("short_distance");
+		}
+		if (request.getParameter("medium_distance") != null && request.getParameter("medium_distance") != ""){
+			distanceList.add("medium_distance");
+		}
+		if (request.getParameter("long_distance") != null && request.getParameter("long_distance") != ""){
+			distanceList.add("long_distance");
+		}
+		if (request.getParameter("longest_distance") != null && request.getParameter("longest_distance") != ""){
+			distanceList.add("longest_distance");
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
+
 		map.put("code", "0");
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
 		map.put("userid", "user01");
+
+		if (timeList.size() != 0){
+			map.put("time_list", timeList);
+		}
+		if (distanceList.size() != 0){
+			map.put("distance_list", distanceList);
+		}
 		
-		List<Map<String, Object>> out = pathDistanceService.getPathDistanceData(map);
-		mav.addObject("list", out);
-		System.out.println("Query Total Data  :::" + out);
+		List<Map<String, Object>> list = pathDistanceService.getPathDistanceData(map);
+		List<Map<String, Object>> chartList = pathDistanceService.getPathDistanceChartData(map);
+
+		mav.addObject("list", list);
+		mav.addObject("chart", chartList);
+
 		return mav;
 	}
 }

@@ -4,11 +4,317 @@
 <mapper namespace="pathDistance">
 
 	<select id="getPathDistance" parameterType="hashmap"  resultType="hashmap">
-
-
-
-
-
-
+	SELECT
+		cp,
+		normal_count, -- 전체 cp 정상 진행 구간만
+		sum_distance, -- 총 합계
+		sum_distance - min_sum_distance AS sub_distance, -- 최소 cp와 차이값
+		round(((sum_distance - min_sum_distance)/min_sum_distance)*100,1) as ratio_distance -- 최소 cp와 차이 비율 (mape)
+	from
+	(
+		select cp, count(bmtid) as normal_count, round(sum(arrive_distance),1) as sum_distance
+		from
+		(
+			SELECT
+				bmtid,
+				cp,
+				except_info,
+				state_condition,
+				to_number(arrive_distance,'0000.00') as arrive_distance,
+				by_time,
+				by_distance
+			from
+			(
+				SELECT
+					*,
+					case
+						when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010101','yyyymmdd'),'day'),to_char(to_date('00010102','yyyymmdd'),'day'),to_char(to_date('00010103','yyyymmdd'),'day'),to_char(to_date('00010104','yyyymmdd'),'day'),to_char(to_date('00010105','yyyymmdd'),'day'))
+						then
+							(case
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss')
+									then 'am_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss')
+									then 'am_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss')
+									then 'am_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss')
+									then 'pm_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss')
+									then 'pm_non_peak'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss')
+									then 'pm_peak'
+							else null end)
+						when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010106','yyyymmdd'),'day'),to_char(to_date('00010107','yyyymmdd'),'day'))
+						then
+							(case
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss')
+									then 'am'
+								when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss')
+									then 'pm'
+							else null end)
+						else null end as by_time,
+					case
+						when to_number(arrive_distance,'0000.00') between shortest_distance_start and shortest_distance_end
+							then 'shortest_distance'
+						when to_number(arrive_distance,'0000.00') between short_distance_start and short_distance_end
+							then 'short_distance'
+						when to_number(arrive_distance,'0000.00') between medium_distance_start and medium_distance_end
+							then 'medium_distance'
+						when to_number(arrive_distance,'0000.00') between long_distance_start and long_distance_end
+							then 'long_distance'
+						when to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start
+							then 'longest_distance'
+						else null end as by_distance
+				from bmt_total_info a, setting_value b
+				where b.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+			) a
+			where
+				userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
+				AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+				-- 상세 데이터 검색 조건
+				and by_time
+					in 
+				<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
+					#{item}
+				</foreach>
+				and by_distance
+					in
+				<foreach collection="distance_list" index="index" item="item" separator="," open="(" close=")">
+					#{item}
+				</foreach>
+				and bmtid
+					in (
+						select bmtid
+						from
+						(
+							select bmtid, sum(total_count) as total_count, sum(normal_count) as normal_count
+							from
+							(
+								select bmtid,
+									case when cp is not null then 1 else null end as total_count,
+									case when except_info = 'y' and state_condition like '정상%' then 1 else null end as normal_count
+								from bmt_total_info
+							) a
+							group by bmtid
+						) a
+						where total_count = normal_count
+					)
+		) a
+		group by cp
+	) a,
+	(
+		select min(sum_distance) as min_sum_distance
+		from
+		(
+			select cp, count(bmtid) as normal_count, round(sum(arrive_distance),1) as sum_distance, 'a' as a
+			from
+			(
+				SELECT
+					bmtid,
+					cp,
+					except_info,
+					state_condition,
+					to_number(arrive_distance,'0000.00') as arrive_distance,
+					by_time,
+					by_distance
+				from
+				(
+					SELECT
+						*,
+						case
+							when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010101','yyyymmdd'),'day'),to_char(to_date('00010102','yyyymmdd'),'day'),to_char(to_date('00010103','yyyymmdd'),'day'),to_char(to_date('00010104','yyyymmdd'),'day'),to_char(to_date('00010105','yyyymmdd'),'day'))
+							then
+								(case
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss')
+										then 'am_peak'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss')
+										then 'am_non_peak'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss')
+										then 'am_non_peak'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss')
+										then 'pm_non_peak'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss')
+										then 'pm_non_peak'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss')
+										then 'pm_peak'
+								else null end)
+							when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010106','yyyymmdd'),'day'),to_char(to_date('00010107','yyyymmdd'),'day'))
+							then
+								(case
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss')
+										then 'am'
+									when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss')
+										then 'pm'
+								else null end)
+							else null end as by_time,
+						case
+							when to_number(arrive_distance,'0000.00') between shortest_distance_start and shortest_distance_end
+								then 'shortest_distance'
+							when to_number(arrive_distance,'0000.00') between short_distance_start and short_distance_end
+								then 'short_distance'
+							when to_number(arrive_distance,'0000.00') between medium_distance_start and medium_distance_end
+								then 'medium_distance'
+							when to_number(arrive_distance,'0000.00') between long_distance_start and long_distance_end
+								then 'long_distance'
+							when to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start
+								then 'longest_distance'
+							else null end as by_distance
+					from bmt_total_info a, setting_value b
+					where b.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+				) a
+				where
+					userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
+					AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+					-- 상세 데이터 검색 조건
+					and by_time
+						in
+					<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
+						#{item}
+					</foreach>
+					and by_distance
+						in
+					<foreach collection="distance_list" index="index" item="item" separator="," open="(" close=")">
+						#{item}
+					</foreach>
+					and bmtid
+						in (
+							select bmtid
+							from
+							(
+								select bmtid, sum(total_count) as total_count, sum(normal_count) as normal_count
+								from
+								(
+									select bmtid,
+										case when cp is not null then 1 else null end as total_count,
+										case when except_info = 'y' and state_condition like '정상%' then 1 else null end as normal_count
+									from bmt_total_info
+								) a
+								group by bmtid
+							) a
+							where total_count = normal_count
+						)
+			) a
+			group by cp
+		) a
+		group by a
+	) b
+	order by cp
+	</select>
+	
+	<select id="getPathDistanceChartData" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			   cp,
+			   count(bmtid) as normal_count, -- 전체 cp 정상 진행 구간만
+											 -- 총 경로 거리별 그래프 데이터 시간 특성 기준
+			   case when sum(am_peak) is null then 0 else sum(am_peak) end as am_peak,
+			   case when sum(am_non_peak) is null then 0 else sum(am_non_peak) end as am_non_peak,
+			   case when sum(pm_non_peak) is null then 0 else sum(pm_non_peak) end as pm_non_peak,
+			   case when sum(pm_peak) is null then 0 else sum(pm_peak) end as pm_peak,
+			   case when sum(am) is null then 0 else sum(am) end as am,
+			   case when sum(pm) is null then 0 else sum(pm) end as pm,
+											 -- 총 경로 거리별 그래프 데이터 거리 특성 기준
+			   case when sum(shortest_distance) is null then 0 else sum(shortest_distance) end as shortest_distance,
+			   case when sum(short_distance) is null then 0 else sum(short_distance) end as short_distance,
+			   case when sum(medium_distance) is null then 0 else sum(medium_distance) end as medium_distance,
+			   case when sum(long_distance) is null then 0 else sum(long_distance) end as long_distance,
+			   case when sum(longest_distance) is null then 0 else sum(longest_distance) end as longest_distance
+		from
+			 (
+			 select
+					bmtid,
+					cp,
+					to_number(arrive_distance,'0000.00') as arrive_distance,
+					by_time,
+					case when by_time = 'am_peak' then to_number(arrive_distance,'0000.00') else null end as am_peak,
+					case when by_time = 'am_non_peak' then to_number(arrive_distance,'0000.00') else null end as am_non_peak,
+					case when by_time = 'pm_non_peak' then to_number(arrive_distance,'0000.00') else null end as pm_non_peak,
+					case when by_time = 'pm_peak' then to_number(arrive_distance,'0000.00') else null end as pm_peak,
+					case when by_time = 'am' then to_number(arrive_distance,'0000.00') else null end as am,
+					case when by_time = 'pm' then to_number(arrive_distance,'0000.00') else null end as pm,
+					by_distance,
+					case when by_distance = 'shortest_distance' then to_number(arrive_distance,'0000.00') else null end as shortest_distance,
+					case when by_distance = 'short_distance' then to_number(arrive_distance,'0000.00') else null end as short_distance,
+					case when by_distance = 'medium_distance' then to_number(arrive_distance,'0000.00') else null end as medium_distance,
+					case when by_distance = 'long_distance' then to_number(arrive_distance,'0000.00') else null end as long_distance,
+					case when by_distance = 'longest_distance' then to_number(arrive_distance,'0000.00') else null end as longest_distance
+			 from
+				  (
+				  SELECT
+						  *,
+							 case
+								 when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010101','yyyymmdd'),'day'),to_char(to_date('00010102','yyyymmdd'),'day'),to_char(to_date('00010103','yyyymmdd'),'day'),to_char(to_date('00010104','yyyymmdd'),'day'),to_char(to_date('00010105','yyyymmdd'),'day'))
+									   then
+									 (case
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss')
+												then 'am_peak'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss')
+												then 'am_non_peak'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss')
+												then 'am_non_peak'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss')
+												then 'pm_non_peak'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss')
+												then 'pm_non_peak'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss')
+												then 'pm_peak'
+										  else null end)
+								 when to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010106','yyyymmdd'),'day'),to_char(to_date('00010107','yyyymmdd'),'day'))
+									   then
+									 (case
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss')
+												then 'am'
+										  when to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss')
+												then 'pm'
+										  else null end)
+								 else null end as by_time,
+							 case
+								 when to_number(arrive_distance,'0000.00') between shortest_distance_start and shortest_distance_end
+									   then 'shortest_distance'
+								 when to_number(arrive_distance,'0000.00') between short_distance_start and short_distance_end
+									   then 'short_distance'
+								 when to_number(arrive_distance,'0000.00') between medium_distance_start and medium_distance_end
+									   then 'medium_distance'
+								 when to_number(arrive_distance,'0000.00') between long_distance_start and long_distance_end
+									   then 'long_distance'
+								 when to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start
+									   then 'longest_distance'
+								 else null end as by_distance
+				  from bmt_total_info a, setting_value b
+				  where b.adminid in (select adminid from admin_user_list where userid = #{userid} or adminid = #{userid})
+				  ) a
+			 where
+					 userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
+			   AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+					 -- 상세 데이터 검색 조건
+			   and by_time
+					   in
+				<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			   and by_distance
+					   in
+				<foreach collection="distance_list" index="index" item="item" separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			   and bmtid
+					   in (
+						  select bmtid
+						  from
+							   (
+							   select bmtid, sum(total_count) as total_count, sum(normal_count) as normal_count
+							   from
+									(
+									select bmtid,
+										   case when cp is not null then 1 else null end as total_count,
+										   case when except_info = 'y' and state_condition like '정상%' then 1 else null end as normal_count
+									from bmt_total_info
+									) a
+							   group by bmtid
+							   ) a
+						  where total_count = normal_count
+						  )
+			 ) a
+		group by cp
+		order by cp
 	</select>
 </mapper>
