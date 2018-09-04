@@ -132,9 +132,9 @@
 		
 		var tableHtml = '';
 		
-		for (var i = 0; i < positions.length; i ++) {
-			centerLon = (parseFloat(positions[0].lon) + parseFloat(positions[1].lon))/2
-			centerLat = (parseFloat(positions[0].lat) + parseFloat(positions[1].lat))/2
+		centerLon = (parseFloat(positions[0].lon) + parseFloat(positions[1].lon))/2;
+		centerLat = (parseFloat(positions[0].lat) + parseFloat(positions[1].lat))/2;
+		for (var i = 0; i < positions.length; i++) {
 			var imageSrc = '../svg/markerSVG'+ (i+1) + '.svg', // 마커이미지의 주소입니다    
 			    imageSize = new daum.maps.Size(34, 34), // 마커이미지의 크기입니다
 			    imageOption = {offset: new daum.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.

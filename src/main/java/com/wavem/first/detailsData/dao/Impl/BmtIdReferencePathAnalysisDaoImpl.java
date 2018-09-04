@@ -17,10 +17,25 @@ public class BmtIdReferencePathAnalysisDaoImpl implements BmtIdReferencePathAnal
 
 	@Resource(name = "sqlSessionTemplate")
 	private SqlSessionTemplate sqlSessionTemplate;
-	
+
 	@Override
-	public List<Map<String, Object>> getBmtIdReferencePathAnalysisData(Map<String, Object> input) {
-		return sqlSessionTemplate.selectList("bmtIdReferencePathAnalysis.getBmtIdReferencePathAnalysis", input);
+	public List<Map<String, Object>> getBmtIdList(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("bmtIdReferencePathAnalysis.getBmtIdList", map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getAnalysisList(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("bmtIdReferencePathAnalysis.getAnalysisList", map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getUserList(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("bmtIdReferencePathAnalysis.getUserList", map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getGpsList(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("bmtIdReferencePathAnalysis.getGpsList", map);
 	}
 
 }

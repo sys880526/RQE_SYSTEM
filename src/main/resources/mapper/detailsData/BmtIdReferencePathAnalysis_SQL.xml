@@ -3,8 +3,222 @@
 
 <mapper namespace="bmtIdReferencePathAnalysis">
 
-	<select id="getBmtIdReferencePathAnalysisData" parameterType="hashmap"  resultType="hashmap">
-	
+	<select id="getBmtIdList" parameterType="hashmap"  resultType="hashmap">
+		SELECT
+			bmtid,
+			sum(normal_count)||'/'||count(userid) as normal_count, -- 정상주행 cp 수 / 총 cp 수
+			startpoi, --  출발지명
+			endpoi -- 도착지명
+		from
+		(
+			SELECT
+				a.*,
+				b.*,
+				case 
+					when a.except_info = 'y' and a.state_condition like '정상%' then 1 
+					else 0 
+				end as normal_count,
+				-- by_time ( 구분을 위한 주석 )
+				case 
+					when 
+						to_char(to_date(a.starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in (to_char(to_date('00010101','yyyymmdd'),'day')
+																						,to_char(to_date('00010102','yyyymmdd'),'day')
+																						,to_char(to_date('00010103','yyyymmdd'),'day')
+																						,to_char(to_date('00010104','yyyymmdd'),'day')
+																						,to_char(to_date('00010105','yyyymmdd'),'day')
+																						) 
+					then 
+						(
+							case 
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(am_peak_start,'hh24:mi:ss') 
+									and to_char(am_peak_end, 'hh24:mi:ss') 
+								then 'am_peak' 
+								
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(am_non_peak_start,'hh24:mi:ss') 
+									and to_char(am_non_peak_end, 'hh24:mi:ss') 
+								then 'am_non_peak'
+								
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss')  <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss') 
+								then 'am_non_peak'
+								
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(pm_non_peak_start,'hh24:mi:ss') 
+									and to_char(pm_non_peak_end, 'hh24:mi:ss') 
+								then 'pm_non_peak' 
+								
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss')  <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss') 
+								then 'pm_non_peak'
+								
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(pm_peak_start,'hh24:mi:ss') 
+									and to_char(pm_peak_end, 'hh24:mi:ss') 
+								then 'pm_peak'
+							else null end
+						)
+					when 
+						to_char(to_date(a.starttm,'yyyy-mm-dd hh24:mi:ss'),'day') in(to_char(to_date('00010106','yyyymmdd'),'day')
+																								,to_char(to_date('00010107','yyyymmdd'),'day')
+																								) 
+					then 
+						(
+							case 
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(am_start,'hh24:mi:ss') 
+									and to_char(am_end, 'hh24:mi:ss') 
+								then 'am'
+								when 
+									to_char(to_timestamp(a.starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+									between to_char(pm_start,'hh24:mi:ss') 
+									and to_char(pm_end, 'hh24:mi:ss') 
+								then 'pm'	
+							else null end
+						)
+					else null 
+				end as by_time,
+				-- /by_time ( 구분을 위한 주석 )
+				-- by_distance ( 구분을 위한 주석 )
+				case 
+					when 
+						to_number(a.arrive_distance,'0000.00') 
+						between shortest_distance_start 
+						and shortest_distance_end 
+					then 'shortest_distance'
+					when 
+						to_number(a.arrive_distance,'0000.00') 
+						between short_distance_start 
+						and short_distance_end 
+					then 'short_distance'
+					when 
+						to_number(a.arrive_distance,'0000.00') 
+						between medium_distance_start 
+						and medium_distance_end 
+					then 'medium_distance'
+					when 
+						to_number(a.arrive_distance,'0000.00') 
+						between long_distance_start 
+						and long_distance_end 
+					then 'long_distance'	
+					when 
+						to_number(a.arrive_distance,'0000.00')  <![CDATA[>=]]> longest_distance_start 
+					then 'longest_distance'
+				else null 
+				end as by_distance,
+				-- /by_distance ( 구분을 위한 주석 )
+				-- driver_tm ( 구분을 위한 주석 )
+				to_number ( to_char ( to_timestamp ( a.bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( a.bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( a.bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( a.bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+			from bmt_total_info a, setting_value b, gps_info c
+			where b.adminid in (
+														select 
+															adminid 
+														from admin_user_list 
+														where userid = #{userid}
+														or adminid = #{userid}
+													)
+			and a.bmtid = c.bmtid
+			and a.userid = c.userid
+		) a
+		where userid IN ( 
+						SELECT userid  
+						FROM admin_user_list 
+						WHERE adminid IN ( 
+										SELECT adminid  
+										FROM admin_user_list 
+										WHERE adminid = #{userid}
+										or userid = #{userid}
+										)
+						) -- userid
+		AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+			BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
+			and to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+		-- 상세 조건 부분 해당 부분은 검색 조건에 따라 변경
+		and by_time 
+			in 
+			<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">
+				#{item}
+			</foreach>	
+		and by_distance 
+			in 
+			<foreach item="item" index="index" collection="list_distance" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		group by bmtid, startpoi, endpoi
+		order by 1	
 	</select>
+	
+	<select id="getAnalysisList" parameterType="hashmap"  resultType="hashmap">
+		select 
+			a.bmtid,
+			a.cp,
+			case 		
+				when except_info = 'y' and state_condition like '정상%' then '정상' 
+		 		else '제외' 
+				end 
+			as bmt_condition, -- 해당 구간 상태
+			est_time, -- 예상 소요 시간
+			to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm, -- 실제 소요 시간
+			est_distance, -- 예상 소요 거리
+			arrive_distance, -- 실제 소요 거리
+			est_charge, -- 예상 소요 요금
+			arrive_charge -- 실제 소요 요금
+		from bmt_total_info a
+		where a.userid IN ( 
+						SELECT 
+							userid 
+						FROM admin_user_list 
+						WHERE adminid IN ( 
+										SELECT 
+											adminid 
+										FROM admin_user_list 
+										WHERE adminid = #{userid}
+										or userid = #{userid}
+										)
+						) -- userid
+		and a.bmtid = #{bmtid}
+		order by cp
+	</select>
+	
+	<select id="getUserList" parameterType="hashmap"  resultType="hashmap">
+		select a.userid, a.bmtid, b.cp
+		from gps_info a, bmt_total_info b
+		where a.bmtid = b.bmtid
+		and a.userid = b.userid
+		and a.userid IN ( 
+						SELECT 
+							userid 
+						FROM admin_user_list 
+						WHERE adminid IN ( 
+										SELECT 
+											adminid 
+										FROM admin_user_list 
+										WHERE adminid = #{userid}
+										or userid = #{userid}
+										)
+						) -- userid
+		and a.bmtid = #{bmtid}
+		group by a.userid, a.bmtid, b.cp
+	</select>
+	
+	<select id="getGpsList" parameterType="hashmap"  resultType="hashmap">
+		select
+			a.*
+			, b.cp
+		from gps_info a, bmt_total_info b
+		where a.bmtid = b.bmtid
+		and a.userid = b.userid
+		and a.userid  = #{userid}
+		and a.bmtid = #{bmtid}
+		 order by a.userid, a.gpstm
+	</select>
+	
+	
 	
 </mapper>

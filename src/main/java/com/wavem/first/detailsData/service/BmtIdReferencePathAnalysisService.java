@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface BmtIdReferencePathAnalysisService {
+	List<Map<String, Object>> getBmtIdList(Map<String, Object> map);
 
-	List<Map<String, Object>> getBmtIdReferencePathAnalysisData(Map<String, Object> map);
+	Map<String, Object> getBmtIdListDetail(Map<String, Object> data);
 
 }
