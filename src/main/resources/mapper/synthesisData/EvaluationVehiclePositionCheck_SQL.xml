@@ -4,13 +4,22 @@
 <mapper namespace="evaluationVehiclePositionCheck">
 
 	<select id="getEvaluationVehiclePositionCheck" parameterType="hashmap"  resultType="hashmap">
-		select a.userid, bmtid, gpstm, lat, lon, speed, cp, carinfo
+		select 
+			a.userid
+			, bmtid
+			, gpstm
+			, lat
+			, lon
+			, speed
+			, cp
+			, carinfo
 		from
 			gps_info a, 
 			(
 				SELECT userid, max(gpstm) as max_gpstm
 				FROM gps_info
-		 		where to_date(gpstm, 'yyyy-mm-dd hh24:mi:ss') = current_date
+				-- 테스트를 위한 주석 처리 ( 테스트는 당일 마다 데ㅐ이터를 받아 볼수 없기 때문 )
+		 		-- where to_date(gpstm, 'yyyy-mm-dd hh24:mi:ss') = current_date
 				group by userid
 			) b,
 			(
@@ -27,7 +36,15 @@
 			) c
 		where a.userid = b.userid
 			and a.gpstm = b.max_gpstm
-			and a.userid in (select userid from admin_user_list where adminid in (select adminid from admin_user_list where adminid = 'user01' or userid = 'user01'))
+			and a.userid in (select 
+								userid 
+							from admin_user_list
+							where adminid in (
+											select 
+												adminid 
+											from admin_user_list 
+											where adminid = #{userid}
+											or userid = #{userid}))
 			and a.userid = c.userid
 		order by userid
 	</select>

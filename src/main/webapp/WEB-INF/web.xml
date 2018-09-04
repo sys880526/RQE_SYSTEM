@@ -69,6 +69,11 @@
         <url-pattern>*.gif</url-pattern>
     </servlet-mapping>
     
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.svg</url-pattern>
+    </servlet-mapping>
+    
       <jsp-config>
     <taglib>
       <taglib-uri>jstl-c</taglib-uri>
