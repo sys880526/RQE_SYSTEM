@@ -7,14 +7,16 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <%-- 	<c:set var="Depth1" value="<%=Depth1%>"/>	 --%>
-
+<%
+	String userId = (String)session.getAttribute("SS_USER_ID");
+%>
 	<div id="header">
           <a href="/main">
               <img src="../images/common/logo.gif" alt="wavem_logo" />
           </a>
           <ul class="util">
-              <li class="name"><strong>홍길동</strong>님</li>
-              <li><a href="#"><img src="../images/common/util_logout.gif" alt="logout" /></a></li>
+              <li class="name"><strong><%=userId%></strong>님</li>
+              <li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li>
           </ul>
           <div class="row">                
               <ul id="gnb" class="gnb">
