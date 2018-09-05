@@ -128,8 +128,8 @@
                                     <th colspan="7" style="background-color: white;border-style: none"></th>
                                 </tr>                               
                                 <tr>
-                                    <th colspan="5" style="height: 25PX;background-color: #f2e6d9;">목적지 선후착</th>
-                                    <th colspan="4" style="height: 25PX;background-color: #f2e6d9;">도착 지연 시간(후착 구간)</th>
+                                    <th colspan="5" style="background-color: #f2e6d9;">목적지 선후착</th>
+                                    <th colspan="4" style="background-color: #f2e6d9;">도착 지연 시간(후착 구간)</th>
                                 </tr>
                                 <tr>
                                 	<th style="background-color: #f2e6d9;">CP</th>

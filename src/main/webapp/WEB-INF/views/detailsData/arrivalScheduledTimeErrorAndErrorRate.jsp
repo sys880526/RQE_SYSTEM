@@ -400,6 +400,13 @@
 	
 	// 도착 예정 시간 분포도 그래프 
 	function arrival_graph() {
+		
+		$('#arrival_graph').empty();
+		
+		if (arrival_graph_data == '' || arrival_graph_data == null) {
+			return;
+		}
+		
 		var array = [];
 		array.push(['cp', '구간번호', 'ETA오차(단위:분)', 'color']);
 		arrival_graph_data.forEach(function(items, index, array2) {
@@ -468,7 +475,7 @@
             chart.draw(data, options);
          }
          google.charts.setOnLoadCallback(drawChart);
-	}
+	};
 	
 	/**
      * 검색된 값이 없는 경우

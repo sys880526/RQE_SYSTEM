@@ -61,35 +61,35 @@
 	                            	<span style="display : table;">요일특성</span>
 	                            	<br>
 									<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="weekday">주중
+									  <input type="checkbox" id="weekday" value="weekday">주중
 									</label>
 									<label>
-										<input type="checkbox" id="weekend">주말
+										<input type="checkbox" id="weekend" value="weekend">주말
 									</label>
                             	</div>                            	
             					<div class="timecheck" style="padding: 0px 0px 0px 100px;display: inline-block;vertical-align : top;">
             						<span style="display : table;padding: 0px 0px 10px 0px;">시간대특성</span>
-            						<div class="row">
+            						<div class="row timecheck">
             							<div style="display: inline-block;">
 		            						<label style="display: table;margin-bottom: 7px;">
-											  <input type="checkbox" id="am_peak" name="am_peak" value="am_peak">오전 첨두
+											  <input type="checkbox" id="am_peak" name="am_peak" value="am_peak" class="weekday" disabled>오전 첨두
 											</label>
 											<label style="display: table;margin-bottom: 7px;">
-											  <input type="checkbox" id="pm_peak" name="pm_peak" value="pm_peak">오후 첨두
+											  <input type="checkbox" id="pm_peak" name="pm_peak" value="pm_peak" class="weekday" disabled>오후 첨두
 											</label>
 											<label>
-											  <input type="checkbox" id="am" name="am" value="am">오전
+											  <input type="checkbox" id="am" name="am" value="am" class="weekend" disabled>오전
 											</label>
             							</div>
             							<div style="padding: 0px 100px 0px 20px;display: inline-block;">
 	            							<label style="display: table;margin-bottom: 7px;">
-											  <input type="checkbox" id="am_non_peak" name="am_non_peak" value="am_non_peak">오전 비첨두
+											  <input type="checkbox" id="am_non_peak" name="am_non_peak" value="am_non_peak" class="weekday" disabled>오전 비첨두
 											</label>
 											<label style="display: table;margin-bottom: 7px;">
-											  <input type="checkbox" id="pm_non_peak" name="pm_non_peak" value="pm_non_peak"> 오후 비첨두
+											  <input type="checkbox" id="pm_non_peak" name="pm_non_peak" value="pm_non_peak" class="weekday" disabled> 오후 비첨두
 											</label>
 											<label>
-											  <input type="checkbox" id="pm" name="pm" value="pm">오후
+											  <input type="checkbox" id="pm" name="pm" value="pm" class="weekend" disabled>오후
 											</label>
             							</div>
             						</div>
@@ -97,19 +97,19 @@
             					<div class="distance" style="display: inline-block;vertical-align: top;">
             						<span style="display : table;padding: 0px 0px 10px 0px;">거리특성</span>
             						<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="shortest_distance" name="shortest_distance" value="shortest_distance"> 초 단거리(0 ~ 5km)
+									  <input type="checkbox" id="shortest_distance" name="shortest_distance" value="shortest_distance" disabled> 초 단거리(0 ~ 5km)
 									</label>
 									<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="short_distance" name="short_distance" value="short_distance"> 단거리(5 ~ 10km)
+									  <input type="checkbox" id="short_distance" name="short_distance" value="short_distance" disabled> 단거리(5 ~ 10km)
 									</label>
 									<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="medium_distance" name="medium_distance" value="medium_distance"> 중거리(10 ~ 30km)
+									  <input type="checkbox" id="medium_distance" name="medium_distance" value="medium_distance" disabled> 중거리(10 ~ 30km)
 									</label>
 									<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="long_distance" name="long_distance" value="long_distance"> 장거리(30 ~ 50km)
+									  <input type="checkbox" id="long_distance" name="long_distance" value="long_distance" disabled> 장거리(30 ~ 50km)
 									</label>
 									<label style="display: table;margin-bottom: 7px;">
-									  <input type="checkbox" id="longest_distance" name="longest_distance" value="longest_distance"> 초 장거리(50 ~ km)
+									  <input type="checkbox" id="longest_distance" name="longest_distance" value="longest_distance" disabled> 초 장거리(50 ~ km)
 									</label>
             					</div>
                             </div>
@@ -181,21 +181,26 @@
 		*/
 		setDate();
 		
-		day();
+		// 주중, 주말 선택할 경우
+		$('#weekday, #weekend').on('change', function() {
+			var checked = $(this).is(':checked');
+			var value = $(this).val();
+			var items = $('.'.concat(value));
+			items.prop('disabled', !checked);
+			if (!checked) {
+				// checked == false
+				items.prop('checked', checked);
+			}
+			distanceCheck();
+		});
 		
+		// 거리특성 선택할 경우
+		$('.weekday, .weekend').on('change', function() {
+			distanceCheck();
+		});
+		
+		// 검색된 값이 없는경우 
 		notFoundResult();
-		
-        $('#weekday').on('change', function() {
-            day();
-        });
-
-         $('#weekend').on('click', function() {
-            day();
-        });        
-
-        $('.timecheck input').on('click', function() {
-            distance();
-        });
 
 	});//document.ready
 	
@@ -264,73 +269,18 @@
 		modalCal.val(year + '-' + month + '-' + day);
 	};
 	
-	
 	/**
-	* 요일특성 선택시 실행함수
+	* 거리특성 선택함수
 	*/
-	day = function() {
-        var weekday = $('#weekday').prop('checked');
-        var weekend = $('#weekend').prop('checked');
-        if(weekday == false && weekend == false) {
-            $('.timecheck input').prop('checked', false).attr('disabled', true);
-            distance();
-            return;
-        }
-        if(weekday === true && weekend === false) {
-            $('#am_peak').attr('disabled', false);
-            $('#am_non_peak').attr('disabled', false);
-            $('#pm_peak').attr('disabled', false);
-            $('#pm_non_peak').attr('disabled', false);
-            $('#am').attr('disabled', true);
-            $('#pm').attr('disabled', true);
-            distance();
-            return;
-        }
-        if(weekday === false && weekend === true) {
-            $('#am_peak').attr('disabled', true);
-            $('#am_non_peak').attr('disabled', true);
-            $('#pm_peak').attr('disabled', true);
-            $('#pm_non_peak').attr('disabled', true);
-            $('#am').attr('disabled', false);
-            $('#pm').attr('disabled', false);
-            distance();
-            return;
-        }
-        if(weekday === true && weekend === true) {          
-            $('.timecheck input').attr('disabled', false);
-            distance();
-            return;
-        }       
-    };
-    
-    /**
-	* 거리특성 선택시 실행함수
-	*/
-    distance = function() {
-    	var weekday = $('#weekday').prop('checked');
-        var weekend = $('#weekend').prop('checked');
-        var ampeak = $('#am_peak').prop('checked');
-        var amnonpeak = $('#am_non_peak').prop('checked');
-        var pmpeak = $('#pm_peak').prop('checked');
-        var pmnonpeak = $('#pm_non_peak').prop('checked');
-        var am = $('#am').prop('checked');
-        var pm = $('#pm').prop('checked');
-        if(weekday === true || weekend === true || 
-        	ampeak === true || amnonpeak === true ||
-            pmpeak === true || pmnonpeak === true ||
-            am === true || pm === true) {
-            $('.distance input').attr('disabled', false);
-            return;
-        }
-        if(weekday === false || weekend === false || 
-        	ampeak === false && amnonpeak === false &&
-            pmpeak === false && pmnonpeak === false &&
-            am === false && pm === false) {
-            $('.distance input').prop('checked', false).attr('disabled', true);
-            return;
-        }
-    };
-    
+	function distanceCheck() {
+		var cnt = $('.timecheck input[type=checkbox]:checked').length;
+		var items = $('.distance input[type=checkbox]'); 
+		items.prop('disabled', (cnt>0) ? false : true);
+		if (cnt <= 0) {
+			items.prop('checked', false);
+		}
+	};
+
     /**
     * bmtIdReferenceSpecific data 조회
     */
@@ -480,6 +430,7 @@
 		$('#tbl-specific-etc1').text('검색된 값이 없습니다');
 		$('#tbl-specific-etc2').text('검색된 값이 없습니다');
 		$('#tbl-specific-etc3').text('검색된 값이 없습니다');
+		return false;
     };
     
     /**
