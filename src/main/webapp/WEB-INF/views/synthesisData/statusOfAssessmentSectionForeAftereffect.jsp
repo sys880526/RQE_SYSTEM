@@ -150,10 +150,8 @@
 		*/
 		setDate();
 		
-		/**
-		* 평가 구간 현황 및 선후착 집계 값 불러오기
-		*/
-		statusOfAssessmentSectionForeAftereffecta();
+		// 검색된 값이 없는경우 
+		notFoundResult();
 		
 	});
 	
@@ -286,7 +284,16 @@
 		    	console.log(err);
 		    }
 		})//ajax
-	}
+	};
+	
+	/**
+     * 검색된 값이 없는 경우
+     */
+     notFoundResult = function() {
+    	 $('#tbl-evaluation-day').children('tbody').append('<tr><td colspan="10">검색된 값이 없습니다</tr>');
+    	 $('#tbl-evaluation-time').children('tbody').append('<tr><td colspan="9">검색된 값이 없습니다</tr>');
+    	 $('#tbl-fore-after').children('tbody').append('<tr><td colspan="7">검색된 값이 없습니다</tr>');
+     };
 	
 	
 	/**

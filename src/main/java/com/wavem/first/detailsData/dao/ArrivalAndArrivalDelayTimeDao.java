@@ -9,4 +9,6 @@ public interface ArrivalAndArrivalDelayTimeDao {
 
 	List<Map<String, Object>> getDataScoreGraphInfo(Map<String, Object> input);
 
+	List<Map<String, Object>> getDataDelayGraphInfo(Map<String, Object> input);
+
 }

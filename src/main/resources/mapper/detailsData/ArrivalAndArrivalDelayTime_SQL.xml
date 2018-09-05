@@ -1,14 +1,683 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="arrivalScheduledTimeErrorAndErrorRate">
+<mapper namespace="arrivalAndArrivalDelayTime">
 
-	<select id="getArrivalScheduledTimeErrorAndErrorRate" parameterType="hashmap"  resultType="hashmap">
-
-
-
-
-
-
+	<select id="getDataScoreDelayInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT	cp
+		,		'100%('||count(score)||'개)' as total_count
+		,		round(((sum(score_first)+0.00)/(count(score)+0.00))*100,1)||'%('||sum(score_first)||'개)' as ratio_first
+		,		round(((sum(score_together)+0.00)/(count(score)+0.00))*100,1)||'%('||sum(score_together)||'개)' as ratio_together
+		,		round(((sum(score_later)+0.00)/(count(score)+0.00))*100,1)||'%('||sum(score_later)||'개)' as ratio_later
+		,		count(min_sub_tm_later)||'개' as path_count
+		,		round(avg(min_sub_tm_later),1)||'분' as avg_delay_time
+		,		max(min_sub_tm_later)||'분' as max_delay_time
+		,		round(stddev(min_sub_tm_later), 1)||'분' as standard_deviation_delay
+		,		sum(score_first) as score_first
+		,		sum(score_together) as score_together
+		,		sum(score_later) as score_later
+		from	(
+					SELECT	a.bmtid
+					,		a.userid
+					,		a.cp
+					,		except_info
+					,		state_condition
+					,		driver_tm
+					,		by_time
+					,		by_distance
+					,		score
+					,		min_sub_tm
+					,		case 
+								when score = '선착' then 1 else 0 end as score_first
+					,		case 
+								when score = '동시도착' then 1 else 0 end as score_together
+					,		case 
+								when score = '후착' then 1 else 0 end as score_later
+					,		case 
+								when score = '후착' then min_sub_tm else null end as min_sub_tm_later
+					from	(
+								SELECT	*
+								from	(
+											SELECT	*
+											,		case
+														when	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+														in		(
+																	to_char(to_date('00010101','yyyymmdd'),'day')
+															,		to_char(to_date('00010102','yyyymmdd'),'day')
+															,		to_char(to_date('00010103','yyyymmdd'),'day')
+															,		to_char(to_date('00010104','yyyymmdd'),'day')
+															,		to_char(to_date('00010105','yyyymmdd'),'day')
+																) 
+														then	(
+																	case
+																		when	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_peak_start,'hh24:mi:ss') 
+																		and 	to_char(am_peak_end, 'hh24:mi:ss') 
+																		then 	'am_peak' 
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_non_peak_start,'hh24:mi:ss') 
+																		and 	to_char(am_non_peak_end, 'hh24:mi:ss') 
+																		then 	'am_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss') 
+																		then 	'am_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_non_peak_start,'hh24:mi:ss') 
+																		and 	to_char(pm_non_peak_end, 'hh24:mi:ss') 
+																		then 	'pm_non_peak' 
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss') 
+																		then 	'pm_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss') 
+																		then 	'pm_peak'
+																		else null end
+																)
+														when 	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+														in		(
+																	to_char(to_date('00010106','yyyymmdd'),'day')
+																,	to_char(to_date('00010107','yyyymmdd'),'day')
+																) 
+														then	(
+																	case
+																		when	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_start,'hh24:mi:ss') 
+																		and 	to_char(am_end, 'hh24:mi:ss') 
+																		then 	'am'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_start,'hh24:mi:ss') 
+																		and 	to_char(pm_end, 'hh24:mi:ss') 
+																		then 	'pm'	
+																		else null end
+																)
+														else null end as by_time
+											,		case
+														when	to_number(arrive_distance,'0000.00') 
+														between shortest_distance_start 
+														and 	shortest_distance_end 
+														then 	'shortest_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between short_distance_start 
+														and 	short_distance_end 
+														then 	'short_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between medium_distance_start 
+														and 	medium_distance_end 
+														then 	'medium_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between long_distance_start 
+														and 	long_distance_end 
+														then 	'long_distance'	
+														when 	to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start
+														then 	'longest_distance'
+														else 	null 
+														end as by_distance
+											from	bmt_total_info a
+											, 		setting_value b
+											where 	b.adminid 
+											in 		(
+														select	adminid 
+														from 	admin_user_list 
+														where 	userid = #{userid} or adminid = #{userid}
+													)
+										) a
+								where	userid 
+								IN 		( 
+											SELECT	userid  
+											FROM 	admin_user_list 
+											WHERE 	adminid 
+											IN 		( 
+														SELECT	adminid  
+														FROM 	admin_user_list 
+														WHERE 	adminid = #{userid} or userid = #{userid}
+													)
+										) -- userid
+								AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+								BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
+								and 	to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+								and 	by_time 
+								in 
+								<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">
+									#{item}
+								</foreach>	
+								and 	by_distance 
+								in 
+								<foreach item="item" index="index" collection="list_distance" open="(" separator="," close=")">
+									#{item}
+								</foreach>	
+							) a, 
+							(
+								SELECT	a.bmtid
+								,		a.userid
+								,		cp
+								,		CASE
+											WHEN	(
+														CASE
+															WHEN except_info = 'y' 
+															THEN 1 ELSE 0 END 
+													) = 0 
+											THEN NULL 
+											WHEN 	( 
+														CASE 
+															WHEN state_condition 
+															LIKE '정상%' 
+															THEN 1 ELSE 0 END 
+													) = 0 
+											THEN NULL 
+											WHEN ss = '동시도착' 
+											THEN ss 
+											WHEN driver_tm - min_tm <![CDATA[<=]]> pre_arrival 
+											THEN '선착' ELSE '후착' 
+											END AS score 
+								,		driver_tm
+								,		driver_tm - min_tm as min_sub_tm
+								FROM	(
+											SELECT	bmtid
+											,		except_info
+											,		state_condition
+											,		cp
+											,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+											,		userid 
+											FROM	bmt_total_info
+										) a,
+										(	
+											SELECT	bmtid
+											,		min( driver_tm ) AS min_tm
+											,		CASE 
+														WHEN max( driver_tm ) - min( driver_tm ) <![CDATA[<=]]> pre_arrival 
+														THEN '동시도착' ELSE NULL  
+														END AS ss 
+											FROM	(
+														SELECT	bmtid
+														,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+														,		pre_arrival 
+														FROM	bmt_total_info a
+														,		setting_value b 
+														where 	b.adminid 
+														in 		(
+																	select	adminid 
+																	from 	admin_user_list 
+																	where 	userid = #{userid} or adminid = #{userid}
+																)
+													) a 
+											GROUP BY bmtid
+											, 		 pre_arrival 
+										) b,
+										setting_value c 
+								where 	c.adminid 
+								in 		(
+											select	adminid 
+											from 	admin_user_list 
+											where 	userid = #{userid} or adminid = #{userid}
+										)
+								and 	a.bmtid = b.bmtid
+							) b
+					where 	a.bmtid = b.bmtid
+					and 	a.cp = b.cp
+				) a
+		group by cp
+		order by cp
 	</select>
+	
+	<select id="getDataScoreGraphInfo" parameterType="hashmap" resultType="hashmap">
+		select	cp
+		,		sum(am_peak_score_first) as am_peak_score_first
+		,		sum(am_peak_score_together) as am_peak_score_together
+		,		sum(am_peak_score_later) as am_peak_score_later
+		,		sum(am_non_peak_score_first) as am_non_peak_score_first
+		,		sum(am_non_peak_score_together) as am_non_peak_score_together
+		,		sum(am_non_peak_score_later) as am_non_peak_score_later
+		,		sum(pm_non_peak_score_first) as pm_non_peak_score_first
+		,		sum(pm_non_peak_score_together) as pm_non_peak_score_together
+		,		sum(pm_non_peak_score_later) as pm_non_peak_score_later
+		,		sum(pm_peak_score_first) as pm_peak_score_first
+		,		sum(pm_peak_score_together) as pm_peak_score_together
+		,		sum(pm_peak_score_later) as pm_peak_score_later
+		,		sum(am_score_first) as am_score_first
+		,		sum(am_score_together) as am_score_together
+		,		sum(am_score_later) as am_score_later
+		,		sum(pm_score_first) as pm_score_first
+		,		sum(pm_score_together) as pm_score_together
+		,		sum(pm_score_later) as pm_score_later
+		from	(
+					SELECT	a.bmtid
+					,		a.cp
+					,		case
+								when	by_time = 'am_peak' 
+								and 	score = '선착' 
+								then	1 else 0 
+								end as am_peak_score_first
+					,		case 
+								when	by_time = 'am_peak' 
+								and 	score = '동시도착' 
+								then 	1 else 0 
+								end as am_peak_score_together
+					,		case 
+								when	by_time = 'am_peak' 
+								and 	score = '후착' 
+								then 	1 else 0 
+								end as am_peak_score_later
+					,		case 
+								when	by_time = 'am_non_peak' 
+								and		score = '선착' 
+								then	1 else 0 
+								end		as am_non_peak_score_first
+					,		case
+								when	by_time = 'am_non_peak'
+								and 	score = '동시도착' 
+								then	1 else 0 
+								end as am_non_peak_score_together
+					,		case 
+								when	by_time = 'am_non_peak' 
+								and		score = '후착' 
+								then	1 else 0 
+								end as am_non_peak_score_later
+					,		case 
+								when	by_time = 'pm_non_peak' 
+								and		score = '선착' 
+								then	1 else 0 
+								end as pm_non_peak_score_first
+					,		case 
+								when	by_time = 'pm_non_peak'
+								and		score = '동시도착' 
+								then	1 else 0 
+								end as pm_non_peak_score_together
+					,		case 
+								when	by_time = 'pm_non_peak' 
+								and		score = '후착' 
+								then	1 else 0 
+								end as pm_non_peak_score_later
+					,		case 
+								when	by_time = 'pm_peak' 
+								and		score = '선착' 
+								then	1 else 0 
+								end as pm_peak_score_first
+					,		case 
+								when	by_time = 'pm_peak' 
+								and		score = '동시도착' 
+								then 	1 else 0 
+								end as pm_peak_score_together
+					,		case 
+								when	by_time = 'pm_peak' 
+								and 	score = '후착' 
+								then 	1 else 0 
+								end as pm_peak_score_later
+					,		case 
+								when	by_time = 'am' 
+								and 	score = '선착' 
+								then 	1 else 0 
+								end as am_score_first
+					,		case 
+								when	by_time = 'am' 
+								and 	score = '동시도착' 
+								then 	1 else 0 
+								end as am_score_together
+					,		case 
+								when	by_time = 'am' 
+								and 	score = '후착' 
+								then 	1 else 0 
+								end as am_score_later
+					,		case 
+								when	by_time = 'pm' 
+								and 	score = '선착' 
+								then 	1 else 0 
+								end as pm_score_first
+					,		case 
+								when	by_time = 'pm' 
+								and 	score = '동시도착' 
+								then 	1 else 0 
+								end as pm_score_together
+					,		case 
+								when	by_time = 'pm' 
+								and 	score = '후착' 
+								then 	1 else 0 
+								end as pm_score_later
+					from	(
+								SELECT	*
+								from	(
+											SELECT	*
+											,		case
+														when	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+														in		(
+																	to_char(to_date('00010101','yyyymmdd'),'day')
+																,	to_char(to_date('00010102','yyyymmdd'),'day')
+																,	to_char(to_date('00010103','yyyymmdd'),'day')
+																,	to_char(to_date('00010104','yyyymmdd'),'day')
+																,	to_char(to_date('00010105','yyyymmdd'),'day')
+																)
+														then	(
+																	case
+																		when	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss') 
+																		then 	'am_peak' 
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss') 
+																		then 	'am_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss') 
+																		then 	'am_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss') 
+																		then 	'pm_non_peak' 
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss') 
+																		then 	'pm_non_peak'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss') 
+																		then 	'pm_peak'
+																		else null end
+																)
+														when 	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+														in		(
+																	to_char(to_date('00010106','yyyymmdd'),'day')
+																,	to_char(to_date('00010107','yyyymmdd'),'day')
+																) 
+														then	(
+																	case
+																		when	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss') 
+																		then 	'am'
+																		when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+																		between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss') 
+																		then 	'pm' else null end
+																)
+														else null end as by_time
+											,		case
+														when	to_number(arrive_distance,'0000.00') 
+														between shortest_distance_start and shortest_distance_end 
+														then 	'shortest_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between short_distance_start and short_distance_end 
+														then 	'short_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between medium_distance_start and medium_distance_end 
+														then 	'medium_distance'
+														when 	to_number(arrive_distance,'0000.00') 
+														between long_distance_start and long_distance_end 
+														then 	'long_distance'	
+														when 	to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start
+														then 	'longest_distance' else null end as by_distance
+														from 	bmt_total_info a, setting_value b
+														where 	b.adminid 
+														in 		(
+																	select	adminid 
+																	from 	admin_user_list 
+																	where 	userid = #{userid} or adminid = #{userid}
+																)
+										) a
+								where	userid 
+								IN 		( 
+											SELECT	userid  
+											FROM 	admin_user_list 
+											WHERE 	adminid 
+											IN 		( 
+														SELECT	adminid  
+														FROM 	admin_user_list 
+														WHERE 	adminid = #{userid} or userid = #{userid}
+													)
+										) -- userid
+								AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+								BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
+								and 	to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+								and 	by_time 
+								in 		(
+											'am_peak' -- 오전 첨두 (주중)
+										,	'am_non_peak' -- 오전 비첨두 (주중)
+										,	'pm_non_peak' -- 오후 비첨두 (주중)
+										,	'pm_peak' -- 오후 첨두 (주중)
+										,	'am' -- 오전 (주말)
+										,	'pm' -- 오후 (주말)
+										)
+								and 	by_distance 
+								in 		(
+											'shortest_distance' -- 초단거리
+										,	'short_distance' -- 단거리
+										,	'medium_distance' -- 중거리
+										,	'long_distance' -- 장거리
+										,	'longest_distance' -- 초장거리
+										)
+
+							) a, 
+							(
+								SELECT	a.bmtid
+								,		a.userid
+								,		cp
+								,		CASE 
+											WHEN	( 
+														CASE 
+															WHEN	except_info = 'y' 
+															THEN 	1 ELSE 0 
+															END 
+													) = 0 THEN NULL 
+											WHEN 	( 
+														CASE 
+															WHEN	state_condition 
+															LIKE 	'정상%' 
+															THEN 	1 ELSE 0 
+															END 
+													) = 0 THEN NULL 
+											WHEN 	ss = '동시도착' 
+											THEN 	ss 
+											WHEN 	driver_tm - min_tm <![CDATA[<=]]> pre_arrival 
+											THEN 	'선착' ELSE '후착' 
+											END AS score 
+								,		driver_tm
+								,		driver_tm - min_tm as min_sub_tm
+								FROM	(
+											SELECT	bmtid
+											,		except_info
+											,		state_condition
+											,		cp
+											,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+											,		userid
+											FROM	bmt_total_info
+										) a,
+										(
+											SELECT	bmtid
+											,		min( driver_tm ) AS min_tm
+											,		CASE 
+														WHEN	max( driver_tm ) - min( driver_tm ) <![CDATA[<=]]> pre_arrival 
+														THEN 	'동시도착' ELSE NULL  
+														END AS ss 
+											FROM	(
+														SELECT	bmtid
+														,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+														,		pre_arrival 
+														FROM	bmt_total_info a
+														,		setting_value b 
+														where 	b.adminid 
+														in 		(
+																	select	adminid 
+																	from 	admin_user_list 
+																	where 	userid = #{userid} or adminid = #{userid}
+																)
+													) a 
+											GROUP BY	bmtid
+											, 			pre_arrival 
+										) b
+								,		setting_value c 
+								where 	c.adminid 
+								in 		(
+											select	adminid 
+											from 	admin_user_list 
+											where 	userid = #{userid} or adminid = #{userid}
+										)
+								and 	a.bmtid = b.bmtid
+							) b
+					where 	a.bmtid = b.bmtid
+					and 	a.cp = b.cp
+				) a
+		group by cp
+		order by cp
+	</select>
+	
+	<select id="getDataDelayGraphInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT	ROW_NUMBER() OVER(partition by a.cp order by a.bmtid) as delay_no
+		,		a.cp
+		,		min_sub_tm as arrival_delay_time
+		from	(
+					SELECT	*
+					from	(
+								SELECT	*
+								,		case
+											when	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+											in		(
+														to_char(to_date('00010101','yyyymmdd'),'day')
+													,	to_char(to_date('00010102','yyyymmdd'),'day')
+													,	to_char(to_date('00010103','yyyymmdd'),'day')
+													,	to_char(to_date('00010104','yyyymmdd'),'day')
+													,	to_char(to_date('00010105','yyyymmdd'),'day')
+													) 
+											then	(
+														case
+															when	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+															between to_char(am_peak_start,'hh24:mi:ss') and to_char(am_peak_end, 'hh24:mi:ss') 
+															then 	'am_peak' 
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+															between to_char(am_non_peak_start,'hh24:mi:ss') and to_char(am_non_peak_end, 'hh24:mi:ss') 
+															then 	'am_non_peak'
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[<]]> to_char(am_peak_start,'hh24:mi:ss') 
+															then 	'am_non_peak'
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_non_peak_start,'hh24:mi:ss') and to_char(pm_non_peak_end, 'hh24:mi:ss') 
+															then 	'pm_non_peak' 
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') <![CDATA[>]]> to_char(pm_peak_end,'hh24:mi:ss') 
+															then 	'pm_non_peak'
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') between to_char(pm_peak_start,'hh24:mi:ss') and to_char(pm_peak_end, 'hh24:mi:ss') 
+															then 	'pm_peak'
+															else 	null 
+															end
+													)
+											when 	to_char(to_date(starttm,'yyyy-mm-dd hh24:mi:ss'),'day') 
+											in		(to_char(to_date('00010106','yyyymmdd'),'day'),to_char(to_date('00010107','yyyymmdd'),'day')) 
+											then	(
+														case
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+															between to_char(am_start,'hh24:mi:ss') and to_char(am_end, 'hh24:mi:ss') 
+															then 	'am'
+															when 	to_char(to_timestamp(starttm,'yyyy-mm-dd hh24:mi:ss'), 'hh24:mi:ss') 
+															between to_char(pm_start,'hh24:mi:ss') and to_char(pm_end, 'hh24:mi:ss') 
+															then 	'pm'	
+															else 	null 
+															end
+													)
+											else 	null 
+											end 	as by_time
+								,		case
+											when 	to_number(arrive_distance,'0000.00') 
+											between shortest_distance_start and shortest_distance_end 
+											then 	'shortest_distance'
+											when 	to_number(arrive_distance,'0000.00') between short_distance_start and short_distance_end 
+											then 	'short_distance'
+											when 	to_number(arrive_distance,'0000.00') between medium_distance_start and medium_distance_end 
+											then 	'medium_distance'
+											when 	to_number(arrive_distance,'0000.00') between long_distance_start and long_distance_end 
+											then 	'long_distance'	
+											when 	to_number(arrive_distance,'0000.00') <![CDATA[>=]]> longest_distance_start 
+											then 	'longest_distance'
+											else 	null 
+											end 	as by_distance
+								from 	bmt_total_info a
+								, 		setting_value b
+								where 	b.adminid 
+								in 		(
+											select	adminid 
+											from 	admin_user_list 
+											where 	userid = #{userid} or adminid = #{userid}
+										)
+							) a
+					where	userid 
+					IN 		( 
+								SELECT	userid  
+								FROM 	admin_user_list 
+								WHERE 	adminid 
+								IN 		( 
+											SELECT	adminid  
+											FROM 	admin_user_list 
+											WHERE 	userid = #{userid} or adminid = #{userid}
+										)
+							) -- userid
+					AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+					BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+					and 	by_time 
+					in 
+					<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">
+						#{item}
+					</foreach>	
+					and 	by_distance 
+					in 
+					<foreach item="item" index="index" collection="list_distance" open="(" separator="," close=")">
+						#{item}
+					</foreach>	
+-- 					and	bmtid
+-- 					in 	(
+-- 							select	bmtid
+-- 							from	(
+-- 										select	bmtid
+--										, 		sum(total_count) as total_count
+--										, 		sum(normal_count) as normal_count
+-- 										from	(
+-- 													select	bmtid
+--													,		case 
+--																when cp is not null then 1 else null end as total_count
+--													,		case 
+--																when except_info = 'y' and state_condition like '정상%' then 1 else null end as normal_count
+-- 													from 	bmt_total_info
+-- 												) a
+-- 										group by bmtid
+-- 									) a
+-- 							where 	total_count = normal_count
+-- 						)
+				) a, 
+				(
+					SELECT	a.bmtid
+					,		a.userid
+					,		cp
+					,		CASE 
+								WHEN ( CASE WHEN except_info = 'y' THEN 1 ELSE 0 END ) = 0 THEN NULL 
+								WHEN ( CASE WHEN state_condition LIKE '정상%' THEN 1 ELSE 0 END ) = 0 THEN NULL 
+								WHEN ss = '동시도착' THEN ss 
+								WHEN driver_tm - min_tm <![CDATA[<=]]> pre_arrival THEN '선착' ELSE '후착' 
+								END AS score 
+					,		driver_tm
+					,		case 
+								when except_info = 'y' and state_condition LIKE '정상%' then driver_tm - min_tm else null end as min_sub_tm
+					FROM	(
+								SELECT	bmtid
+								,		except_info
+								,		state_condition
+								,		cp
+								,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+								,		userid 
+								FROM	bmt_total_info
+							) a,
+							(	SELECT	bmtid
+								,		min( driver_tm ) AS min_tm
+								,		CASE 
+											WHEN max( driver_tm ) - min( driver_tm ) <![CDATA[<=]]> pre_arrival THEN '동시도착' ELSE NULL  END AS ss
+								FROM	(
+											SELECT	bmtid
+											,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+											,		pre_arrival 
+											FROM	bmt_total_info a
+											,		setting_value b 
+											where 	b.adminid 
+											in 		(
+														select	adminid 
+														from 	admin_user_list 
+														where 	userid = #{userid} or adminid = #{userid}
+													)
+										) a 
+								GROUP BY	bmtid
+								, 			pre_arrival 
+							) b,
+							setting_value c 
+					where 	c.adminid 
+					in 		(
+								select	adminid 
+								from 	admin_user_list 
+								where 	userid = #{userid} or adminid = #{userid}
+							)
+					and 	a.bmtid = b.bmtid
+				) b
+		where 	a.bmtid = b.bmtid
+		and 	a.cp = b.cp
+		order by 1,2
+	</select>
+	
 </mapper>

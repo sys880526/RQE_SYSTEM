@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE>
 <html>
 <head>
 	<title>선/후착 및 도착 지연 시간</title>
@@ -21,7 +21,6 @@
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />    
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
-    
 </head>
 <body>
 <!-- #container -->
@@ -32,7 +31,7 @@
 		<!-- .body clearFix -->
 		<div class="body clearFix">
 			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
+			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
 			<!-- \#snbArea -->
 			<!-- #contentArea -->
 			<div id="contentsArea">
@@ -129,8 +128,8 @@
                                     <th colspan="7" style="background-color: white;border-style: none"></th>
                                 </tr>                               
                                 <tr>
-                                    <th colspan="5" style="height: 25PX;background-color: #f2e6d9;">목적지 선후착</th>
-                                    <th colspan="4" style="height: 25PX;background-color: #f2e6d9;">도착 지연 시간(후착 구간)</th>
+                                    <th colspan="5" style="background-color: #f2e6d9;">목적지 선후착</th>
+                                    <th colspan="4" style="background-color: #f2e6d9;">도착 지연 시간(후착 구간)</th>
                                 </tr>
                                 <tr>
                                 	<th style="background-color: #f2e6d9;">CP</th>
@@ -157,6 +156,19 @@
 		                    	<tr style="border-style: none;">
 		                    		<td style="border-style: none;">
 		                    			<div id="first_later_score"></div>
+		                    		</td>
+		                    	</tr>
+	                    	</tbody>
+	                    </table>
+                	</div>
+                	
+                	<div class="row">
+						<!-- 최선착 대비 도착 지연 시간 분포 -->
+	                    <table style="border-style: none;">
+	                    	<tbody style="border-style: none;">
+		                    	<tr style="border-style: none;">
+		                    		<td style="border-style: none;">
+		                    			<div id="delay_score"></div>
 		                    		</td>
 		                    	</tr>
 	                    	</tbody>
@@ -394,6 +406,7 @@
 					
 					all_score_data = data.out;
 					ampm_score_data = data.ampm;
+					delay_score_data = data.delay;
 					
 					list.empty();
 					
@@ -421,6 +434,7 @@
 					
 					//그래프 함수 호출
 					all_score();
+					delay_score();
 					ampeak_score();
 					amnonpeak_score();
 					pmnonpeak_score();
@@ -436,12 +450,12 @@
 		});
     };
     
+    // 그래프 데이터 변수
     var all_score_data = '';
     var ampm_score_data = '';
+    var delay_score_data = '';
     
-    /**
-    * 목적지 선후착률(전체구간) 그래프
-    */
+    // 목적지 선후착률(전체구간) 그래프
     function all_score() {
     	var array = [];
     	array.push(['cp', '선착', '동시도착', '후착']);
@@ -462,6 +476,79 @@
          }
          google.charts.setOnLoadCallback(drawChart);
     }; 
+    
+    
+    // 최선착 대비 도착 지연 시간 분포
+    function delay_score() {
+    	var array = [];
+    	array.push(['cp', '구간번호', '최선착 대비 지연 시간 (단위:분)', 'color']);
+    	delay_score_data.forEach(function(items, index, array2) {
+    		var chartdata = [ 
+				items.cp
+				,items.delay_no
+				,items.arrival_delay_time				
+			];
+    		if (chartdata[2] == '' || chartdata[2] == null || chartdata[2] == 0) {
+				return;
+			}
+    		if (chartdata[0] != 'Bluelink 최소') {
+    			chartdata.push(1);
+			} else if (chartdata[0] != 'Bluelink 추천') {
+				chartdata.push(2);
+			} else if (chartdata[0] != 'T map 최소') {
+				chartdata.push(3);
+			} else if (chartdata[0] != 'T map 최적') {
+				chartdata.push(4);
+			} else if (chartdata[0] != 'Kakao') {
+				chartdata.push(5);
+			}
+			array.push(chartdata);
+    	});
+    	function drawChart() {
+            var data = google.visualization.arrayToDataTable(array);
+            var options = {
+            		title: '최선착 대비 도착 지연 시간 분포',            		
+            		hAxis: {
+                        title: '구간분포',
+                        ticks: [],
+                        gridlines: {color: '#696966'},
+                        titleTextStyle:{italic:'0'}
+                        },
+                    vAxis: {
+                        title: '최선착 대비 지연 시간 (단위:분)',
+                        ticks: [],
+                        gridlines: {color: '#696966'},
+                        titleTextStyle:{italic:'0'}
+                        },
+                    colorAxis: {
+               	        values: [1, 2, 3, 4, 5], 
+               	        colors: ['#ff3385', '#8c1aff', '#00a3cc', '#009933', '#ff9966'], 
+               	        legend: {position: 'none'}
+                        },
+                    sizeAxis: {
+                    	maxSize:7,
+                    	minSize:1    	
+                        },
+                    chartArea:{backgroundColor:'#fffffff'},
+                    animation:{easing:'in'}
+            }; 
+            // 가로 라인개수
+            for (i = 0; i < array.length; i++) { 
+            	options.hAxis.ticks.push(i);
+            };
+            // 세로
+            var cnt = array.length - 1;
+            var total = array[cnt][2];
+            var result = total/5 + 2;
+            for (i = 0; i < result; i++) {
+            	options.vAxis.ticks.push(i*5);
+            };
+            // 차트그리기
+            var chart = new google.visualization.BubbleChart(document.getElementById('delay_score'));
+            chart.draw(data, options);
+         }
+         google.charts.setOnLoadCallback(drawChart);
+    };
     
     
     // 주중 오전 첨두 그래프

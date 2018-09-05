@@ -31,7 +31,7 @@ public class BmtIdReferencePathAnalysisServiceImpl implements BmtIdReferencePath
 		List<Map<String, Object>> userList = bmtIdReferencePathAnalysisDao.getUserList(map);
 		
 		// gpsList
-		List<List<Map<String, Object>>> gpsDataList = new ArrayList<>();
+		List<List<Map<String, Object>>> gpsDataList = new ArrayList<List<Map<String, Object>>>();
 		for(int i = 0; i < userList.size(); i++) {
 			gpsDataList.add(bmtIdReferencePathAnalysisDao.getGpsList(userList.get(i)));
 		}

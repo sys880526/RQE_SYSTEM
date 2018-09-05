@@ -16,8 +16,13 @@ public class ArrivalScheduledTimeErrorAndErrorRateServiceImpl implements Arrival
 	private ArrivalScheduledTimeErrorAndErrorRateDao arrivalScheduledTimeErrorAndErrorRateDao;
 
 	@Override
-	public List<Map<String, Object>> getArrivalScheduledTimeErrorAndErrorRateData(Map<String, Object> map) {
-		return (List<Map<String, Object>>) arrivalScheduledTimeErrorAndErrorRateDao.getArrivalScheduledTimeErrorAndErrorRateData(map);
+	public List<Map<String, Object>> getArrivalScheduledTimeErrorAndErrorRateData(Map<String, Object> input) {
+		return arrivalScheduledTimeErrorAndErrorRateDao.getArrivalScheduledTimeErrorAndErrorRateData(input);
+	}
+
+	@Override
+	public List<Map<String, Object>> getArrivalScheduledTimeErrorAndErrorRateGraphData(Map<String, Object> input) {
+		return arrivalScheduledTimeErrorAndErrorRateDao.getArrivalScheduledTimeErrorAndErrorRateGraphData(input);
 	}
 	
 }

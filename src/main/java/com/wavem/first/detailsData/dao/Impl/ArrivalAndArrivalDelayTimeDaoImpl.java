@@ -30,5 +30,10 @@ public class ArrivalAndArrivalDelayTimeDaoImpl implements ArrivalAndArrivalDelay
 	public List<Map<String, Object>> getDataScoreGraphInfo(Map<String, Object> input) {
 		return SqlSessionTemplate.selectList("arrivalAndArrivalDelayTime.getDataScoreGraphInfo", input);
 	}
+
+	@Override
+	public List<Map<String, Object>> getDataDelayGraphInfo(Map<String, Object> input) {
+		return SqlSessionTemplate.selectList("arrivalAndArrivalDelayTime.getDataDelayGraphInfo", input);
+	}
 	
 }
