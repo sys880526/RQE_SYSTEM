@@ -9,7 +9,7 @@
 		normal_count, -- 전체 cp 정상 진행 구간만
 		sum_distance, -- 총 합계
 		sum_distance - min_sum_distance AS sub_distance, -- 최소 cp와 차이값
-		round(((sum_distance - min_sum_distance)/min_sum_distance)*100,1) as ratio_distance -- 최소 cp와 차이 비율 (mape)
+		case when min_sum_distance = 0 then 0 else round(((sum_distance - min_sum_distance)/min_sum_distance)*100,1) end as ratio_distance -- 최소 cp와 차이 비율 (mape)
 	from
 	(
 		select cp, count(bmtid) as normal_count, round(sum(arrive_distance),1) as sum_distance
@@ -72,6 +72,7 @@
 				userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 				AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
 				-- 상세 데이터 검색 조건
+				and except_info = 'y' and state_condition like '정상%'
 				and by_time
 					in 
 				<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
@@ -166,6 +167,7 @@
 					userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 					AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
 					-- 상세 데이터 검색 조건
+					and except_info = 'y' and state_condition like '정상%'
 					and by_time
 						in
 					<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
@@ -285,6 +287,7 @@
 			 where
 					 userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 			   AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+			   and except_info = 'y' and state_condition like '정상%'
 					 -- 상세 데이터 검색 조건
 			   and by_time
 					   in

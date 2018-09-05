@@ -139,6 +139,7 @@
 		AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
 			BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
 			and to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+		and except_info = 'y' and state_condition like '정상%'
 		-- 상세 조건 부분 해당 부분은 검색 조건에 따라 변경
 		and by_time 
 			in 
