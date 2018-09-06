@@ -19,7 +19,7 @@
 				SELECT userid, max(gpstm) as max_gpstm
 				FROM gps_info
 				-- 테스트를 위한 주석 처리 ( 테스트는 당일 마다 데ㅐ이터를 받아 볼수 없기 때문 )
-		 		-- where to_date(gpstm, 'yyyy-mm-dd hh24:mi:ss') = current_date
+		 		where to_date(gpstm, 'yyyy-mm-dd hh24:mi:ss') = current_date
 				group by userid
 			) b,
 			(
