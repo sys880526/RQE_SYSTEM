@@ -242,7 +242,15 @@
 					ampm_score_data = data.ampm;
 					delay_score_data = data.delay;
 					
+					// 표 및 그래프 초기화
 					list.empty();
+					$('#first_later_score').empty();
+					$('#delay_score').empty();
+					$('#am_peak_score').empty();
+					$('#pm_non_peak_score').empty();
+					$('#pm_peak_score').empty();
+					$('#am_score').empty();
+					$('#pm_score').empty();
 					
 					if (data.out.length === 0) {
 						alert('검색된 값이 없습니다');
@@ -250,6 +258,17 @@
 					};
 					
 					data.out.forEach(function(items, index, array) {
+						
+						if (items.avg_delay_time == null || items.avg_delay_time == '') {
+							items.avg_delay_time = '-';
+						}; 
+						if (items.max_delay_time == null || items.max_delay_time == '') {
+							items.max_delay_time = '-';
+						};
+						if (items.standard_deviation_delay == null || items.standard_deviation_delay == '') {
+							items.standard_deviation_delay = '-';
+						};
+						
 						var html = [
 							'<tr>',
 							'<td>', items.cp, '</td>',
@@ -263,6 +282,7 @@
 							'<td>', items.standard_deviation_delay, '</td>',
 							'</tr>'
 						].join('');
+						
 						list.append(html);
 					});
 					
@@ -343,7 +363,7 @@
             var options = {
             		title: '최선착 대비 도착 지연 시간 분포',            		
             		hAxis: {
-                        title: '구간분포',
+                        title: '구간번호',
                         ticks: [],
                         gridlines: {color: '#696966'},
                         titleTextStyle:{italic:'0'}
@@ -366,14 +386,16 @@
                     chartArea:{backgroundColor:'#fffffff'},
                     animation:{easing:'in'}
             }; 
+            
+            var cnt = array.length - 1;
+            var hval = array[cnt][1];
+            var total = array[cnt][2];
+            var result = total/5 + 2;
             // 가로 라인개수
-            for (i = 0; i < array.length; i++) { 
+            for (i = 0; i < hval; i++) { 
             	options.hAxis.ticks.push(i);
             };
             // 세로
-            var cnt = array.length - 1;
-            var total = array[cnt][2];
-            var result = total/5 + 2;
             for (i = 0; i < result; i++) {
             	options.vAxis.ticks.push(i*5);
             };
@@ -445,7 +467,7 @@
 		});
     	function drawChart() {
             var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주중 오전 비첨두 선후착률', isStacked:true};  
+            var options = {title: '주중 오후 비첨두 선후착률', isStacked:true};  
             var chart = new google.visualization.ColumnChart(document.getElementById('pm_non_peak_score'));
             chart.draw(data, options);
          }
@@ -524,6 +546,14 @@
      */
      notFoundResult = function() {
     	$('#tbl-delay-info').children('tbody').append('<tr><td colspan="9">검색된 값이 없습니다</tr>');
+    	$('#first_later_score').empty();
+		$('#delay_score').empty();
+		$('#am_peak_score').empty();
+		$('#pm_non_peak_score').empty();
+		$('#pm_peak_score').empty();
+		$('#am_score').empty();
+		$('#pm_score').empty();
+    	
      };
 
 </script>
