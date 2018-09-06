@@ -255,6 +255,7 @@
 					if (data.out.length === 0) {
 						alert('검색된 값이 없습니다');
 						notFoundResult();
+						return;
 					};
 					
 					data.out.forEach(function(items, index, array) {
@@ -342,7 +343,7 @@
 				,items.delay_no
 				,items.arrival_delay_time				
 			];
-    		if (chartdata[2] == '' || chartdata[2] == null || chartdata[2] == 0) {
+    		if (chartdata[2] == '' || chartdata[2] == null) {
 				return;
 			}
     		if (chartdata[0] != 'Bluelink 최소') {
@@ -388,16 +389,30 @@
             }; 
             
             var cnt = array.length - 1;
-            var hval = array[cnt][1];
-            var total = array[cnt][2];
-            var result = total/5 + 2;
-            // 가로 라인개수
+            var hval = array[cnt][1] + 1;
+            var maxNum= 0;
+            //var total = array[cnt][2];
+            //var result = total/3 + 2;
+            // 세로 라인개수
             for (i = 0; i < hval; i++) { 
             	options.hAxis.ticks.push(i);
             };
-            // 세로
-            for (i = 0; i < result; i++) {
-            	options.vAxis.ticks.push(i*5);
+            // 가로 라인개수
+            for (var i = 0; i < cnt; i++) {
+	        	// maxNum 값이 없는 경우 현재 배열값으로 지정
+	        	/* if (maxNum == 0 || maxNum == null) {
+	        	    maxNum = array[0][2];
+	        	}; */
+	        	// maxNum의 값과 현재 값을 비교해서 maxNum값을 가장 큰 값으로 유지
+	        	if (maxNum < array[i][2]) {
+	        	    maxNum = array[i][2];
+	        	};
+			};
+			var result = maxNum+5;
+			console.log(maxNum);
+			console.log(result);
+            for (j = 0; j < result; j += 3) {
+            	options.vAxis.ticks.push(j);
             };
             // 차트그리기
             var chart = new google.visualization.BubbleChart(document.getElementById('delay_score'));
@@ -544,11 +559,12 @@
     /**
      * 검색된 값이 없는 경우
      */
-     notFoundResult = function() {
+     function notFoundResult() {
     	$('#tbl-delay-info').children('tbody').append('<tr><td colspan="9">검색된 값이 없습니다</tr>');
     	$('#first_later_score').empty();
 		$('#delay_score').empty();
 		$('#am_peak_score').empty();
+		$('#am_non_peak_score').empty();
 		$('#pm_non_peak_score').empty();
 		$('#pm_peak_score').empty();
 		$('#am_score').empty();
