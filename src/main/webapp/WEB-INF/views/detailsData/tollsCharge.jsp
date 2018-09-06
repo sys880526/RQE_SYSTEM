@@ -38,7 +38,7 @@
 			<div id="contentsArea">
 				<!-- .titContents -->
 				<div class="titContents">
-					<h2>경로 거리</h2>
+					<h2>통행 요금</h2>
 					<p>
 						Home > 상세데이터 >
 						<strong>통행 요금</strong>
