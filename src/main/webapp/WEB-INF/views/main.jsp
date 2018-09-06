@@ -91,7 +91,7 @@
 	
 	<!-- #footer -->
 	<div id=footer>
-		COPYRIGHT ⓒ ALL RIGHTS RESERVED.
+		ⓒ 2018. WaveM Co. ALL RIGHTS RESERVED.
 	</div>
 	
 	<script>
