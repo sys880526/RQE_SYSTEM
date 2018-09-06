@@ -29,7 +29,7 @@
 					,		case
 								when	except_info = 'y' 
 								and 	state_condition like '정상%' 
-								then 	round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1)
+								then 	(case when driver_tm = 0 then null else round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1) end)
 								else 	null 
 								end as mape_eta_tm
 					from	(
