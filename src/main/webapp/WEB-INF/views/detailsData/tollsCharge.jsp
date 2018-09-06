@@ -282,6 +282,10 @@
                         tension: 0
                     }
                 }
+	            , legend: {
+	                display: true,
+	                position: 'bottom'
+	            }
             }
         });
     }
@@ -358,6 +362,10 @@
                         tension: 0
                     }
                 }
+	            , legend: {
+	                display: true,
+	                position: 'bottom'
+	            }
             }
         });
     }

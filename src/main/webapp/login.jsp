@@ -18,7 +18,6 @@
 		// keydown event 
 		$("#userPass").keydown(function(event) {
 			if (event.which == 13) {
-				alert("test");
 				loginAction();
 			}
 		});
@@ -92,9 +91,8 @@
 	<!-- #login -->
 	<div id="login">
 		<ul>
-			<li><label for="userId">ID</label> <input type="text" id="userId" class="text" /></li>
-			<li><label for="userPw">PASSWORD</label> <input type="password" id="userPass" class="text" /></li>
-<!-- 			<li class="btn"><a href="./sample.do"><img src="./images/login/btn_login.gif" alt="로그인" /></a></li> -->
+			<li><label for="userId">ID</label> <input type="text" id="userId" name="userId" class="text" /></li>
+			<li><label for="userPw">PASSWORD</label> <input type="password" id="userPass" name="userPass" class="text" /></li>
 			<li class="btn">					
 				<img id="btnLogin" src="./images/login/btn_login.gif" alt="Login" title="Login" style="cursor: pointer;" />
 			</li>

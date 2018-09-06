@@ -8,7 +8,7 @@
 			   cp,
 			   sum_charge,
 			   sum_charge - min_charge AS sub_charge,
-			   round(((sum_charge - min_charge)/min_charge)*100,1) as ratio_charge
+			   case when min_charge = 0 then 0 else round(((sum_charge - min_charge)/min_charge)*100,1) end as ratio_charge
 		from
 			 (
 			 select cp, sum(arrive_charge) as sum_charge
@@ -16,7 +16,7 @@
 				  (
 				  SELECT
 						 bmtid,
-						 userid,
+						 userid,     
 						 cp,
 						 to_number(arrive_charge, '000000,0') as arrive_charge,
 						 by_time,
@@ -69,6 +69,7 @@
 				  where
 						  userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 					AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+					and except_info = 'y' and state_condition like '정상%'
 					and by_time
 							in
 					<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
@@ -161,6 +162,7 @@
 					   where
 							   userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 						 AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+						 and except_info = 'y' and state_condition like '정상%'
 						 and by_time
 								 in
 						<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
@@ -280,6 +282,7 @@
 			 where
 					 userid IN ( SELECT userid  FROM admin_user_list WHERE adminid IN ( SELECT adminid  FROM admin_user_list WHERE adminid = #{userid} or userid = #{userid}))
 			   AND to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) BETWEEN to_date (#{start_date},'yyyy-mm-dd') and to_date(#{end_date},'yyyy-mm-dd')
+			   and except_info = 'y' and state_condition like '정상%'
 			   and by_time
 					   in
 				<foreach collection="time_list" index="index" item="item" separator="," open="(" close=")">
