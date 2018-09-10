@@ -68,7 +68,9 @@ public class LoginController {
 			// session setting
 			HttpSession session = request.getSession();
 			session.setAttribute("SS_USER_ID", userInfo.getUserId()); // 사용자ID
-			session.setAttribute("SS_USER_NM", userInfo.getUserName()); // 사용자명
+			session.setAttribute("SS_CP", userInfo.getCp()); // 사용자CP
+			session.setAttribute("SS_CAR_INFO", userInfo.getCarinfo());
+			session.setAttribute("SS_AUCODE", userInfo.getAucode()); 
 			mav.addObject("userInfoList", userInfoList);
 			
 			 // 세션에 존재하는 Locale을 새로운 언어로 변경해준다.
@@ -101,7 +103,9 @@ public class LoginController {
 		// session setting
 		HttpSession session = request.getSession();
 		session.setAttribute("SS_USER_ID", null); // 사용자ID
-		session.setAttribute("SS_USER_NM", null); // 사용자명
+		session.setAttribute("SS_CP", null); // 사용자CP
+		session.setAttribute("SS_CAR_INFO", null);
+		session.setAttribute("SS_AUCODE", null); 
 		
 		//mav.addObject("gubun", "관리자");
 		mav.setViewName("redirect:/");

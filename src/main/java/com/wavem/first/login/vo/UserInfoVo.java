@@ -4,8 +4,9 @@ public class UserInfoVo {
 
 	private String userId;
 	private String userPass;
-	private String userName;
-	
+	private String cp;
+	private String carinfo;
+	private String aucode;
 	
 	public String getUserId() {
 		return userId;
@@ -19,12 +20,23 @@ public class UserInfoVo {
 	public void setUserPass(String userPass) {
 		this.userPass = userPass;
 	}
-	public String getUserName() {
-		return userName;
+	public String getCp() {
+		return cp;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setCp(String cp) {
+		this.cp = cp;
 	}
-	
+	public String getCarinfo() {
+		return carinfo;
+	}
+	public void setCarinfo(String carinfo) {
+		this.carinfo = carinfo;
+	}
+	public String getAucode() {
+		return aucode;
+	}
+	public void setAucode(String aucode) {
+		this.aucode = aucode;
+	}
 	
 }

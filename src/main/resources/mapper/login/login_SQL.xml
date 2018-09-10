@@ -6,17 +6,31 @@
 	<resultMap type="com.wavem.first.login.vo.UserInfoVo" id="login-resultMap">
 		<result property="userId" column="userid" />
 		<result property="userPass" column="userpw" />
-<!-- 		<result property="userName" column="user_nm" /> -->
+		<result property="cp" column="cp"/>
+		<result property="carinfo" column="carinfo"/>
+		<result property="aucode" column="aucode"/>
 	</resultMap>
 
 	<select id="login" parameterType="com.wavem.first.login.vo.UserInfoVo"  resultType="com.wavem.first.login.vo.UserInfoVo">
-		SELECT 
-			userid
-			, userpw
-			, aucode
-		FROM user_id_list
-		WHERE userid = #{userId}
-		AND userpw = #{userPass}
+		select a.userid, a.cp, a.carinfo, c.aucode
+			from
+			(
+			select userid, cp, carinfo, bid
+			from cp_list
+			) a,
+			(
+			select userid, max(bid) as m_bid
+			from cp_list
+			where userid in (select userid from user_id_list where userid = #{userId} and userpw = #{userPass})
+			group by userid
+			) b,
+			(
+			select userid, aucode
+			from user_id_list
+			) c
+			where a.userid = b.userid
+				and a.bid = b.m_bid
+				and a.userid = c.userid
 	</select>
 
 </mapper>

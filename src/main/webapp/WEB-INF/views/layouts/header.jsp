@@ -9,15 +9,23 @@
 <%-- 	<c:set var="Depth1" value="<%=Depth1%>"/>	 --%>
 <%
 	String userId = (String)session.getAttribute("SS_USER_ID");
+	String cp = (String)session.getAttribute("SS_CP");
+	String carinfo = (String)session.getAttribute("SS_CARINFO");
 %>
 	<div id="header">
           <a href="/main">
               <img src="../images/common/logo.gif" alt="wavem_logo" />
           </a>
-          <ul class="util">
-              <li class="name"><strong><%=userId%></strong>님</li>
-              <li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li>
-          </ul>
+<!--           <ul class="util"> -->
+<%--               <li class="name"><strong><%=userId%></strong>님</li> --%>
+<!--               <li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li> -->
+<!--           </ul> -->
+		<div class="util">
+			<div style="border:1px solid blue">
+				<li class="name"><strong><%=userId %></strong>님</li>
+				<li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li>
+			</div>
+		</div>
           <div class="row">                
               <ul id="gnb" class="gnb">
 <%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_1.gif" alt="home" /></a></li> --%>
