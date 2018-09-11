@@ -102,6 +102,7 @@
 					AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
 					BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
 					and 	to_date(#{end_date},'yyyy-mm-dd')
+					and except_info = 'y' and state_condition like '정상%'
 					and		by_time 
 					in 
 					<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">

@@ -122,7 +122,9 @@
 	var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 	
 	callPositionInfo();	
+	setInterval(function(){ callPositionInfo() }, 10000);
 	
+	var customOverlayList = [];
 	
 	function drawInfo(positions){
 		var centerLon = 0;
@@ -130,10 +132,19 @@
 		
 		$("#cpName > tbody").empty();
 		
+		if(positions.length == 0){
+			return false;
+		}
+		
 		var tableHtml = '';
 		
 		centerLon = (parseFloat(positions[0].lon) + parseFloat(positions[1].lon))/2;
 		centerLat = (parseFloat(positions[0].lat) + parseFloat(positions[1].lat))/2;
+		
+		for(var i = 0; i < customOverlayList.length; i++) {
+			customOverlayList[i].setMap(null);
+		}
+		
 		for (var i = 0; i < positions.length; i++) {
 			var imageSrc = '../svg/markerSVG'+ (i+1) + '.svg', // 마커이미지의 주소입니다    
 			    imageSize = new daum.maps.Size(34, 34), // 마커이미지의 크기입니다
@@ -165,11 +176,8 @@
 			    content: content,
 			    yAnchor: 1 
 			});
-			
-			
-			
+			customOverlayList.push(customOverlay);
 			// table 데이터 
-			
 			tableHtml += '<tr>';
 			tableHtml += '<td>' + positions[i].cp + '</td>';
 			tableHtml += '<td>' + positions[i].userid + '</td>';

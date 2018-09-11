@@ -29,7 +29,7 @@
 					,		case
 								when	except_info = 'y' 
 								and 	state_condition like '정상%' 
-								then 	round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1)
+								then 	(case when driver_tm = 0 then null else round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1) end)
 								else 	null 
 								end as mape_eta_tm
 					from	(
@@ -127,6 +127,7 @@
 					AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
 					BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
 					and 	to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+					and except_info = 'y' and state_condition like '정상%'
 					and 	by_time 
 					in 
 					<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">
@@ -156,6 +157,7 @@
 	-- 									) a
 	-- 							where 	total_count = normal_count
 	-- 						)
+	
 				) a
 		group by cp
 		order by cp
@@ -265,6 +267,7 @@
 				AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
 				BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
 				and 	to_date(#{end_date},'yyyy-mm-dd') -- 검색 기간
+				and except_info = 'y' and state_condition like '정상%'
 				and 	by_time 
 				in 
 				<foreach item="item" index="index" collection="list_time" open="(" separator="," close=")">

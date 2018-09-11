@@ -279,32 +279,34 @@
 	setDate = function() {
 		var start = $('#bmt-start-date');
 		var end = $('#bmt-end-date');
+		var modalCal = $('#bmt-date');	// modal 에 입력되는 달력
 		
-		/*var year = new Date().getFullYear();
-		
-		var month1 = new Date().getMonth() + 1;
-		var month2 = null;
-		if (month1 < 10) {
-			month2 = '-0' + month1;
-		} else {
-			month2 = '-' + month1;
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		if (month < 10) {
+			month = '0' + month;
+		}
+		var day = date.getDate();
+		if (day < 10) {
+			day = '0' + day;
+		}
+
+		var prevDate = new Date(date.setDate(date.getDate()-30));
+		var prevYear = prevDate.getFullYear();
+		var prevMonth = prevDate.getMonth() + 1;
+		if (prevMonth < 10) {
+			prevMonth = '0' + prevMonth;
+		}
+		var prevDay = prevDate.getDate();
+		if (prevDay < 10) {
+			prevDay = '0' + prevDay;
 		}
 		
-		var day1 = new Date().getDate();
-		var day2 = null;
-		
-		if (day1 < 10) {
-			day2 = '-0' + day1;
-		} else {
-			day2 = '-' + day1;
-		}
-		
-		start.val(year + month2 + day2);
-		end.val(year + month2 + day2); */
-		start.val('2018-08-01');
-		end.val('2018-08-31');
-		
-	} 
+		start.val(prevYear + '-' + prevMonth + '-' + prevDay);
+		end.val(year + '-' + month + '-' + day);
+		modalCal.val(year + '-' + month + '-' + day);
+	}; 
 	
 	dataSheetList = function() {
 		var start = $('#bmt-start-date').val();
