@@ -23,19 +23,20 @@ public class BmtListRegistrationController {
 	@Autowired
 	private BmtListRegistrationService bmtListRegistrationService;
 	
-	
 	@RequestMapping(value = "/bmtListRegistration/bmtListRegistration", method=RequestMethod.GET)
-	public ModelAndView bmtListRegistration() {
-		
+	public ModelAndView bmtListRegistration(HttpSession session) {
 		ModelAndView mv = new ModelAndView("bmtListRegistration/bmtListRegistration");
-		
-		
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mv.setViewName("redirect:/");
+		}
 		mv.addObject("control", "bmtListRegistration");
 		mv.addObject("sub_control", "bmtListRegistration.bmtListRegistration");
-		
 		return mv;
 	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/bmtListRegistration/getBmtHistoryList", method = RequestMethod.POST)
@@ -60,10 +61,8 @@ public class BmtListRegistrationController {
 	public ModelAndView saveNewBmtList(HttpServletRequest request, HttpSession session
 			, @RequestBody List<Map<String, Object>> saveData) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		
 		int resultCode = bmtListRegistrationService.saveNewBmtList(saveData);
 		mav.addObject("code", resultCode);
-		
 		return mav;
 	}
 }

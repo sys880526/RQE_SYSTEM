@@ -104,7 +104,7 @@
                            <table id="PathCostStatus" cellspacing="0" width="100%" border="0">
                             <thead>
 								<tr style="background-color: #e6f2ff;">
-										<th>경로 비용 현황</th>
+									<th colspan="2">경로 비용 현황</th>
 								</tr>		
                                 <tr style="background-color: #e6f2ff;">
 										<th rowspan="2">평가 대상명</th>
@@ -138,6 +138,7 @@
 		<!-- \.body clearFix -->
 	</div>
 </body>
+<script src="/js/common.js"></script>
 <script>
 	$(document).ready(function() {
 		/**
@@ -229,64 +230,95 @@
      
 	//총 경로 거리 차트 function
      function drawChart1(data) {
-    	 // Create the data table.
-    	 var graphData1 = new google.visualization.DataTable();
-    	 
-         graphData1.addColumn('string', 'cp 명');
-         graphData1.addColumn('number', '총 경로 거리');
-         
-         for(var i = 0; i < data.list.length; i++){
-            graphData1.addRow([data.list[i].cp, data.list[i].sum_distance]);
-            
-         }
-         
-          var options = {
-            title: '총 경로 거리 (단위:km)',
-            is3D: true,
-          };
-
-          var chart1 = new google.visualization.PieChart(document.getElementById('Comprehensive_distanceGraph'));
-          chart1.draw(graphData1, options);
+		// Create the data table.
+		var graphData1 = new google.visualization.DataTable();
+    	graphData1.addColumn('string', 'cp 명');
+        graphData1.addColumn('number', '총 경로 거리');
+        
+        for(var i = 0; i < data.list.length; i++){
+        	graphData1.addRow([data.list[i].cp, data.list[i].sum_distance]);
         }
+         
+        var options = {
+        		title: '총 경로 거리 (단위:km)',
+        		colors: [],
+        		is3D: true
+        };
+     	// option color set
+       	set_color(options);
+        var chart1 = new google.visualization.PieChart(document.getElementById('Comprehensive_distanceGraph'));
+        chart1.draw(graphData1, options);
+     }
      
  	//총 통행 요금 차트 function
      function drawChart2(data) {
-       var graphData2 = new google.visualization.DataTable();
-    	   graphData2.addColumn('string', 'cp 명');
-           graphData2.addColumn('number', '총 통행 요금');
-           
-           for(var i = 0; i < data.list.length; i++){
-              graphData2.addRow([data.list[i].cp, data.list[i].sum_charge]);
-              
-           }
-
-       var options = {
-         title: '총 통행 요금 (단위:원)',
-         is3D: true,
-       };
-
-       var chart2 = new google.visualization.PieChart(document.getElementById('Comprehensive_chargeGraph'));
-       chart2.draw(graphData2, options);
+ 		var graphData2 = new google.visualization.DataTable();
+    	graphData2.addColumn('string', 'cp 명');
+        graphData2.addColumn('number', '총 통행 요금');
+        
+        for(var i = 0; i < data.list.length; i++){
+        	graphData2.addRow([data.list[i].cp, data.list[i].sum_charge]);
+        }
+        
+        var options = {
+        		title: '총 통행 요금 (단위:원)',
+        		colors: [],
+        		is3D: true
+        }
+     	// option color set
+       	set_color(options);
+        var chart2 = new google.visualization.PieChart(document.getElementById('Comprehensive_chargeGraph'));
+        chart2.draw(graphData2, options);
      }
+ 	
  	//총 통행 시간 차트 function
      function drawChart3(data) {
-       var graphData3 = new google.visualization.DataTable();
-           graphData3.addColumn('string', 'cp 명');
-           graphData3.addColumn('number', '총 통행 시간');
+ 		var graphData3 = new google.visualization.DataTable();
+        graphData3.addColumn('string', 'cp 명');
+        graphData3.addColumn('number', '총 통행 시간');
            
-           for(var i = 0; i < data.list.length; i++){
-                  graphData3.addRow([data.list[i].cp, data.list[i].sum_tm]);
-               }
-    	   
-       var options = {
-         title: '총 통행 시간 (단위:분)',
-         is3D: true,
-       };
-
-       var chart3 = new google.visualization.PieChart(document.getElementById('Comprehensive_timeGraph'));
-       chart3.draw(graphData3, options);
-     }
+      	for(var i = 0; i < data.list.length; i++){
+             graphData3.addRow([data.list[i].cp, data.list[i].sum_tm]);
+        }
+      	
+       	var options = {
+       			title: '총 통행 시간 (단위:분)',
+         		colors: [],
+         		is3D: true
+       	}
+       	// option color set
+       	set_color(options);
+       	var chart3 = new google.visualization.PieChart(document.getElementById('Comprehensive_timeGraph'));
+       	chart3.draw(graphData3, options);
+     };
      
+  	// 그래프 데이터 변수
+     var total_distance_data = '';
+  	
+  	// option color set
+     function set_color(options) {
+    	 var co = ['#FF0000', '#0000FF', '#FFFF00', '#00FF00', '#FFA500', '#BA55D3', '#8B4513', '#C0C0C0', '#EE82EE', '#00BFFF'];
+    	 var cp = [];
+    	 total_distance_data.forEach(function(items, index, array) {
+    		 cp.push(items.cp);
+     	 });
+    	 var cnt = cp.length;
+    	 
+    	// colorAxis.colors 
+   		if (cnt <= 10) {
+   			for (var i = 0; i < cnt; i++) {
+   	  			options.colors.push(co[i]);
+   	  		};
+ 		} else {
+ 			for (var i = 0; i < 10; i++) {
+   	  			options.colors.push(co[i]);
+   	  		};	
+   	  		for (var i = 10; i < cnt; i++) {
+   	  			// getRandomColor()은 common.js 안에 있습니다.
+ 	  			options.colors.push(getRandomColor());
+ 	  		};
+ 		}
+  	};
 	
 	getList = function() {
 		var start = $('#bmt-start-date').val();
@@ -303,7 +335,7 @@
  			, data : $('#search-bmt').serializeObject()
 			, processData : true /*querySTring make false*/
 			, success : function(data, stat, xhr) {
-				
+				total_distance_data = data.list;
 				var evaluationSectionStatusHtml = '';
 				var pathCostStatusHtml = '';
 				

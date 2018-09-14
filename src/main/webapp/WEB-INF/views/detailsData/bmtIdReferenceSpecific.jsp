@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />    
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
+    <link rel="stylesheet" type="text/css" href="../css/imageModal.css" />
 </head>
 <body>
 <!-- #container -->
@@ -77,7 +78,7 @@
 	                    	</table>
 	                    	<!-- image -->
 		                    <div style="margin-bottom: 20px">
-								<img id="specific-image" src="" style="display: block;margin-left: auto;margin-right: auto;width: 50%">		                    
+								<img id="specific-image" src="" style="display: block;margin-left: auto;margin-right: auto;width: 50%;cursor: pointer;">		                    
 		                    </div>
 	                       <!-- \image -->
 	                       <table id="tbl-specific-etc">
@@ -103,6 +104,14 @@
 		<!-- \.body clearFix -->
 	</div>
 	<!-- \#container -->
+	
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+		<button class="rotation" id="image_rotation" style="cursor: pointer;">회전 </button>
+		<!-- <span class="rotation" style="cursor: pointer;">&#xf01e;</span> -->
+		<span class="close">&times;</span>
+		<img class="modal-content-img" id="modal_img">
+	</div>
 </body>
 <script>
 	$(document).ready(function() {
@@ -111,6 +120,33 @@
 		
 		// 검색된 값이 없는경우 
 		notFoundResult();
+		
+		// Get the modal
+		var modal = document.getElementById('myModal');
+		
+		// Get the image and insert it inside the modal	
+		var modalImg = document.getElementById("modal_img");
+		$('#specific-image').on('click', function() {
+			modal.style.display = "block";
+			modalImg.src = this.src;
+		});
+		
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+		
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() { 
+		    modal.style.display = "none";
+		}
+		
+		var deg_temp = 0;
+		$('#modal_img').attr('class', 'modal-content-img');
+		
+		$('#image_rotation').on('click', function() {
+			deg_temp = deg_temp + 90;
+			var img = $('#modal_img');
+			img.attr('class', 'modal-content-img rotated-image');
+		});
 
 	});//document.ready
 	
@@ -175,7 +211,7 @@
 					var html1 = [
 						'<tr onclick="selectSpecific(',
 						index,
-						')">',
+						')" style="cursor: pointer;">',
 						'<td>', items.bmtid, '</td>',
 						'<td>', items.yugocode, '</td>',
 						'<td>', items.cp, '</td>',

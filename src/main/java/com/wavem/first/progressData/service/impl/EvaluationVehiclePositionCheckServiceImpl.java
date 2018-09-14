@@ -1,4 +1,4 @@
-package com.wavem.first.synthesisData.service.impl;
+package com.wavem.first.progressData.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wavem.first.synthesisData.dao.EvaluationVehiclePositionCheckDao;
-import com.wavem.first.synthesisData.service.EvaluationVehiclePositionCheckService;
+import com.wavem.first.progressData.dao.EvaluationVehiclePositionCheckDao;
+import com.wavem.first.progressData.service.EvaluationVehiclePositionCheckService;
 
 @Service("EvaluationVehiclePositionCheckService")
 public class EvaluationVehiclePositionCheckServiceImpl implements EvaluationVehiclePositionCheckService {

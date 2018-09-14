@@ -1,4 +1,4 @@
-package com.wavem.first.synthesisData.dao;
+package com.wavem.first.progressData.dao;
 
 import java.util.List;
 import java.util.Map;

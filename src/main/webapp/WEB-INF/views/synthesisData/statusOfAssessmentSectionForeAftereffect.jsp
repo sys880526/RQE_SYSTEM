@@ -265,8 +265,8 @@
 						'<td>', items.friday_nomal, '(', items.friday_total, ')', '</td>',
 						'<td>', items.saturday_nomal, '(', items.saturday_total, ')', '</td>',
 						'<td>', items.sunday_nomal, '(', items.sunday_total, ')', '</td>',
-						'<td>', items.except_info_y, '</td>',
 						'<td>', items.state_condition_y, '</td>',
+						'<td>', items.except_info_y, '</td>',
 						'</tr>'
 					].join('');
 					
@@ -279,8 +279,8 @@
 						'<td>', items.pm_peak_normal, '(', items.pm_peak_total, ')', '</td>',
 						'<td>', items.am_normal, '(', items.am_total, ')', '</td>',
 						'<td>', items.pm_normal, '(', items.pm_total, ')', '</td>',
-						'<td>', items.except_info_y, '</td>',
 						'<td>', items.state_condition_y, '</td>',
+						'<td>', items.except_info_y, '</td>',
 						'</tr>'
 					].join('');
 					list1.append(html1);
@@ -289,20 +289,20 @@
 				
 				data.foreAfter.forEach(function(items, index, array) {
 					var html3 = [
-						'<tr>',
+						'<tr class="', items.check_select, '">',
 						'<td>', items.cp, '</td>',
-						'<td>', items.total_nomal, '</td>',
+						'<td>', items.state_condition, '</td>',
 						'<td>', items.arrive_first, '</td>',
 						'<td>', items.arrive_together, '</td>',
 						'<td>', items.arrive_later, '</td>',
-						'<td>', items.etc_count, '</td>',
-						'<td>', items.total_count, '</td>',
+						'<td>', items.except_info_n, '</td>',
+						'<td>', items.except_info, '</td>',
 						'</tr>'
 					].join('');		
 					list3.append(html3);
 				});//forEach
-				
-					
+				$('.1').css( "background-color", '#e6ffcc' );
+				$('.2').css( "background-color", '#ffcccc' );
 			}
 		    , error : function(xhr, stat, err) {
 		    	alert("error");

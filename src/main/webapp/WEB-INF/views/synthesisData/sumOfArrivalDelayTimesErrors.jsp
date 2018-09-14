@@ -244,7 +244,7 @@
 				
 				data.arrivalDelay.forEach(function(items, index, array) {					
 					var html1 = [
-						'<tr>',
+						'<tr class="',  items.check_select , '">',
 						'<td>', items.cp, '</td>',
 						'<td>', items.normal_count, '</td>',
 						'<td>', items.avg_delay_time, '</td>',
@@ -260,7 +260,7 @@
 				
 				data.arrivalSchedule.forEach(function(items, index, array) {
 					var html2 = [
-						'<tr>',
+						'<tr class="',  items.check_select , '">',
 						'<td>', items.cp, '</td>',
 						'<td>', items.normal_count, '</td>',
 						'<td>', items.avg_mae_eta, '</td>',
@@ -273,7 +273,9 @@
 					].join('');		
 					list2.append(html2);
 				});//forEach
-					
+				//강조 표시
+				$('.1').css( "background-color", '#e6ffcc' );
+				$('.2').css( "background-color", '#ffcccc' );
 			}
 		    , error : function(xhr, stat, err) {
 		    	alert("error");

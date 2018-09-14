@@ -4,12 +4,19 @@
 <mapper namespace="pathDistance">
 
 	<select id="getPathDistance" parameterType="hashmap"  resultType="hashmap">
-	SELECT
-		cp,
-		normal_count, -- 전체 cp 정상 진행 구간만
-		sum_distance, -- 총 합계
-		sum_distance - min_sum_distance AS sub_distance, -- 최소 cp와 차이값
-		case when min_sum_distance = 0 then 0 else round(((sum_distance - min_sum_distance)/min_sum_distance)*100,1) end as ratio_distance -- 최소 cp와 차이 비율 (mape)
+	SELECT	cp
+	,		normal_count -- 전체 cp 정상 진행 구간만
+	,		sum_distance -- 총 합계
+	,		sum_distance - min_sum_distance AS sub_distance -- 최소 cp와 차이값
+	,		case 
+				when min_sum_distance = 0 then null else round(((sum_distance - min_sum_distance)/min_sum_distance)*100,1) end as ratio_distance -- 최소 cp와 차이 비율 (mape)
+	, 
+		-- 	case when rank() over(order by sum_distance) = 1 then 1 else 0 end as check_win,
+		-- 	case when rank() over(order by sum_distance desc) = 1 then 1 else 0 end as check_lose,
+			case 
+				when (case when rank() over(order by sum_distance) = 1 then 1 else 0 end) = 1 then 1
+				when (case when rank() over(order by sum_distance desc) = 1 then 1 else 0 end) = 1 then 2 
+				else 0 end as check_select
 	from
 	(
 		select cp, count(bmtid) as normal_count, round(sum(arrive_distance),1) as sum_distance

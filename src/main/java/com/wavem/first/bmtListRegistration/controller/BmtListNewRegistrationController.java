@@ -23,19 +23,20 @@ public class BmtListNewRegistrationController {
 	@Autowired
 	private BmtListNewRegistrationService bmtListNewRegistrationService;
 	
-	
 	@RequestMapping(value = "/bmtListRegistration/bmtNewList", method=RequestMethod.GET)
-	public ModelAndView bmtNewList() {
-		
+	public ModelAndView bmtNewList(HttpSession session) {
 		ModelAndView mv = new ModelAndView("bmtListRegistration/bmtListNewRegistration");
-		
-		
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mv.setViewName("redirect:/");
+		}
 		mv.addObject("control", "bmtListRegistration");
 		mv.addObject("sub_control", "bmtListRegistration.bmtNewList");
-		
 		return mv;
 	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/bmtListRegistration/getBmtNewList", method = RequestMethod.POST)
@@ -57,21 +58,18 @@ public class BmtListNewRegistrationController {
 	public ModelAndView deleteBmtNewList(HttpServletRequest request, HttpSession session
 			, @RequestBody List<Map<String, Object>> deleteData) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		
 		int resultCode = bmtListNewRegistrationService.deleteBmtNewList(deleteData);
 		mav.addObject("code", resultCode);
-		
 		return mav;
 	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/bmtListRegistration/bmtNewListsInsert", method = RequestMethod.POST)
 	public ModelAndView bmtNewListsInsert(HttpServletRequest request, HttpSession session
 			, @RequestBody List<Map<String, Object>> saveData) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		
 		int resultCode = bmtListNewRegistrationService.bmtNewListsInsert(saveData);
 		mav.addObject("code", resultCode);
-		
 		return mav;
 	}
 }

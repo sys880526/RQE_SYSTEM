@@ -28,8 +28,15 @@ public class TollsChargeController {
 		private TollsChargeService tollsChargeService;
 		
 		@RequestMapping(value = "/detailsData/tollsCharge", method = RequestMethod.GET)
-		public ModelAndView getTollsCharge(HttpServletRequest request, HttpServletResponse response) {
+		public ModelAndView getTollsCharge(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 			ModelAndView mav = new ModelAndView();
+			//session check
+			if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+					|| session.getAttribute("SS_CP").toString().isEmpty()
+					|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+					|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+				mav.setViewName("redirect:/");
+			}
 			mav.addObject("control", "detailsData");
 			mav.addObject("sub_Control","detailsData_tollsCharge");
 			mav.setViewName("detailsData/tollsCharge");

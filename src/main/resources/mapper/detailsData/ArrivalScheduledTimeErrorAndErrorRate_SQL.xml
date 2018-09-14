@@ -5,13 +5,28 @@
 
 	<select id="getArrivalScheduledTimeErrorAndErrorRateData" parameterType="hashmap"  resultType="hashmap">
 		select	cp
-		,		count(sub_eta_tm) as normal_count
-		,		round(avg(sub_eta_tm),1) as avg_mae_eta
-		,		max(sub_eta_tm) as max_mae_eta
-		,		round(stddev(sub_eta_tm),1) as standard_deviation_mae
-		,		round(avg(mape_eta_tm),1) as avg_mape_eta
-		,		max(mape_eta_tm) as max_mape_eta
-		,		round(stddev(mape_eta_tm),1) as standard_deviation_mape
+		,		count(sub_eta_tm) as normal_count -- CP 별 정상 주행 건수
+		,		round(avg(sub_eta_tm),1) as avg_mae_eta -- ETA 오차 평균값
+		,		max(sub_eta_tm) as max_mae_eta -- ETA 오차 최대값
+		,		round(stddev(sub_eta_tm),1) as standard_deviation_mae -- ETA 오차 표준편차
+		, 
+			-- 	case when rank() over(order by round(avg(sub_eta_tm),1)) = 1 then 1 else 0 end as check_select_01,
+			-- 	case when rank() over(order by round(avg(sub_eta_tm),1) desc) = 1 then 1 else 0 end as check_select_01,
+				case 
+					when (case when rank() over(order by round(avg(sub_eta_tm),1)) = 1 then 1 else 0 end) = 1 then 1
+					when (case when rank() over(order by round(avg(sub_eta_tm),1) desc) = 1 then 1 else 0 end) = 1 then 2
+					else 0 end as check_select_01
+		,		round(avg(mape_eta_tm),1) as avg_mape_eta -- ETA 오차율 평균값
+		,		max(mape_eta_tm) as max_mape_eta -- ETA 오차율 최대값
+		,		round(stddev(mape_eta_tm),1) as standard_deviation_mape -- ETA 오차율 표준편차
+		, 
+			-- 	case when rank() over(order by round(avg(mape_eta_tm),1)) = 1 then 1 else 0 end as check_select_02,
+			-- 	case when rank() over(order by round(avg(mape_eta_tm),1) desc) = 1 then 1 else 0 end as check_select_02
+				case 
+					when (case when rank() over(order by round(avg(mape_eta_tm),1)) = 1 then 1 else 0 end) = 1 then 1
+					when (case when rank() over(order by round(avg(mape_eta_tm),1) desc) = 1 then 1 else 0 end) = 1 then 2
+					else 0 end as check_select_02
+					-- 표가 2개라 check_select 또한 두개 입니다.
 		from	(
 					SELECT	bmtid
 					, 		userid
@@ -21,17 +36,11 @@
 					, 		est_time
 					, 		driver_tm
 					,		case 
-								when	except_info = 'y' 
-								and 	state_condition like '정상%' 
-								then 	abs(driver_tm - to_number(est_time,'0000')) 
-								else 	null 
-								end as sub_eta_tm
-					,		case
-								when	except_info = 'y' 
-								and 	state_condition like '정상%' 
-								then 	(case when driver_tm = 0 then null else round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1) end)
-								else 	null 
-								end as mape_eta_tm
+								when except_info = 'y' and state_condition like '정상%' then abs(driver_tm - to_number(est_time,'0000')) else null end as sub_eta_tm
+					,		case 
+								when except_info = 'y' and state_condition like '정상%' 
+								then case when driver_tm = 0 then null else round(((abs(driver_tm - to_number(est_time,'0000'))+0.00)/(driver_tm+0.00))*100,1) end
+								else null end as mape_eta_tm
 					from	(
 								SELECT	*
 								,		case

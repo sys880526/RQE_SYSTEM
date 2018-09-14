@@ -75,7 +75,7 @@
 			<!-- .body clearFix -->
 			<div class="body clearFix">
 				<!-- #snbArea -->
-				<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
+				<jsp:include page="/WEB-INF/views/layouts/progressData_subMenu.jsp"/>
 				<!-- \#snbArea -->
 				<!-- #contentArea -->
 				<div id="contentsArea">
@@ -195,7 +195,7 @@
 		data.userid = 'user01';
 		
 		$.ajax({
-			url : '/synthesisData/evaluationVehiclePositionCheckData'
+			url : '/progressData/evaluationVehiclePositionCheckData'
 	        , type : 'post'
 			, dataType : 'json'
  			, data : JSON.stringify(data)

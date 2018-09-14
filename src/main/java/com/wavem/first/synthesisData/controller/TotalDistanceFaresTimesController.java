@@ -30,7 +30,14 @@ public class TotalDistanceFaresTimesController {
 	
 	@RequestMapping(value = "/synthesisData/totalDistanceFaresTimes", method = RequestMethod.GET)
 	public ModelAndView getTotalDistanceFaresTimes(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-		ModelAndView mav = new ModelAndView();		
+		ModelAndView mav = new ModelAndView();	
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "synthesisData");
 		mav.addObject("sub_Control", "synthesisData_totalDistanceFaresTimes");
 		mav.setViewName("synthesisData/totalDistanceFaresTimes");	

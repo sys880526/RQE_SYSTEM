@@ -201,7 +201,7 @@
 		selectBmtId = function(bmtId){
 			var data = {
 					bmtid : bmtId
-					, userid : "user01"				
+					//, userid : "user01"				
 			};
 			
 			$.ajax({
@@ -211,21 +211,22 @@
 	 			, data : JSON.stringify(data)
 				, contentType : 'application/json; charset=UTF-8'
 				, success : function(data, stat, xhr) {
+					var userList = data.list.userList;
 					var colorList = [];
+					getColor(userList, colorList);
 					console.log(data);
 					// cp list 테이블
 					if(data.list.userList != null && data.list.userList != ''){
-						var userList = data.list.userList;
+						//var userList = data.list.userList;
 						var userListHtml = '';
 						$("#cpResultTableDiv > table > tbody").empty();
 						for(var i = 0; i < userList.length; i++){
-							var color = getRandomColor();
+							//var color = getRandomColor();
 							userListHtml += '<tr>';
 							userListHtml += '<td>'+userList[i].cp+'</td>';
-							userListHtml += '<td style="background-color:'+color+'"></td>';
+							userListHtml += '<td style="background-color:'+ colorList[i] +'"></td>';
 							userListHtml += '</tr>';
-							
-							colorList.push(color);
+							//colorList.push(color);
 						}
 						$("#cpResultTableDiv > table > tbody").html(userListHtml);
 					}
@@ -346,5 +347,23 @@
 			    }
 			});
 		}
+		
+		function getColor(userList, colorList) {
+			var co = ['#FF0000', '#0000FF', '#FFFF00', '#00FF00', '#FFA500', '#BA55D3', '#8B4513', '#C0C0C0', '#EE82EE', '#00BFFF'];
+			var cnt = userList.length;
+			if (cnt <= 10) {
+	  			for (var i = 0; i < cnt; i++) {
+	  				colorList.push(co[i]);
+	  	  		};
+			} else {
+				for (var i = 0; i < 10; i++) {
+					colorList.push(co[i]);
+	  	  		};	
+	  	  		for (var i = 10; i < cnt; i++) {
+	  	  			// getRandomColor()은 common.js 안에 있습니다.
+		  			colorList.push(getRandomColor());
+		  		};
+			}
+		};
 	</script>
 </html>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,15 @@ public class SumOfArrivalDelayTimesErrorsController {
 	private SumOfArrivalDelayTimesErrorsService sumOfArrivalDelayTimesErrorsService;
 	
 	@RequestMapping(value = "/synthesisData/sumOfArrivalDelayTimesErrors", method = RequestMethod.GET)
-	public ModelAndView getSumOfArrivalDelayTimesErrors(HttpServletRequest request) {
+	public ModelAndView getSumOfArrivalDelayTimesErrors(HttpServletRequest request, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "synthesisData");
 		mav.addObject("sub_Control", "synthesisData_sumOfArrivalDelayTimesErrors");
 		mav.setViewName("synthesisData/sumOfArrivalDelayTimesErrors");

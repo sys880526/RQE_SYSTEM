@@ -331,8 +331,8 @@
 				}				
 				data.list.forEach(function(items, index, array) {					
 					var html = [
-						'<tr id = "', items.bmtid ,'">',
-						'<td>', items.userid , '</td>',
+						'<tr id = "', items.bmtid ,'" style="cursor: pointer;">',
+						'<td>', items.bmtid , '</td>',
 						'<td>', items.state_condition , '</td>',
 						'<td>', items.cp , '</td>',
 						'<td>', items.startpoi , '</td>',

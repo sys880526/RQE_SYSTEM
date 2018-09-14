@@ -30,6 +30,13 @@ public class BmtIdReferenceSpecificController {
 	@RequestMapping(value = "/detailsData/bmtIdReferenceSpecific", method = RequestMethod.GET)
 	public ModelAndView getBmtIdReferenceSpecific(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();		
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "detailsData");
 		mav.addObject("sub_Control", "detailsData_bmtIdReferenceSpecific");
 		mav.setViewName("detailsData/bmtIdReferenceSpecific");		

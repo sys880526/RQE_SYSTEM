@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eachEvaluationSectionCurrentSituation">
+
+	<select id="getEachEvaluationSectionCurrentSituationData" parameterType="hashmap"  resultType="hashmap">
+		select	a.bmtid
+		,		case 
+					when b.cp  is null then '평가 준비중' else b.cp end as cp
+		,		case 
+					when b.cp  is null then '평가 준비중' else b.carinfo end as carinfo -- 차량정보
+		,		a.notice -- 공지사항
+		,		a.startpoi -- 출발지명
+		,		a.endpoi -- 도착지명
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.real_req_time is null then '평가 진행중' else a.real_req_time end as real_req_time -- 경로 요청 시간
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.est_time is null then '평가 진행중' else a.est_time end as est_time -- 예싱 소요 시간
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.est_distance is null then '평가 진행중' else a.est_distance end as est_distance -- 예상 소요 거리
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.est_charge is null then '평가 진행중' else a.est_charge end as est_charge -- 예상 소요 요금
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.bmt_start_tm is null then '평가 진행중' else a.bmt_start_tm end as bmt_start_tm -- 출발시간
+		,		case 
+					when b.cp  is null then '평가 준비중' when a.bmt_end_tm is null then '평가 진행중' else a.bmt_end_tm end as bmt_end_tm -- 도착시간
+		-- 	"평가 준비중" 으로 데이터가 표출 될 경우 색상코드 #0000FF (푸른색) and 굵은 글씨로 표출
+		-- 	"평가 진행중" 으로 데이터가 표출 될 경우 색상코드 #FF0000 (붉은색) and 굵은 글씨로 표출
+		from	(
+					select	a.bmtid
+					,		a.userid
+					,		a.notice
+					,		a.startpoi
+					,		a.endpoi
+					,		a.real_req_time
+					,		a.est_time
+					,		a.est_distance
+					,		a.est_charge
+					,		b.bmt_start_tm
+					,		b.bmt_end_tm
+					from	(
+								select	a.bmtid
+								,		b.userid
+								,		a.notice
+								,		a.startpoi
+								,		a.endpoi
+								,		b.real_req_time
+								,		b.est_time
+								,		b.est_distance
+								,		b.est_charge
+								from	(
+											SELECT	bmtid
+											,		notice
+											,		requesttm
+											,		startpoi
+											,		endpoi
+											from 	bmt_list
+											where 	userid 
+											in 		(
+														select	adminid 
+														from 	admin_user_list 
+														where 	userid = #{userid} or adminid = #{userid}
+													)
+											and 	to_date(substr(bmtid,1,6),'yymmdd') = current_date
+											and 	useyn = 'y'
+										) a left outer join
+										(
+											select	*
+											from 	bmt_summary_list 
+											where 	userid 
+											in 		(
+														select	userid 
+														from 	admin_user_list 
+														where 	adminid 
+														in 		(	
+																	select	adminid 
+																	from 	admin_user_list 
+																	where 	userid = #{userid} or adminid = #{userid}
+																)
+													)
+											and 	useyn = 'y'
+										) b
+								on a.bmtid = b.bmtid
+							)a left outer join
+							(
+								select	*
+								from 	bmt_start_end_tm
+								where 	userid 
+								in 		(
+											select	userid 
+											from 	admin_user_list 
+											where 	adminid 
+											in 		(
+														select	adminid 
+														from 	admin_user_list 
+														where 	userid = #{userid} or adminid = #{userid}
+													)
+										)
+							)b
+					on 		a.bmtid = b.bmtid
+					and 	a.userid = b.userid
+				) a left outer join cp_list b
+		on a.userid = b.userid
+		order by bmtid desc, cp
+	</select>
+	
+</mapper>

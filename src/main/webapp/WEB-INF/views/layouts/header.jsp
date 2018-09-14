@@ -48,7 +48,15 @@
             	<c:otherwise>
 	            	<li><a href="/bmtListRegistration/bmtListRegistration"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
             	</c:otherwise>
-            </c:choose>            
+            </c:choose>
+            <c:choose>
+            	<c:when test="${control eq 'progressData'}">
+	            	<li><a href="/progressData/eachEvaluationSectionCurrentSituation" class="active"><img src="../images/common/gnb_6.gif" alt="bmt_list" /></a></li>
+            	</c:when>
+            	<c:otherwise>
+	            	<li><a href="/progressData/eachEvaluationSectionCurrentSituation"><img src="../images/common/gnb_6.gif" alt="bmt_list" /></a></li>
+            	</c:otherwise>
+            </c:choose>    
             <c:choose>
             	<c:when test="${control eq 'synthesisData'}">
             		<li>

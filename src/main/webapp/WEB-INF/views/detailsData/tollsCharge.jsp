@@ -100,6 +100,9 @@
     $(document).ready(function() {
     	
     	$('.btnSearch').attr('href', 'javascript:pathDistanceSearch()');
+    	
+    	// 검색된 값이 없는경우 
+		notFoundResult();
         
     });//document.ready
 
@@ -166,7 +169,7 @@
 
                 data.list.forEach(function(items) {
                     var html = [
-                        '<tr>',
+                        '<tr class="',  items.check_select , '">',
                         '<td>', items.cp, '</td>',
                         '<td>', items.sum_charge + '원', '</td>',
                         '<td>', items.sub_charge + '원', '</td>',
@@ -175,6 +178,9 @@
                     ].join('');
                     list.append(html);
                 });
+              	//강조 표시
+				$('.1').css( "background-color", '#e6ffcc' );
+				$('.2').css( "background-color", '#ffcccc' );
 
                 //그래프 함수 호출
                 ratioChargeChart(data.list);
@@ -368,6 +374,11 @@
 	            }
             }
         });
+    }
+    
+	// 검색값이 없는 경우
+    function notFoundResult() {
+    	$('#totalDistance').children('tbody').append('<tr><td colspan="4">검색된 값이 없습니다</td></tr>')
     }
 
 </script>

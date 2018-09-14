@@ -4,84 +4,94 @@
 <mapper namespace="sumOfArrivalDelayTimesErrors">
 	
 	<select id="sumOfArrivalDelayTimesErrors" parameterType="hashmap" resultType="hashmap">
-			SELECT	cp
-			,		sum( normal ) as normal_count
-			,		round( avg( delay_time ), 1 ) AS avg_delay_time
-			,		max( delay_time ) as max_delay_time
-			,		round( stddev( delay_time ), 1 ) as standard_deviation_delay
-			,		round( avg( delay_ratio ), 1 ) AS avg_delay_ratio
-			,		max( delay_ratio ) as max_delay_ratio
-			,		round( stddev( delay_ratio ), 1 ) as standard_deviation_ratio
-			from	(
-						SELECT	a.bmtid
-						,		userid
-						,		cp
-						,		except_info
-						,		state_condition
-						,		case
-									when except_info = 'y' 
-									and state_condition like '정상%' then 1 else 0 
-									end as normal
-						,		driver_tm
-						,		min_driver_tm
-						,		case 
-									when except_info = 'y' 
-									and state_condition like '정상%' then driver_tm - min_driver_tm else null 
-									end as delay_time
-						,		case 
-									when except_info = 'y' 
-									and state_condition like '정상%' then round(((driver_tm - min_driver_tm) / min_driver_tm)*100,1) else null 
-									end as delay_ratio	
-						from	(
-									SELECT	bmtid
-									,		userid
-									,		cp
-									,		except_info
-									,		state_condition
-									,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
-									FROM	bmt_total_info
-									WHERE	userid
-									IN		(
-												SELECT	userid
-												FROM	admin_user_list 
-												WHERE	adminid
-												IN		(
-															SELECT	adminid
-															FROM	admin_user_list 
-															WHERE	adminid = #{userid} 
-															or		userid = #{userid}
-														)
-											)
-									AND		to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
-									BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
-									and to_date(#{end_date},'yyyy-mm-dd') 
-								) a,
-								(
-									select	bmtid
-									,		min(driver_tm) as min_driver_tm
-									from	(
-												SELECT	bmtid
-												,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
-												FROM bmt_total_info
-											) a
-									group by bmtid
-								) b
-						where a.bmtid = b.bmtid
-					) a
-			group by cp
-			order by cp
+		SELECT	cp
+		,		sum( normal ) as normal_count
+		,		round( avg( delay_time ), 1 ) AS avg_delay_time
+		,		max( delay_time ) as max_delay_time
+		,		round( stddev( delay_time ), 1 ) as standard_deviation_delay
+		,		round( avg( delay_ratio ), 1 ) AS avg_delay_ratio
+		,		max( delay_ratio ) as max_delay_ratio
+		,		round( stddev( delay_ratio ), 1 ) as standard_deviation_ratio
+		,
+			-- 	case when rank() over(order by round( avg( delay_time ), 1 )) = 1 then 1 else 0 end as check_select,
+			-- 	case when rank() over(order by round( avg( delay_time ), 1 ) desc) = 1 then 1 else 0 end as check_select,
+				case 
+					when (case when rank() over(order by round( avg( delay_time ), 1 )) = 1 then 1 else 0 end) = 1 then 1
+					when (case when rank() over(order by round( avg( delay_time ), 1 ) desc) = 1 then 1 else 0 end) = 1 then 2
+					else 0 end as check_select
+		from	(
+					SELECT	a.bmtid
+					,		userid
+					,		cp
+					,		except_info
+					,		state_condition
+					,		case 
+								when except_info = 'y' and state_condition like '정상%' 
+								then 1 else 0 end as normal
+					,		driver_tm
+					,		min_driver_tm
+					,		case 
+								when except_info = 'y' and state_condition like '정상%' 
+								then driver_tm - min_driver_tm else null end as delay_time
+					,		case 
+								when except_info = 'y' and state_condition like '정상%' 
+								then round(((driver_tm - min_driver_tm) / min_driver_tm)*100,1) else null end as delay_ratio	
+					from	(
+								SELECT	bmtid
+								,		userid
+								,		cp
+								,		except_info
+								,		state_condition
+								,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+								FROM 	bmt_total_info 
+								WHERE 	userid 
+								IN 		( 
+											SELECT	userid  
+											FROM 	admin_user_list 
+											WHERE 	adminid 
+											IN 		( 
+														SELECT	adminid  
+														FROM 	admin_user_list 
+														WHERE 	adminid = #{userid} or userid = #{userid}
+													)
+										)
+								AND 	to_date ( substr( bmtid, 1, 6 ), 'yymmdd' ) 
+								BETWEEN to_date (#{start_date},'yyyy-mm-dd') 
+								and 	to_date(#{end_date},'yyyy-mm-dd') 
+							) a,
+							(
+								select	bmtid
+								, 		min(driver_tm) as min_driver_tm
+								from	(
+											SELECT	bmtid
+											,		to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'hh24' ), '00' ) * 60+ to_number ( to_char ( to_timestamp ( bmt_end_tm, 'yyyy-mm-dd hh24:mi:ss' ) - to_timestamp ( bmt_start_tm, 'yyyy-mm-dd hh24:mi:ss' ), 'mi' ), '00' ) AS driver_tm
+											FROM 	bmt_total_info
+										) a
+								group by bmtid
+							) b
+					where a.bmtid = b.bmtid
+				) a
+		group by cp
+		order by cp
 	</select>
 
 	
 	<select id="arrivalScheduledErrorCount" parameterType="hashmap" resultType="hashmap">
-			select	cp
-			,		sum( normal ) as normal_count
-			,		round(avg(mae_eta),1) as avg_mae_eta
-			,		max( mae_eta ) as max_mae_eta
-			,		round( stddev( mae_eta ), 1 ) as standard_deviation_mae
-			,		round(avg(mape_eta),1) as avg_mape_eta
-			,		max( mape_eta ) as max_mape_eta
-			,		round( stddev( mape_eta ), 1 ) as standard_deviation_mape
+		select	cp
+		,		sum( normal ) as normal_count
+		,		round(avg(mae_eta),1) as avg_mae_eta
+		,		max( mae_eta ) as max_mae_eta
+		,		round( stddev( mae_eta ), 1 ) as standard_deviation_mae
+		,		round(avg(mape_eta),1) as avg_mape_eta
+		,		max( mape_eta ) as max_mape_eta
+		,		round( stddev( mape_eta ), 1 ) as standard_deviation_mape
+		,
+			-- 	case when rank() over(order by round(avg(mae_eta),1)) = 1 then 1 else 0 end as check_select,
+			-- 	case when rank() over(order by round(avg(mae_eta),1) desc) = 1 then 1 else 0 end as check_select,
+				case 
+					when (case when rank() over(order by round(avg(mae_eta),1)) = 1 then 1 else 0 end) = 1 then 1
+					when (case when rank() over(order by round(avg(mae_eta),1) desc) = 1 then 1 else 0 end) = 1 then 2
+					else 0 end as check_select
 			from	(
 						SELECT	bmtid
 						,		userid

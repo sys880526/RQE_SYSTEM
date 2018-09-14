@@ -135,6 +135,7 @@
 	</div>
 	<!-- \#container -->
 </body>
+<script src="/js/common.js"></script>
 <script>
 	$(document).ready(function() {
 		
@@ -184,6 +185,7 @@
 				, processData : true /*querySTring make false*/
 				, success : function(data, stat, xhr) {
 					
+					arrival_data = data.out;
 					arrival_graph_data = data.graph;
 					
 					list1.empty();
@@ -197,7 +199,7 @@
 					
 					data.out.forEach(function(items, index, array) {
 						var html1 = [
-							'<tr>',
+							'<tr class="',  items.check_select_02 , '">',
 							'<td>', items.cp, '</td>',
 							'<td>', items.normal_count, '</td>',
 							'<td>', items.avg_mae_eta, '</td>',
@@ -207,7 +209,7 @@
 						].join('');
 						
 						var html2 = [
-							'<tr>',
+							'<tr class="',  items.check_select_02 , '">',
 							'<td>', items.cp, '</td>',
 							'<td>', items.normal_count, '</td>',
 							'<td>', items.avg_mape_eta, '</td>',
@@ -220,6 +222,9 @@
 						list2.append(html2);
 						
 					});
+					//강조 표시
+					$('.1').css( "background-color", '#e6ffcc' );
+					$('.2').css( "background-color", '#ffcccc' );
 					
 					//그래프 함수 호출
 					arrival_graph();
@@ -233,6 +238,7 @@
 	};
 	
 	// 그래프 데이터 변수
+	var arrival_data = '';
 	var arrival_graph_data = '';
 	
 	// 도착 예정 시간 분포도 그래프 
@@ -242,39 +248,28 @@
 			return;
 		};
 		var array = [];
-		array.push(['cp', '구간번호', 'ETA오차(단위:분)', 'color']);
+		array.push(['cp', '구간번호', 'ETA오차(단위:분)', 'legend']);
 		arrival_graph_data.forEach(function(items, index, array2) {
     		var chartdata = [ 
 				items.cp
 				,items.eta_mae_no
-				,items.eta_mae				
+				,items.eta_mae	
+				,items.cp
 			];
-    		if (chartdata[2] == '' || chartdata[2] == null) {
+    		// null check
+    		if (chartdata[2] == null) {
 				return;
-			}
-    		if (chartdata[0] != 'Bluelink 최소') {
-    			chartdata.push(1);
-			} else if (chartdata[0] != 'Bluelink 추천') {
-				chartdata.push(2);
-			} else if (chartdata[0] != 'T map 최소') {
-				chartdata.push(3);
-			} else if (chartdata[0] != 'T map 최적') {
-				chartdata.push(4);
-			} else if (chartdata[0] != 'Kakao') {
-				chartdata.push(5);
 			}
 			array.push(chartdata);
 		});
-         google.charts.setOnLoadCallback(drawChart(array));
+         google.charts.setOnLoadCallback(arrival_drawChart(array));
 	};
 	
-	function drawChart(array) {
-		var cnt = array.length - 1;
-        var hval = array[cnt][1] + 1;
-        var maxNum= 0;
+	// 도착 예정 시간 분포도 차트 그리기 함수
+	function arrival_drawChart(array) {
         var data = google.visualization.arrayToDataTable(array);
         var options = {
-        		title: '최선착 대비 도착 지연 시간 분포',            		
+        		title: '도착 예정 시간 분포도',            		
         		hAxis: {
                     title: '구간번호',
                     ticks: [],
@@ -287,11 +282,7 @@
                     gridlines: {color: '#696966'},
                     titleTextStyle:{italic:'0'}
                     },
-                colorAxis: {
-           	        values: [1, 2, 3, 4, 5], 
-           	        colors: ['#ff3385', '#8c1aff', '#00a3cc', '#009933', '#ff9966'], 
-           	        legend: {position: 'none'}
-                    },
+                colors: [],
                 sizeAxis: {
                 	maxSize:7,
                 	minSize:1    	
@@ -299,11 +290,32 @@
                 chartArea:{backgroundColor:'#fffffff'},
                 animation:{easing:'in'}
         }; 
-        // 세로 라인개수
+        // bubbleChart options set line fucntion
+        setBubbleOptions_line(array, options);
+     	// bubbleChart options set color fucntion
+        setBubbleOptions_color(options);
+        var chart = new google.visualization.BubbleChart(document.getElementById('arrival_graph'));
+        chart.draw(data, options);
+     };
+     
+  	// bubbleChart options set line fucntion
+    function setBubbleOptions_line(array, options) {
+    	
+    	// 첫번째 배열값 제외
+    	var cnt = array.length - 1;
+    	 
+    	// 구간번호 : eta_mae_no (구간번호 기준으로 DB조회되므로 마지막 값이 최대값이다.)
+        var hval = array[cnt][1] + 3;
+    	 
+      	// 가로 라인개수 조회 결과값 중 최대값
+        var maxNum= 0;
+      	
+     	// 세로 라인개수
         for (i = 0; i < hval; i++) { 
         	options.hAxis.ticks.push(i);
         };
-        // 가로 라인개수
+        
+     	// 가로 라인개수
         for (var i = 0; i < cnt; i++) {
         	// maxNum 값이 없는 경우 현재 배열값으로 지정
         	/* if (maxNum == 0 || maxNum == null) {
@@ -314,17 +326,40 @@
         	    maxNum = array[i][2];
         	};
 		};
-		var result = maxNum+5;
-		console.log(maxNum);
-		console.log(result);
-        for (var j = 0; j < result; j += 3) {
+		
+		// 가로 라인개수(그래프에 반영)
+		var result = maxNum + 10;
+        for (var j = 0; j < result; j += 5) {
         	options.vAxis.ticks.push(j);
         };
-        // 차트그리기
-        var chart = new google.visualization.BubbleChart(document.getElementById('arrival_graph'));
-        chart.draw(data, options);
-     };
-       
+    };
+    
+ 	// bubbleChart options set color fucntion
+    function setBubbleOptions_color(options) {
+    	var co = ['#FF0000', '#0000FF', '#FFFF00', '#00FF00', '#FFA500', '#BA55D3', '#8B4513', '#C0C0C0', '#EE82EE', '#00BFFF'];
+    	var cp = [];
+    	arrival_data.forEach(function(items, index, array) {
+			cp.push(items.cp); 
+    	});
+    	
+    	var cnt = cp.length;
+    	
+  		// colorAxis.colors 
+  		if (cnt <= 10) {
+  			for (var i = 0; i < cnt; i++) {
+  				options.colors.push(co[i]);
+  	  		};
+		} else {
+			for (var i = 0; i < 10; i++) {
+				options.colors.push(co[i]);
+  	  		};	
+  	  		for (var i = 10; i < cnt; i++) {
+  	  			// getRandomColor()은 common.js 안에 있습니다.
+  	  		options.colors.push(getRandomColor());
+	  		};
+		}
+    };
+    
 	
 	/**
      * 검색된 값이 없는 경우

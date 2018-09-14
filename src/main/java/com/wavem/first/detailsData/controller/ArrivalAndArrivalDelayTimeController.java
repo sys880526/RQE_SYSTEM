@@ -29,6 +29,13 @@ public class ArrivalAndArrivalDelayTimeController {
 	@RequestMapping(value = "/detailsData/arrivalAndArrivalDelayTime", method = RequestMethod.GET)
 	public ModelAndView getArrivalAndArrivalDelayTime(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "detailsData");
 		mav.addObject("sub_Control", "detailsData_arrivalAndArrivalDelayTime");
 		mav.setViewName("detailsData/arrivalAndArrivalDelayTime");
@@ -39,6 +46,14 @@ public class ArrivalAndArrivalDelayTimeController {
 	public ModelAndView getArrivalAndArrivalDelayTimeData(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");

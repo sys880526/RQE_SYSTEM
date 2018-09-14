@@ -190,6 +190,7 @@
 	</div>
 	<!-- \#container -->
 </body>
+<script src="/js/common.js"></script>
 <script>
 	$(document).ready(function() {
 		
@@ -271,7 +272,7 @@
 						};
 						
 						var html = [
-							'<tr>',
+							'<tr class="',  items.check_select , '">',
 							'<td>', items.cp, '</td>',
 							'<td>', items.total_count, '</td>',
 							'<td>', items.ratio_first, '</td>',
@@ -283,9 +284,11 @@
 							'<td>', items.standard_deviation_delay, '</td>',
 							'</tr>'
 						].join('');
-						
 						list.append(html);
 					});
+					//강조 표시
+					$('.1').css( "background-color", '#e6ffcc' );
+					$('.2').css( "background-color", '#ffcccc' );
 					
 					//그래프 함수 호출
 					all_score();
@@ -310,6 +313,15 @@
     var ampm_score_data = '';
     var delay_score_data = '';
     
+ 	// 선착, 동시도착, 후착 색상 지정
+    function getColor(options) {
+    	// 선착 : #0000FF, 동시도착 : #FFFF00, 후착 : #FF0000
+    	var co = ['#0000FF', '#FFFF00', '#FF0000'];
+    	for (var i = 0; i < co.length; i++) {
+    		options.colors.push(co[i]);
+		};
+    };
+    
     // 목적지 선후착률(전체구간) 그래프
     function all_score() {
     	var array = [];
@@ -323,104 +335,140 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '목적지 선후착률(전체구간)', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('first_later_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(all_score_drawChart(array));
     }; 
     
+    // 목적지 선후착률(전체구간) 차트 그리기 함수
+    function all_score_drawChart(array) {
+        var data = google.visualization.arrayToDataTable(array);
+        var options = {
+        		title: '목적지 선후착률(전체구간)', 
+         		colors:[],
+        		isStacked:'percent'
+        };
+        getColor(options);
+        var chart = new google.visualization.ColumnChart(document.getElementById('first_later_score'));
+        chart.draw(data, options);
+    };
     
     // 최선착 대비 도착 지연 시간 분포
     function delay_score() {
     	var array = [];
-    	array.push(['cp', '구간번호', '최선착 대비 지연 시간 (단위:분)', 'color']);
+    	array.push(['cp', '구간번호', '최선착 대비 지연 시간 (단위:분)', 'legend']);
     	delay_score_data.forEach(function(items, index, array2) {
     		var chartdata = [ 
 				items.cp
 				,items.delay_no
-				,items.arrival_delay_time				
+				,items.arrival_delay_time
+				,items.cp
 			];
-    		if (chartdata[2] == '' || chartdata[2] == null) {
+    		// null check
+    		if (chartdata[2] == null) {
 				return;
-			}
-    		if (chartdata[0] != 'Bluelink 최소') {
-    			chartdata.push(1);
-			} else if (chartdata[0] != 'Bluelink 추천') {
-				chartdata.push(2);
-			} else if (chartdata[0] != 'T map 최소') {
-				chartdata.push(3);
-			} else if (chartdata[0] != 'T map 최적') {
-				chartdata.push(4);
-			} else if (chartdata[0] != 'Kakao') {
-				chartdata.push(5);
-			}
+			};
 			array.push(chartdata);
     	});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {
-            		title: '최선착 대비 도착 지연 시간 분포',            		
-            		hAxis: {
-                        title: '구간번호',
-                        ticks: [],
-                        gridlines: {color: '#696966'},
-                        titleTextStyle:{italic:'0'}
-                        },
-                    vAxis: {
-                        title: '최선착 대비 지연 시간 (단위:분)',
-                        ticks: [],
-                        gridlines: {color: '#696966'},
-                        titleTextStyle:{italic:'0'}
-                        },
-                    colorAxis: {
-               	        values: [1, 2, 3, 4, 5], 
-               	        colors: ['#ff3385', '#8c1aff', '#00a3cc', '#009933', '#ff9966'], 
-               	        legend: {position: 'none'}
-                        },
-                    sizeAxis: {
-                    	maxSize:7,
-                    	minSize:1    	
-                        },
-                    chartArea:{backgroundColor:'#fffffff'},
-                    animation:{easing:'in'}
-            }; 
-            
-            var cnt = array.length - 1;
-            var hval = array[cnt][1] + 1;
-            var maxNum= 0;
-            //var total = array[cnt][2];
-            //var result = total/3 + 2;
-            // 세로 라인개수
-            for (i = 0; i < hval; i++) { 
-            	options.hAxis.ticks.push(i);
-            };
-            // 가로 라인개수
-            for (var i = 0; i < cnt; i++) {
-	        	// maxNum 값이 없는 경우 현재 배열값으로 지정
-	        	/* if (maxNum == 0 || maxNum == null) {
-	        	    maxNum = array[0][2];
-	        	}; */
-	        	// maxNum의 값과 현재 값을 비교해서 maxNum값을 가장 큰 값으로 유지
-	        	if (maxNum < array[i][2]) {
-	        	    maxNum = array[i][2];
-	        	};
-			};
-			var result = maxNum+5;
-			console.log(maxNum);
-			console.log(result);
-            for (j = 0; j < result; j += 3) {
-            	options.vAxis.ticks.push(j);
-            };
-            // 차트그리기
-            var chart = new google.visualization.BubbleChart(document.getElementById('delay_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(delay_score_drawChart(array));
     };
     
+    // 최선착 대비 도착 지연 시간 분포 차트 그리기 함수
+    function delay_score_drawChart(array) {
+          var data = google.visualization.arrayToDataTable(array);
+          var options = {
+          		title: '최선착 대비 도착 지연 시간 분포',            		
+          		hAxis: {
+          			title: '구간번호',
+                    ticks: [],
+                    gridlines: {color: '#696966'},
+                    titleTextStyle:{italic:'0'}
+                    },
+                vAxis: {
+                	title: '최선착 대비 지연시간 (단위:분)',
+                    ticks: [],
+                    gridlines: {color: '#696966'},
+                    titleTextStyle:{italic:'0'}
+                  	},
+                colors: [],    
+                sizeAxis: {
+                	maxSize:7,
+                	minSize:1    	
+                    },
+                chartArea:{backgroundColor:'#fffffff'},
+                animation:{easing:'in'},
+                legend:{
+                	visible: true,
+                	position: 'right'
+                	}
+          }; 
+       	  // bubbleChart options set line fucntion
+          setBubbleOptions_line(array, options);
+       	  // bubbleChart options set color fucntion
+          setBubbleOptions_color(options);
+          var chart = new google.visualization.BubbleChart(document.getElementById('delay_score'));
+          chart.draw(data, options);
+    };
+    
+    // bubbleChart options set line fucntion
+    function setBubbleOptions_line(array, options) {
+    	
+    	// 첫번째 배열값 제외
+    	var cnt = array.length - 1;
+    	
+    	// 구간번호 : delay_no (구간번호 기준으로 DB조회되므로 마지막 값이 최대값이다.)
+        var hval = array[cnt][1] + 3;
+    	
+    	// 가로 라인개수 조회 결과값 중 최대값
+        var maxNum= 0;
+
+    	// 세로 라인개수(그래프에 반영)
+        for (i = 0; i < hval; i++) { 
+        	options.hAxis.ticks.push(i);
+        };
+        
+        // 가로 라인개수
+        for (var i = 0; i < cnt; i++) {
+     		// maxNum 값이 없는 경우 현재 배열값으로 지정
+	     	/* if (maxNum == 0 || maxNum == null) {
+	     	    maxNum = array[0][2];
+	     	}; */
+     		// maxNum의 값과 현재 값을 비교해서 maxNum값을 가장 큰 값으로 유지
+     		if (maxNum < array[i][2]) {
+     	    	maxNum = array[i][2];
+     		};
+		};
+		
+		// 가로 라인개수(그래프에 반영)
+		var result = maxNum + 10;
+        for (j = 0; j < result; j += 5) {
+        	options.vAxis.ticks.push(j);
+        };
+    };
+    
+ 	// bubbleChart options set color fucntion
+    function setBubbleOptions_color(options) {
+    	var co = ['#FF0000', '#0000FF', '#FFFF00', '#00FF00', '#FFA500', '#BA55D3', '#8B4513', '#C0C0C0', '#EE82EE', '#00BFFF'];
+    	var cp = [];
+    	all_score_data.forEach(function(items, index, array) {
+			cp.push(items.cp); 
+    	});
+    	
+    	var cnt = cp.length;
+    	
+  		// colorAxis.colors 
+  		if (cnt <= 10) {
+  			for (var i = 0; i < cnt; i++) {
+  				options.colors.push(co[i]);
+  	  		};
+		} else {
+			for (var i = 0; i < 10; i++) {
+				options.colors.push(co[i]);
+  	  		};	
+  	  		for (var i = 10; i < cnt; i++) {
+  	  			// getRandomColor()은 common.js 안에 있습니다.
+  	  			options.colors.push(getRandomColor());
+	  		};
+		}
+    };
     
     // 주중 오전 첨두 그래프
     function ampeak_score() {
@@ -435,15 +483,21 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주중 오전첨두 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('am_peak_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(ampeak_score_drawChart(array));
     };
     
+ 	// 주중 오전 첨두 차트 그리기 함수
+    function ampeak_score_drawChart(array) {
+        var data = google.visualization.arrayToDataTable(array);
+        var options = {
+        		title: '주중 오전첨두 선후착률', 
+         		colors:[],
+        		isStacked:'percent'
+        };
+        getColor(options);
+        var chart = new google.visualization.ColumnChart(document.getElementById('am_peak_score'));
+        chart.draw(data, options);
+    };
     
     // 주중 오전 비첨두 그래프
     function amnonpeak_score() {
@@ -458,14 +512,21 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주중 오전 비첨두 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('am_non_peak_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(amnonpeak_score_drawChart(array));
     };
+    
+    // 주중 오전 비첨두 차트 그리기 함수
+    function amnonpeak_score_drawChart(array) {
+        var data = google.visualization.arrayToDataTable(array);
+        var options = {
+        		title: '주중 오전 비첨두 선후착률', 
+        		colors:[],
+        		isStacked:'percent'
+        		};  
+        getColor(options);
+        var chart = new google.visualization.ColumnChart(document.getElementById('am_non_peak_score'));
+        chart.draw(data, options);
+     };
     
     // 주중 오후 비첨두 그래프
      function pmnonpeak_score() {
@@ -480,13 +541,20 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주중 오후 비첨두 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('pm_non_peak_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(pmnonpeak_score_drawChart(array));
+    };
+    
+    // 주중 오후 비첨두 차트 그리기 함수
+    function pmnonpeak_score_drawChart(array) {
+       var data = google.visualization.arrayToDataTable(array);
+       var options = {
+    		   title: '주중 오후 비첨두 선후착률', 
+    		   colors:[],
+       		   isStacked:'percent'
+    		   }; 
+       getColor(options);
+       var chart = new google.visualization.ColumnChart(document.getElementById('pm_non_peak_score'));
+       chart.draw(data, options);
     };
     
     // 주중 오후 첨두 그래프
@@ -502,13 +570,20 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주중 오후 첨두 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('pm_peak_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(pmpeak_score_drawChart(array));
+    };
+    
+    // 주중 오후 첨두 차트 그리기 함수
+    function pmpeak_score_drawChart(array) {
+       var data = google.visualization.arrayToDataTable(array);
+       var options = {
+    		   title: '주중 오후 첨두 선후착률', 
+    		   colors:[],
+       		   isStacked:'percent'
+    		   };  
+       getColor(options);
+       var chart = new google.visualization.ColumnChart(document.getElementById('pm_peak_score'));
+       chart.draw(data, options);
     };
     
     // 주말 오전 그래프 
@@ -524,13 +599,20 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주말 오전 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('am_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(am_score_drawChart(array));
+    };
+    
+    // 주말 오전 차트 그리기 함수 
+    function am_score_drawChart(array) {
+      var data = google.visualization.arrayToDataTable(array);
+      var options = {
+    		  title: '주말 오전 선후착률', 
+    		  colors:[],
+      		  isStacked:'percent'
+    		  };  
+      getColor(options);
+      var chart = new google.visualization.ColumnChart(document.getElementById('am_score'));
+      chart.draw(data, options);
     };
     
     // 주말 오후 그래프
@@ -546,13 +628,20 @@
 			];
 			array.push(chartdata);
 		});
-    	function drawChart() {
-            var data = google.visualization.arrayToDataTable(array);
-            var options = {title: '주말 오후 선후착률', isStacked:true};  
-            var chart = new google.visualization.ColumnChart(document.getElementById('pm_score'));
-            chart.draw(data, options);
-         }
-         google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(pm_score_drawChart(array));
+    };
+    
+    // 주말 오후 차트 그리기 함수
+    function pm_score_drawChart(array) {
+       var data = google.visualization.arrayToDataTable(array);
+       var options = {
+    		   title: '주말 오후 선후착률', 
+    		   colors:[],
+       		   isStacked:'percent'
+    		   };  
+       getColor(options);
+       var chart = new google.visualization.ColumnChart(document.getElementById('pm_score'));
+       chart.draw(data, options);
     };
     
     
@@ -560,7 +649,7 @@
      * 검색된 값이 없는 경우
      */
      function notFoundResult() {
-    	$('#tbl-delay-info').children('tbody').append('<tr><td colspan="9">검색된 값이 없습니다</tr>');
+    	$('#tbl-delay-info').children('tbody').append('<tr><td colspan="9">검색된 값이 없습니다</td></tr>');
     	$('#first_later_score').empty();
 		$('#delay_score').empty();
 		$('#am_peak_score').empty();
@@ -569,7 +658,6 @@
 		$('#pm_peak_score').empty();
 		$('#am_score').empty();
 		$('#pm_score').empty();
-    	
      };
 
 </script>

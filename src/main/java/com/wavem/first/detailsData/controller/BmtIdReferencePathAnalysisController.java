@@ -33,8 +33,15 @@ public class BmtIdReferencePathAnalysisController {
 	private BmtIdReferencePathAnalysisService bmtIdReferencePathAnalysisService;
 	
 	@RequestMapping(value = "/detailsData/bmtIdReferencePathAnalysis", method = RequestMethod.GET)
-	public ModelAndView getBmtIdReferencePathAnalysis(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView getBmtIdReferencePathAnalysis(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "detailsData");
 		mav.addObject("sub_Control","detailsData_bmtIdReferencePathAnalysis");
 		mav.setViewName("detailsData/bmtIdReferencePathAnalysis");
@@ -49,9 +56,11 @@ public class BmtIdReferencePathAnalysisController {
 		
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+		String userid = session.getAttribute("SS_USER_ID").toString();
+		System.out.println("userid>>>>>>>>>>>" + userid);
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
-		map.put("userid", "user01");
+		map.put("userid", userid);
 		
 		//bmt id 기준 특이사항 by_time sql 		
 		ArrayList<String> list_time = new ArrayList<String>();
@@ -150,7 +159,8 @@ public class BmtIdReferencePathAnalysisController {
 	public ModelAndView getBmtIdListDetail(HttpServletRequest request, HttpSession session
 			, @RequestBody Map<String, Object> data) {
 		ModelAndView mav = new ModelAndView("jsonView");
-		
+		String userid = session.getAttribute("SS_USER_ID").toString();
+		data.put("userid", userid);
 		Map<String, Object> result = bmtIdReferencePathAnalysisService.getBmtIdListDetail(data);
 		mav.addObject("list", result);
 		System.out.println("result >>>>>>>>>>>" + result);

@@ -101,6 +101,9 @@
     $(document).ready(function() {
     	
     	$('.btnSearch').attr('href', 'javascript:pathDistanceSearch()');
+    	
+    	// 검색된 값이 없는경우 
+		notFoundResult();
        
     });//document.ready
 
@@ -163,11 +166,12 @@
                 if (data.list.length === 0) {
                     alert('검색된 값이 없습니다');
                     notFoundResult();
+                    return;
                 };
 
                 data.list.forEach(function(items) {
                     var html = [
-                        '<tr>',
+                        '<tr class="',  items.check_select , '">',
                         '<td>', items.cp, '</td>',
                         '<td>', items.sum_distance + 'km', '</td>',
                         '<td>', items.sub_distance + 'km', '</td>',
@@ -176,8 +180,11 @@
                     ].join('');
                     list.append(html);
                 });
-
-                //그래프 함수 호출
+              	//강조 표시
+				$('.1').css( "background-color", '#e6ffcc' );
+				$('.2').css( "background-color", '#ffcccc' );
+                
+              	//그래프 함수 호출
                 ratioDistanceChart(data.list);
                 distanceSpecificity(data.chart);
                 timeSpecificity(data.chart);
@@ -363,9 +370,17 @@
                         tension: 0
                     }
                 }
+	            , legend: {
+	                display: true,
+	                position: 'bottom'
+	            }
             }
         });
     }
-
+    
+    // 검색값이 없는 경우
+    function notFoundResult() {
+    	$('#totalDistance').children('tbody').append('<tr><td colspan="4">검색된 값이 없습니다</td></tr>')
+    }
 </script>
 </html>

@@ -29,8 +29,15 @@ public class ArrivalScheduledTimeErrorAndErrorRateController {
 	private ArrivalScheduledTimeErrorAndErrorRateService arrivalScheduledTimeErrorAndErrorRateService;
 	
 	@RequestMapping(value = "/detailsData/arrivalScheduledTimeErrorAndErrorRate", method = RequestMethod.GET)
-	public ModelAndView getArrivalScheduledTimeErrorAndErrorRate(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView getArrivalScheduledTimeErrorAndErrorRate(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
+		//session check
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mav.setViewName("redirect:/");
+		}
 		mav.addObject("control", "detailsData");
 		mav.addObject("sub_Control","detailsData_arrivalScheduledTimeErrorAndErrorRate");
 		mav.setViewName("detailsData/arrivalScheduledTimeErrorAndErrorRate");
