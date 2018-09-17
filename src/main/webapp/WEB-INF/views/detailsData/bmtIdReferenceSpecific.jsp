@@ -113,6 +113,8 @@
 		<img class="modal-content-img" id="modal_img">
 	</div>
 </body>
+<!-- 사진회전기능 추가 -->
+<script src="../js/jQueryRotateCompressed.js"></script>
 <script>
 	$(document).ready(function() {
 		
@@ -139,13 +141,11 @@
 		    modal.style.display = "none";
 		}
 		
-		var deg_temp = 0;
-		$('#modal_img').attr('class', 'modal-content-img');
-		
+		var deg_temp = 0;		
 		$('#image_rotation').on('click', function() {
 			deg_temp = deg_temp + 90;
 			var img = $('#modal_img');
-			img.attr('class', 'modal-content-img rotated-image');
+			img.rotate(deg_temp);
 		});
 
 	});//document.ready
