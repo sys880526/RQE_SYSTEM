@@ -34,9 +34,9 @@
 			<!-- #contentArea -->
 			<div id="contentsArea">
 				<div class="titContents">
-					<h2>Data Sheet</h2>
+					<h2>평가 구간 현황 및 선후착 집계</h2>
 					<p>
-						Home > 종합데이터 >
+						종합데이터 > 
 						<strong>평가 구간 현황 및 선후착 집계</strong>
 					</p>
 				</div>

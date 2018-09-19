@@ -77,7 +77,14 @@
             		<li><a href="/detailsData/pathDistance" ><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>
             	</c:otherwise>
             </c:choose>            
-            <li><a href="#" ><img src="../images/common/gnb_5.gif" alt="system" /></a></li>
+            <c:choose>
+            	<c:when test="${control eq 'userManagement'}">
+            		<li><a href="/system/userManagement" class="active"><img src="../images/common/gnb_5.gif" alt="system" /></a></li>	
+            	</c:when>
+            	<c:otherwise>
+            		<li><a href="/system/userManagement" ><img src="../images/common/gnb_5.gif" alt="system" /></a></li>
+            	</c:otherwise>
+            </c:choose>            
         </ul>
   	  </div>
 	</div>

@@ -57,7 +57,7 @@
 					<div class="titContents">
 						<h2>BMT ID 기준 경로 지도 분석</h2>
 						<p>
-							Home > 상세데이터 >
+							상세데이터 > 
 							<strong>BMT ID 기준 경로 지도 분석</strong>
 						</p>
 					</div>

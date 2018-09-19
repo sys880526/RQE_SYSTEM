@@ -3,14 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>선/후착 및 도착 지연 시간</title>
+	<title>기준 데이터 설정</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
     <script type="text/javascript" src="../js/style.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type = "text/javascript">google.charts.load('current', {packages: ['corechart']});</script>
     
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../css/import.css" />
@@ -31,158 +29,74 @@
 		<!-- .body clearFix -->
 		<div class="body clearFix">
 			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
+			<jsp:include page="/WEB-INF/views/layouts/system_subMenu.jsp"/>
 			<!-- \#snbArea -->
 			<!-- #contentArea -->
 			<div id="contentsArea">
 				<div class="titContents">
-					<h2>선/후착 및 도착 지연 시간</h2>
+					<h2>기준 데이터 설정</h2>
 					<p>
-						상세데이터 > 
-						<strong>선/후착 및 도착 지연 시간</strong>
+						시스템 관리 > 
+						<strong>기준 데이터 설정</strong>
 					</p>
 				</div>
 				<!-- \.titContents -->
-				<!-- .contents -->
+			<!-- .contents -->
                 <div class="contents" width=100%>
-                	<!-- .search -->
-                	<jsp:include page="/WEB-INF/views/layouts/checkbox.jsp"/>
-                	<!-- /.search -->
-                	<!-- .row -->   
-                	<div class="row" style="margin-bottom: 25px">
-	                	<!-- table -->               
-                    	<table id="tbl-delay-info" style="border-style: none;">
-                            <thead>
-                            	<tr>
-                                    <th colspan="2" style="background-color: #e6e6ff;">선후착 집계(정상 비율)</th> 
-                                    <th colspan="7" style="background-color: white;border-style: none"></th>
-                                </tr>                               
+			<!-- Save button -->
+				<div>
+					<a href="#" class="btnSave" id="btnSave" style="float : right;">
+                                <img src="../images/board/btn_save.gif" alt="save" style="padding-bottom: 15px; padding-top: 15px;" />
+                            </a>
+                            
+					<a href="#" class="btnReset" id="btnReset" style="float : right;">
+                                <img src="../images/board/btn_reset.gif" alt="reset" style="padding-bottom: 15px; padding-top: 15px;" />
+                            </a>
+				</div>
+				                	
+
+                	<!-- table -->               
+                    <div style="margin-bottom: 25px">
+                    	<table id="userManagementTime">
+                            <thead style="background-color: #e6f2ff">
                                 <tr>
-                                    <th colspan="5">목적지 선후착</th>
-                                    <th colspan="4">도착 지연 시간(후착 구간)</th>
+                                    <th colspan="6" style="height: 15PX;"><b>시간 구분</b></th> 
                                 </tr>
                                 <tr>
-                                	<th>CP</th>
-                                	<th>총 구간</th>
-                                	<th>선착률</th>
-                                	<th>동시도착률</th>
-                                	<th>후착률</th>
-                                	<th>구간</th>
-                                	<th>평균 지연 시간</th>
-                                	<th>최대 지연 시간</th>
-                                	<th>표준 편차</th>
+                                    <th colspan="5" style="height: 15PX;"><b>주중</b></th>
+                                    <th colspan="1" style="height: 15PX;"><b>주말</b></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오전 첨두 시작 시간</b><p>("hh:mm:ss" 이상)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오전 첨두 종료 시간</b><p>("hh:mm:ss" 미만)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오전 오후 경계 시간</b><p>("hh:mm:ss" 부터 오후)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오후 첨두 시작 시간</b><p>("hh:mm:ss" 이상)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오후 첨두 종료 시간</b><p>("hh:mm:ss" 미만)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>오전 오후 경계 시간</b><p>("hh:mm:ss" 부터 오후)</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
-                        </table>   
-	                    <!-- \table -->  
-                	</div>
-                	<!-- /.row --> 
-                	
-                	<div class="row" style="border-style: none;">
-						<!-- 목적지 선후착률(전체구간) -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="first_later_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 최선착 대비 도착 지연 시간 분포 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="delay_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오전 첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오전 비첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_non_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오후 비첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_non_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오후 첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주말 오전 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주말 오후 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
+                        </table> 
+                    </div>
+                    <div>    
+                        <table id="userManagementDistance">
+                            <thead style="background-color: #e6f2ff">
+                                <tr>
+                                    <th colspan="4" style="height: 15PX;"><b>거리 구분</b></th>
+                                    <th colspan="1" style="height: 15PX;"><b>동시 도착</b></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>최단거리</b><p>(" "km 이하)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>단거리</b><p>(" "km 이하)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>중거리</b><p>(" "km 이하)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>장거리</b><p>(" "km 이하)</th>
+                                    <th colspan="1" style="height: 25PX;background-color:#EAEAEA;"><b>동시도착 조건</b><p>(" "km 이하))</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>    
+                    </div>
+                    <!-- \table -->       
                 </div>
 			</div>
 		</div>

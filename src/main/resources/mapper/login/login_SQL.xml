@@ -12,25 +12,49 @@
 	</resultMap>
 
 	<select id="login" parameterType="com.wavem.first.login.vo.UserInfoVo"  resultType="com.wavem.first.login.vo.UserInfoVo">
-		select a.userid, a.cp, a.carinfo, c.aucode
-			from
-			(
-			select userid, cp, carinfo, bid
-			from cp_list
-			) a,
-			(
-			select userid, max(bid) as m_bid
-			from cp_list
-			where userid in (select userid from user_id_list where userid = #{userId} and userpw = #{userPass})
-			group by userid
-			) b,
-			(
-			select userid, aucode
-			from user_id_list
-			) c
-			where a.userid = b.userid
-				and a.bid = b.m_bid
-				and a.userid = c.userid
+         <!-- admin ID 로그인 가능 변경 쿼리 (변경일자 18.09.18 적용) -->
+         SELECT
+            a.userid,
+            a.aucode,
+            case when b.cp is null then '관리자' else b.cp end as cp,
+            case when b.carinfo is null then '관리자' else b.carinfo end as carinfo
+         from
+         (
+            select userid, userpw, aucode
+            from user_id_list
+            where userid = #{userId} and userpw = #{userPass}
+         ) a left OUTER JOIN
+         (
+            select b.userid, b.cp, b.carinfo
+            from
+            (
+               select userid, max(bid)
+               from cp_list
+               group by userid
+            ) a, cp_list b
+            where a.userid = b.userid
+         ) b
+         on a.userid = b.userid
+<!-- 기존 쿼리 -->
+<!-- 		select a.userid, a.cp, a.carinfo, c.aucode -->
+<!-- 			from -->
+<!-- 			( -->
+<!-- 			select userid, cp, carinfo, bid -->
+<!-- 			from cp_list -->
+<!-- 			) a, -->
+<!-- 			( -->
+<!-- 			select userid, max(bid) as m_bid -->
+<!-- 			from cp_list -->
+<!-- 			where userid in (select userid from user_id_list where userid = #{userId} and userpw = #{userPass}) -->
+<!-- 			group by userid -->
+<!-- 			) b, -->
+<!-- 			( -->
+<!-- 			select userid, aucode -->
+<!-- 			from user_id_list -->
+<!-- 			) c -->
+<!-- 			where a.userid = b.userid -->
+<!-- 				and a.bid = b.m_bid -->
+<!-- 				and a.userid = c.userid -->
 	</select>
 
 </mapper>

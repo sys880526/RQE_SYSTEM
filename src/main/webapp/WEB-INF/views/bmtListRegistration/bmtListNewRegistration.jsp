@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>종합데이터</title>
+	<title>등록 이력 조회</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
@@ -36,10 +36,10 @@
 			<div id="contentsArea">
 				<!-- .titContents -->
 				<div class="titContents">
-					<h2>Data Sheet</h2>
+					<h2>등록 이력 조회</h2>
 					<p>
-						BMT LIST 사전 등록 > BMT LIST 이력 조회 >
-						<strong>BMT LIST 이력 조회</strong>
+						BMT LIST 사전 등록 > 
+						<strong>등록 이력 조회</strong>
 					</p>
 				</div>
 				<!-- \.titContents -->

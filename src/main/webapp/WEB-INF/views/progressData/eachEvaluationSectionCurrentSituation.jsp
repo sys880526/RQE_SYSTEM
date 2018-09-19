@@ -38,7 +38,7 @@
 				<div class="titContents">
 					<h2>각 평가 구간 현황</h2>
 					<p>
-						Home > 진행 데이터 >
+						진행 데이터 > 
 						<strong>각 평가 구간 현황</strong>
 					</p>
 				</div>

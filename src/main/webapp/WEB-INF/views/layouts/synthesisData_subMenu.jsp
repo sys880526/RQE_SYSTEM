@@ -5,10 +5,10 @@
     <ul class="snb">
       	<c:choose>
 	    	<c:when test="${sub_Control eq 'synthesisData_dataSheet'}">
-				<li><a href="/synthesisData/datasheet" class="active">DataSheet</a></li>
+				<li><a href="/synthesisData/datasheet" class="active">Data Sheet</a></li>
 	      	</c:when>
 	        <c:otherwise>
-	       		<li><a href="/synthesisData/datasheet">DataSheet</a></li>
+	       		<li><a href="/synthesisData/datasheet">Data Sheet</a></li>
 	      	</c:otherwise>
 	     </c:choose>
 	    

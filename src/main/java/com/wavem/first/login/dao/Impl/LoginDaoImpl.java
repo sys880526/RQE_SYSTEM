@@ -44,7 +44,5 @@ public class LoginDaoImpl implements LoginDao {
 
 		return userInfoList;
 	}
-
-	
 	
 }

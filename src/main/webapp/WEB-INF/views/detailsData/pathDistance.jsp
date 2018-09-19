@@ -42,7 +42,7 @@
             <div class="titContents">
                 <h2>경로 거리</h2>
                 <p>
-                    Home > 상세데이터 >
+                    상세데이터 > 
                     <strong>경로 거리</strong>
                 </p>
             </div>

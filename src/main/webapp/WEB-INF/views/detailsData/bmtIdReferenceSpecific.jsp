@@ -37,7 +37,7 @@
 				<div class="titContents">
 					<h2>BMT ID 기준 특이사항</h2>
 					<p>
-						Home > 상세데이터 >
+						상세데이터 > 
 						<strong>BMT ID 기준 특이사항</strong>
 					</p>
 				</div>

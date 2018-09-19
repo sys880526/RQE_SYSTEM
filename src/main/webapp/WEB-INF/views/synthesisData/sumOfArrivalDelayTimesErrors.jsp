@@ -36,9 +36,9 @@
 			<div id="contentsArea">
 				<!-- .titContents -->
 				<div class="titContents">
-					<h2>Data Sheet</h2>
+					<h2>도착 지연 시간 및 오차 집계</h2>
 					<p>
-						Home > 종합데이터 >
+						종합데이터 > 
 						<strong>도착 지연 시간 및 오차 집계</strong>
 					</p>
 				</div>

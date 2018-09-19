@@ -46,7 +46,7 @@
 <%--         	<%@ include file = "../views/layouts/bmtList_subMenu.jsp" %>     --%>
             <!-- /#snbArea -->
             <div id="contentsArea">
-                <div class="titContents">
+                <div class="titContents" style="width: 1300px;">
                     <h2>HOME</h2>
                     <p>
                         <strong>HOME</strong>

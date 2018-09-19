@@ -2,6 +2,7 @@ package com.wavem.first.login.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class LoginController {
 	 * @throws ParseException 
 	 */
 	@RequestMapping(value = "/login/login", method = RequestMethod.POST)
-	public ModelAndView login(HttpServletRequest request,HttpServletResponse response) {
+	public ModelAndView login(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		logger.info("========LoginController.doLoginUser 시작=======");
 
@@ -57,10 +58,9 @@ public class LoginController {
 		userInfo.setUserId(request.getParameter("userId"));
 		userInfo.setUserPass(request.getParameter("userPass"));
 
-		List<UserInfoVo> userInfoList = null;
+		List<UserInfoVo> userInfoList = null; // 초기화
 
 		userInfoList = loginService.login(userInfo);
-
 		if (userInfoList.size() > 0) {
 
 			userInfo = userInfoList.get(0);
@@ -69,8 +69,8 @@ public class LoginController {
 			HttpSession session = request.getSession();
 			session.setAttribute("SS_USER_ID", userInfo.getUserId()); // 사용자ID
 			session.setAttribute("SS_CP", userInfo.getCp()); // 사용자CP
-			session.setAttribute("SS_CAR_INFO", userInfo.getCarinfo());
-			session.setAttribute("SS_AUCODE", userInfo.getAucode()); 
+			session.setAttribute("SS_CAR_INFO", userInfo.getCarinfo()); // 사용자 차량정보
+			session.setAttribute("SS_AUCODE", userInfo.getAucode()); // AU코드
 			mav.addObject("userInfoList", userInfoList);
 			
 			 // 세션에 존재하는 Locale을 새로운 언어로 변경해준다.
@@ -79,9 +79,11 @@ public class LoginController {
 			session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locales);
 
 			mav.addObject("loginflag", "true");
+//			System.out.println("loginflag >>>>>>> " + mav);
 			mav.setViewName("redirect:/main");
 		} else {
 			mav.addObject("loginflag", "false");
+//			System.out.println("loginflag >>>>>>> " + mav);
 			mav.setViewName("redirect:/");
 		}
 		logger.info("========LoginController.doLoginUser 종료=======");
@@ -99,6 +101,7 @@ public class LoginController {
 		String localeLanguage = locale.getLanguage();
 		
 		mav.addObject("loginflag", "");
+//		mav.addObject("msg_logout","로그아웃 하셨습니다.");
 		
 		// session setting
 		HttpSession session = request.getSession();

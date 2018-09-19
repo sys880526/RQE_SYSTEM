@@ -40,7 +40,7 @@
 				<div class="titContents">
 					<h2>건수/거리/요금/시간 집계</h2>
 					<p>
-						Home > 종합데이터 >
+						종합데이터 > 
 						<strong>건수/거리/요금/시간 집계</strong>
 					</p>
 				</div>

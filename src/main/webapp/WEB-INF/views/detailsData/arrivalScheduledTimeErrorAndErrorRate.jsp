@@ -40,7 +40,7 @@
 				<div class="titContents">
 					<h2>도착 예정 시간 오차 및 오차율</h2>
 					<p>
-						Home > 상세데이터 >
+						상세데이터 > 
 						<strong>도착 예정 시간 오차 및 오차율</strong>
 					</p>
 				</div>

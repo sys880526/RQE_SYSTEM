@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>종합데이터</title>
+	<title>Data Sheet</title>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
@@ -37,7 +37,7 @@
 				<div class="titContents">
 					<h2>Data Sheet</h2>
 					<p>
-						Home > 종합데이터 >
+						종합데이터 > 
 						<strong>Data Sheet</strong>
 					</p>
 				</div>

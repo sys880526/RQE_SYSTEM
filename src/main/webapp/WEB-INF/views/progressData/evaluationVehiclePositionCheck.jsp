@@ -83,7 +83,7 @@
 					<div class="titContents">
 						<h2>각 평가 차량 위치 확인</h2>
 						<p>
-							Home > 종합데이터 >
+							종합데이터 > 
 							<strong>각 평가 차량 위치 확인</strong>
 						</p>
 					</div>

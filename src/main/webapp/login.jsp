@@ -25,8 +25,8 @@
 		// button event
 		$("#btnLogin").click(function() {
 			loginAction();
-		});
-			
+		}); 
+		
 <%
 	if("Y".equals(strParamSO)) {
 		out.println("alert('세션이 만료되었습니다. 다시 로그인 하세요.');");		  
@@ -83,11 +83,12 @@
 		}).focusout(function(){
 			$(this).removeClass('active');
 		});
-	});
+	});3
   </script>
  </head>
 <form id="frm" name="frm" action="/login/login" method="post">
  <body style="background:#dce1e9 url(./images/login/bg_body.gif) center 0 no-repeat;">
+ ${loginflag}
 	<!-- #login -->
 	<div id="login">
 		<ul>
@@ -96,7 +97,6 @@
 			<li class="btn">					
 				<img id="btnLogin" src="./images/login/btn_login.gif" alt="Login" title="Login" style="cursor: pointer;" />
 			</li>
-			<li style="padding:7px 0 0 302px"><a href="#layerPopup_1" class="btnLayer">관리자 등록</a></li>
 		</ul>
 	</div>
 	</form>
