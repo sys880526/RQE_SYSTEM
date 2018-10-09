@@ -1,0 +1,125 @@
+@charset "utf-8";
+
+/* layout-box */
+.layout-box {margin-top:25px; position:relative; float:left;}
+.layout-box div.tit {font-size:14px; color:#202a41; font-weight:600; margin-bottom:8px; height:28px; line-height:26px; position:relative; overflow: visible;}
+.layout-box div.tit .btn_wrap {position:absolute; top:0; right:0;}
+.layout-box div.tit .btn_wrap .btn {height:24px; line-height:22px; padding:0 6px;}
+.layout-box div.tit > p:first-child {display:inline-block; vertical-align:middle;}
+.layout-box div.tit > span.text {font-size:12px; margin-left:12px; color:#ec561a;}
+.layout-box div.tit > .btn.small {margin-left:4px; vertical-align:middle;}
+.layout-box div.tit > .btn_wrap {line-height:1em;}
+.layout-box div.tit > .btn_wrap span.duration {font-size:13px; font-weight:600; color:#537aa2; margin-right:8px;}
+.layout-box div.tit > .btn_wrap.right {float:right;}
+.layout-box div.tit > .search-box {display:inline-block; position:absolute; top:0; right:0;}
+.layout-box div.tit > .search-box > .floor > * {height:28px; line-height: 26px;}
+
+/* 페이지 제목 */
+.tit-page {padding-bottom: 18px; position: relative;}
+.tit-page::before,
+.tit-page::after {content:""; display: block; width:100%; height:3px; background-color: #bbcadb; position: absolute; bottom:0; left:0;}
+.tit-page::after {width:187px; background-color: #465271;}
+.tit-page > span:first-child {font-size: 24px; color:#465271; display: inline-block; position: relative; line-height: 24px; padding-left: 15px;}
+.tit-page > span:first-child::before,
+.tit-page > span:first-child::after {content: ""; display: block; position: absolute; top:3px; left:0; width:6px; height:6px; background-color: #00abc5;}
+.tit-page > span:first-child::after {background-color: #000000; top:9px;}
+
+/* Layout */
+html {height:100%;}
+div.inner {width:1280px; margin:0 auto; position: relative;}
+#wrap {min-width:1280px;}
+
+header {
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#284077+0,242d49+100 */
+background: #284077; /* Old browsers */
+background: -moz-linear-gradient(top, #284077 0%, #242d49 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #284077 0%,#242d49 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #284077 0%,#242d49 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#284077', endColorstr='#242d49',GradientType=0 ); /* IE6-9 */
+position: fixed; top:0; left:0; width:100%; height:80px;
+min-width:1280px;
+box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.3);
+z-index: 3;
+}
+header:after {content:""; display: block; position: absolute; top:0; left:0; width:1092px; height:80px; background-image: url('../../images/common/bg_gnb.png'); z-index: 0;}
+
+h1 {float:left; width:240px; height:100%; position: relative; padding:24px 20px 0 20px; box-sizing: border-box; margin-right: 24px; z-index: 2;}
+h1 a {display: inline-block;}
+h1 a > img {height:34px;}
+
+#gnb {float:left; position: relative; z-index: 2;}
+#gnb li {float:left; margin-right: 50px;}
+#gnb li:last-child {margin-right: 0;}
+#gnb li a {color:#fff; display:inline-block; height:80px; line-height:80px; font-size: 15px; font-weight: 600; background-position: 0 50%; background-repeat: no-repeat; padding-left: 40px; position: relative;}
+#gnb li a:after {content: ""; display: block; position: absolute; bottom:-4px; left:0px; width:100%; height:4px; background-color: #00abc5; transition: all 0.15s;}
+#gnb li a:hover:after,
+#gnb li.active a:after {bottom:0;}
+#gnb li.bmt a {background-image: url('../../images/common/bg_gnb_01.png');}
+#gnb li.progress a {background-image: url('../../images/common/bg_gnb_02.png');}
+#gnb li.synthesis a {background-image: url('../../images/common/bg_gnb_03.png');}
+#gnb li.detail a {background-image: url('../../images/common/bg_gnb_04.png');}
+#gnb li.system a {background-image: url('../../images/common/bg_gnb_05.png');}
+
+.user-info {position: absolute; top:50%; right:20px; transform: translate(0, -50%); padding:3px 0; box-sizing: border-box;}
+.user-info ul {display: inline-block; vertical-align: middle; overflow: visible;}
+.user-info li {float:left; font-size: 14px; font-weight: 500; margin-right: 27px; color:#fff; overflow: visible;}
+.user-info li:before {content:""; display: inline-block; vertical-align: middle; width:32px; height:32px; line-height: 32px; border-radius: 50%; text-align: center; color:#fff; margin-top: -2px; margin-right: 8px;}
+.user-info li.user:before {background-image: url('../../images/common/bg_user.png');}
+.user-info li.cp:before {content:"CP"; background-color: #4459a9;}
+.user-info li.car:before {content:"차"; background-color: #7d55d7;}
+.btn.logout {background-color: #021134; height:32px; line-height: 32px; padding:0 20px; border-radius: 16px; border:none; font-size: 13px; color:#abb6d0; font-weight: 400;}
+.btn.logout:hover {color:#fff;}
+
+#snb {position: fixed; top:80px; left:0; width:200px; height:100%; background-color: #e1e8ef; z-index: 3;}
+#snb::after {content: ""; display: block; width:1px; height:100%; background-color: #d8e1ea; position: absolute; top:0; right:0;}
+#snb > .tit {background-color: #2b447f; width:100%; height:80px; color:#fff; font-size: 18px; font-weight: 600; text-align: center; position: relative; z-index: 2;}
+#snb > .tit > span {position: absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;}
+#snb ul li a {font-size: 14px; height:60px; line-height: 60px; display: block; border-bottom: solid 1px #dae0e8; padding-left: 20px; font-weight: 500; color:#26292f; background:#f0f3f6 url('../../images/common/bg_right_arrow.svg') right 20px top 50% no-repeat; position: relative;}
+#snb ul li a::before {content:""; display: block; width:3px; height:100%; position: absolute; left:-3px; top:0; background-color: #517cdd; transition: all .15s;}
+#snb ul li.active a {background-color: #fff;}
+#snb ul li a:hover::before,
+#snb ul li.active a::before {left:0;}
+#container {height:100%; clear:both; overflow:hidden;}
+#contents {width:998px; height:100%; float:left; padding:40px;}
+footer {position: fixed; bottom:0; left:0; width:100%; clear:both; background-color: #f5f7fb; height:30px; line-height:30px; border-top: solid 1px #e1e2e6; text-align: right; padding:0 16px; box-sizing: border-box;}
+footer p.copyright {font-size: 12px; color:#75777e; letter-spacing: 0; font-weight: 500;}
+
+.tit-page {margin-bottom: 20px;}
+.tit-page ul.path {display: inline-block; position: absolute; right:0; bottom:16px; margin-right: 5px;}
+.tit-page ul.path li {float:left; margin-left: 12px; background:url('../../images/common/bg_path.svg') 0 50% no-repeat; padding-left: 20px; font-size: 14px; color:#75777e;}
+.tit-page ul.path li:first-child {margin-left: 0; padding-left: 0; background:none;}
+.tit-page ul.path li:last-child {color:#667db9;}
+
+/* 로그인 */
+body.login {height:100%; background:url('../../images/login/bg_login.jpg') 50% 50% no-repeat; background-size: cover; position: relative;}
+.login-box {display: inline-block; overflow: visible; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);}
+.login-box h1 {width:auto; float: none; padding:0; margin-right: 0; display: block;}
+.login-box input,
+.login-box .btn {width:392px; height:70px; display: block; border-radius: 35px; margin-left:auto; margin-right: auto; border:none; box-shadow: 0px 34px 81px 0px rgba(0, 0, 0, 0.26); }
+.login-box input {margin-top: 20px; background-color: #32446f; color:#fff; padding: 0 35px 0 84px; font-size: 18px; color:#d5e7f3; background-repeat:no-repeat; background-position: 35px 50%; transition: all 0.3s;}
+.login-box input::placeholder {color:#5b6c96;}
+.login-box input:hover,
+.login-box input:focus {color:#fff; font-size: 19px;}
+.login-box input.user-id {background-image: url('../../images/login/bg_input_login.png');}
+.login-box input.user-pw {background-image: url('../../images/login/bg_input_password.png');}
+.login-box .btn {line-height: 70px; text-align: center; color: #fff; margin-top: 30px; letter-spacing: 0em; font-size: 18px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#00aac5+0,1786b9+100 */
+background: #00aac5; /* Old browsers */
+background: -moz-linear-gradient(left, #00aac5 0%, #1786b9 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left, #00aac5 0%,#1786b9 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right, #00aac5 0%,#1786b9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00aac5', endColorstr='#1786b9',GradientType=1 ); /* IE6-9 */
+}
+.login-box .btn:hover,
+.login-box .btn:focus {letter-spacing:0.1em;}
+.login-box p.copyright {text-align: center; font-size: 14px; color:#759eb8; margin-top: 60px; font-weight: 500;}
+
+/* jQuery-UI custom */
+input.datepicker {width:140px;}
+.ui-datepicker-trigger,
+.monthpicker + img.icon {margin-left:6px; vertical-align: middle; margin-left: 1px; margin-right: 12px; cursor:pointer;}
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {top:4px;}
+.ui-datepicker td {height:auto !important;}
+/* datepicker customizing */
+.ui-widget-header {background-color: #f1f1f1; border-color:transparent;}
+.ui-datepicker select {height:28px; line-height: 26px; background-color: #fff;}

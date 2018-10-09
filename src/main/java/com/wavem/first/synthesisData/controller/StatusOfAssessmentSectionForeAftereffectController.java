@@ -48,10 +48,12 @@ public class StatusOfAssessmentSectionForeAftereffectController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+		String userid = session.getAttribute("SS_USER_ID").toString();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
-		map.put("userid", "user01");
+		map.put("userid", userid);
 		List<Map<String, Object>> dayTime = statusOfAssessmentSectionForeAftereffectService.getStatusOfAssessmentSectionData(map);
 		List<Map<String, Object>> foreAfter =  statusOfAssessmentSectionForeAftereffectService.getForeAftereffectData(map);
 		mav.addObject("dayTime", dayTime);

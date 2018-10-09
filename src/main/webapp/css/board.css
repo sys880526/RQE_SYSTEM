@@ -4,7 +4,7 @@
 .search {padding:15px; border:1px solid #cecece; margin-bottom:20px; line-height:1;}
 .search .pd {padding:0 3px 0 10px; color:#333;}
 .search .first {padding-left:0px;}
-.search .date {width:85px; text-align:center; border-right:none;}
+.search .date {width:125px; text-align:center; border-right:none;}
 .search .btnSearch {margin-left:3px;}
 
 /* 상태 */

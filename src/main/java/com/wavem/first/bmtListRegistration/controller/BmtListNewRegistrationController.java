@@ -44,12 +44,14 @@ public class BmtListNewRegistrationController {
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("code", "0");
 		String date = request.getParameter("bmt-date");
+		String userid = session.getAttribute("SS_USER_ID").toString();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "0");
 		map.put("date", date);
-		map.put("userid", "admin01");
+		map.put("userid", userid);
 		List<Map<String, Object>> out = bmtListNewRegistrationService.getBmtNewHistoryList(map);
 		mav.addObject("list", out);
+		System.out.println(session.getAttribute("SS_USER_ID"));
 		return mav;
 	}
 	

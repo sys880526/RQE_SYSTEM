@@ -1,18 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>등록 이력 조회</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
-    <script type="text/javascript" src="../js/common.js"></script>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<!-- , target-densitydpi=device-dpi -->
+<title>등록 이력 조회</title>
+<!-- JS -->
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
     <link rel="stylesheet" type="text/css" href="../css/import.css" />
     <link rel="stylesheet" type="text/css" href="../css/board.css" />
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
@@ -20,88 +30,93 @@
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
+
 </head>
 <body>
-	<!-- #container -->
-	<div id="container" class="gnb">
+	<div id=wrap>
 		<!-- #header -->
-		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
+		<jsp:include page="/WEB-INF/views/layouts/header.jsp" />
 		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
-			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/bmtListRegistraion_subMenu.jsp"/>
-			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<!-- .titContents -->
-				<div class="titContents">
-					<h2>등록 이력 조회</h2>
-					<p>
-						BMT LIST 사전 등록 > 
-						<strong>등록 이력 조회</strong>
-					</p>
-				</div>
-				<!-- \.titContents -->
-				<!-- .contents -->
-                <div class="contents" width=100%>
-                    <!-- .search -->
-                    <!--
-                        board.css : box-sizing: content-box 추가
-                    -->
-                    <div class="search">
-                        <form id="search-bmt">
-                            <span class="pd">시작 날짜</span>
-                            <input type="text" class="text date" id="bmt-date" name="bmt-date" />
-                            <a href="javascript:getList()" class="btnSearch">
-                                <img src="../images/board/btn_search.gif" alt="search" />
-                            </a>
-                           	
-                            <a href="javascript:deleteNewList()" class="btnNewSave" id="btnNewSave" style="float : right;">
-                                <img src="../images/board/btn_dele.gif" alt="newSave" />
-                            </a>
-                           	
-                            <a href="javascript:saveNewList()" class="btnNewSave" id="btnNewSave" style="float : right;">
-                                <img src="../images/board/btn_save.gif" alt="newSave" />
-                            </a>
-                           	
-                            
-                        </form>
-                    </div>
-                    <!-- /.search -->
-                    <div>
-                           <a href="javascript:addNewList()" class=""btnAddNew"" id="btnAddNew" style="float : right;">
-                               <img src="../images/board/btn_add.png" alt="addNew" style=" width: 20px;"/>
-                           </a>
-                           <a href="javascript:removeNewList()" class=""btnRemoveNew"" id="btnRemoveNew" style="float : right; width: 20px;">
-                               <img src="../images/board/btn_remove.png" alt="removeNew" style=" width: 20px;"/>
-                           </a>
-                        <table id="tbl-data-sheet" class="boardListStyle" cellspacing="0" width="100%" border="0">
-                          	<colcolgroup>
-                          		<col width="5%">
-                          		<col width="10%">
-                          		<col width="*">
-                          		<col width="*">
-                          	</colcolgroup>
-                           	<thead>
-                                <tr>
-                                    <th></th>
-                                    <th>BMT ID</th>
-                                    <th>출발지명</th>
-                                    <th>도착지명</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- /.contents -->
+
+		<!-- #subMenu -->
+		<jsp:include
+			page="/WEB-INF/views/layouts/bmtListRegistraion_subMenu.jsp" />
+		<!-- \#subMenu -->
+
+		<section id="contents" style="width: 95%;">
+			<div class="tit-page">
+				<span>등록 이력 조회</span>
+				<ul class="path">
+					<li>BMT LIST 등록</li>
+					<li>등록 이력 조회</li>
+				</ul>
+				<!-- .path -->
 			</div>
-			<!-- \#contentArea -->
-		</div>
-		<!-- \.body clearFix -->
+			<!-- .tit-page -->
+
+			<div class="contents">
+				<!-- .search -->
+				<!--
+	              board.css : box-sizing: content-box 추가
+	          -->
+				<div class="search">
+					<form id="search-bmt">
+						<span class="pd">시작 날짜</span> <input type="text" class="text date"
+							id="bmt-date" name="bmt-date" /> <a href="javascript:getList()"
+							class="btnSearch"> <img src="../images/board/btn_search.gif"
+							alt="search" />
+						</a> <a href="javascript:deleteNewList()" class="btnNewSave"
+							id="btnNewSave" style="float: right;"> <img
+							src="../images/board/btn_dele.gif" alt="newSave" />
+						</a> <a href="javascript:saveNewList()" class="btnNewSave"
+							id="btnNewSave" style="float: right;"> <img
+							src="../images/board/btn_save.gif" alt="newSave" />
+						</a>
+					</form>
+				</div>
+				<!-- /.search -->
+
+				<div>
+					<a href="javascript:addNewList()" class=""
+						btnAddNew"" id="btnAddNew" style="float: right;"> <img
+						src="../images/board/btn_add.png" alt="addNew"
+						style="width: 20px;" />
+					</a> <a href="javascript:removeNewList()" class=""
+						btnRemoveNew"" id="btnRemoveNew"
+						style="float: right; width: 20px;"> <img
+						src="../images/board/btn_remove.png" alt="removeNew"
+						style="width: 20px;" />
+					</a>
+					<table id="tbl-data-sheet" class="boardListStyle" cellspacing="0"
+						width="100%" border="0">
+						<colcolgroup>
+						<col width="5%">
+						<col width="10%">
+						<col width="*">
+						<col width="*">
+						</colcolgroup>
+						<thead>
+							<tr>
+								<th></th>
+								<th>BMT ID</th>
+								<th>출발지명</th>
+								<th>도착지명</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+		<!-- /.contents -->
+		</section>
+		<!--  #container -->
+		<footer>
+			<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+				reserved.</p>
+		</footer>
 	</div>
-	<!-- \#container -->
+	<!-- wrap -->
 </body>
 <script>
 	$(document).ready(function() {

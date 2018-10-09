@@ -1,67 +1,74 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html><html>
-	<head>
-		<title>BMT ID 기준 경로 지도 분석</title>
-		<meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-	    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-	    <script type="text/javascript" src="../js/style.js"></script>
-	    <script type="text/javascript" src="../js/common.js"></script>
-	    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbd114108f63ae7f837dbe2cee10a1ba"></script>
-	    
-	    
-	     <!-- CSS -->
-	    <link rel="stylesheet" type="text/css" href="../css/import.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/board.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/common.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/default.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/layout.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/login.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/style.css" />
-	    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
-	    
-	    <style>
-	    	#cpResultTableDiv table thead tr th,
-	    	#cpResultTableDiv table tbody tr td,
-	    	#analysisTableDiv table thead tr th,
-	    	#analysisTableDiv table tbody tr th,
-	    	#analysisTableDiv table tbody tr td
-	    	{
-	    		padding : 0;
-	    	}
-	    	#analysisTableDiv table thead tr th,
-	    	#analysisTableDiv table tbody tr th{
-    		    width: 90px;
-	    	}
-	    	#cpResultTableDiv table tbody tr td{
-	    	    font-weight: bold;
-    	    }
-	    
-	    </style>
-	</head>
-	<body>
-		<!-- #container -->
-		<div id="container" class="gnb">
-			<!-- #header -->
-			<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
-			<!-- \#header -->
-			<div class="body clearFix">
-				<!-- #snbArea -->
-				<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
-				<!-- \#snbArea -->
-				<!-- #contentArea -->
-				<div id="contentsArea">
-					<!-- .titContents -->
-					<div class="titContents">
-						<h2>BMT ID 기준 경로 지도 분석</h2>
-						<p>
-							상세데이터 > 
-							<strong>BMT ID 기준 경로 지도 분석</strong>
-						</p>
-					</div>
-					<!-- \.titContents -->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+	, target-densitydpi=device-dpi />
+	
+	<title>BMT ID 기준 경로 지도 분석</title>
+	
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	<script type="text/javascript"
+		src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fbd114108f63ae7f837dbe2cee10a1ba"></script>
+    
+    
+   	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/import.css" />
+	<link rel="stylesheet" type="text/css" href="../css/board.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/default.css" />
+	<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="../css/login.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
+    
+    <style>
+    	#cpResultTableDiv table thead tr th,
+    	#cpResultTableDiv table tbody tr td,
+    	#analysisTableDiv table thead tr th,
+    	#analysisTableDiv table tbody tr th,
+    	#analysisTableDiv table tbody tr td
+    	{
+    		padding : 0;
+    	}
+    	#analysisTableDiv table thead tr th,
+    	#analysisTableDiv table tbody tr th{
+   		    width: 90px;
+    	}
+    	#cpResultTableDiv table tbody tr td{
+    	    font-weight: bold;
+   	    }
+    
+    </style>
+</head>
+<body>
+	<div id=wrap>
+		<!-- #header -->
+		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
+		<!-- \#header -->
+			<!-- #snbArea -->
+			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
+			<!-- \#snbArea -->
+			<section id="contents" style="width: 95%;">
+				<div class="tit-page">
+					<span>BMT ID 기준 경로 지도 분석</span>
+					<ul class="path">
+						<li>상세 데이터</li>
+						<li>BMT ID 기준 경로 지도 분석</li>
+					</ul>
+					<!-- .path -->
+				</div>
+				<!-- tit-page -->	
 					<!-- .contents -->
 	                <div class="contents" style="width:100%">
 	                	<!-- .search -->
@@ -106,13 +113,17 @@
 	                	</div>
 	               	</div>
 	               	<!-- /.contents -->
-	            </div>
-	            <!-- /#contentsArea -->
-	        </div>
-	        <!-- /.body.clearFix -->
-        </div>
-        <!-- /#container -->
-	</body>
+			 </section>
+				<!-- /.contents -->
+		</section>
+		<!--  #container -->
+		<footer>
+			<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+					reserved.</p>
+		</footer>             
+	</div>
+<!-- .wrap -->
+</body>
 	<script>
 		var mapContainer = document.getElementById('bmtIdReferencePathAnalysisDiv'), // 지도를 표시할 div  
 			mapOption = { 

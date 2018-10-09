@@ -1,19 +1,33 @@
 <!DOCTYPE html>
+<html lang="ko">
+<!-- <html lang="ko" xmlns="http://www.w3.org/1999/xhtml" > -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
-<%@ taglib uri="jstl-c" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%
 	String strParamSO = request.getParameter("SS_OUT");
 	if(null == strParamSO) strParamSO = "N";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
- <head>
-  <meta charset=utf-8" />
-  <title>사용자 인터페이스</title>
-  <link rel="stylesheet" type="text/css" href="./css/import.css" />
-  <script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="./js/style.js"></script>
-  <script type="text/javascript">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!--     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no", target-densitydpi=device-dpi />
+    <title>실차평가시스템</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="../js/placeholder.js"></script>
+    <script type="text/javascript" src="../js/ui.js"></script>
+<!--     <link rel="stylesheet" type="text/css" href="../share/css/style.css" /> -->
+<!--     <script type="text/javascript" src="../share/js/jquery-3.3.1.js"></script> -->
+<!--     <script type="text/javascript" src="../share/js/jquery-ui.min.js"></script> -->
+<!--     <script type="text/javascript" src="../share/js/jquery.mCustomScrollbar.concat.min.js"></script> -->
+<!--     <script type="text/javascript" src="../share/js/placeholder.js"></script> -->
+<!--     <script type="text/javascript" src="../share/js/ui.js"></script> -->
+    <script type="text/javascript">
 	$(document).ready(function() {
 		// keydown event 
 		$("#userPass").keydown(function(event) {
@@ -27,19 +41,21 @@
 			loginAction();
 		}); 
 		
-<%
-	if("Y".equals(strParamSO)) {
-		out.println("alert('세션이 만료되었습니다. 다시 로그인 하세요.');");		  
-	}
-%>
+		<%
+			if("Y".equals(strParamSO)) {
+				out.println("alert('세션이 만료되었습니다. 다시 로그인 하세요.');");		  
+			}
+		%>	
+
 		//getid(document.frm);
 		// alert
+// 		var msg = ${msg};
+
 		if ("true" == $("#loginflag").val()) {
-			location.href = "/bulletin/bulletin";
 		} else if ("false" == $("#loginflag").val()) {
-			alert($("#msg").val());
-			return;
-		}
+		    alert("로그인 실패 / ID-Password 재확인!");
+		    return;
+		 }
 	});
 
 	// valid
@@ -74,9 +90,9 @@
 			$("#frm").submit();
 		}
 	}
-	
 	</script>
-  <script type="text/javascript">
+	
+	 <script type="text/javascript">
 	$(function(){
 		$('#login .text').focusin(function(){
 			$(this).addClass('active');
@@ -85,21 +101,22 @@
 		});
 	});3
   </script>
- </head>
+</head>
 <form id="frm" name="frm" action="/login/login" method="post">
- <body style="background:#dce1e9 url(./images/login/bg_body.gif) center 0 no-repeat;">
- ${loginflag}
-	<!-- #login -->
-	<div id="login">
-		<ul>
-			<li><label for="userId">ID</label> <input type="text" id="userId" name="userId" class="text" /></li>
-			<li><label for="userPw">PASSWORD</label> <input type="password" id="userPass" name="userPass" class="text" /></li>
-			<li class="btn">					
-				<img id="btnLogin" src="./images/login/btn_login.gif" alt="Login" title="Login" style="cursor: pointer;" />
-			</li>
-		</ul>
-	</div>
-	</form>
-	<!-- /#login -->
-
+	<body class="login">
+	    <div id="wrap">
+	        <div class="login-box">
+	            <h1><img src="../images/common/img_logo.png" alt="" /></h1>
+	            <input type="text" value="" placeholder="아이디" id="userId" name="userId" class="user-id" />
+	            <input type="password" value="" placeholder="비밀번호" id="userPass" name="userPass" class="user-pw" />
+	            <a id="btnLogin" class="btn">LOGIN</a>
+	            <p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights reserved.</p>
+	        </div>
+	        <!-- /.login_box -->
+	        <div class="loading common"><p>로딩중입니다.</p></div>
+	        <div class="modal"></div>
+	    </div>
+	    <!-- #wrap -->
+	</body>
+</form>
 </html>

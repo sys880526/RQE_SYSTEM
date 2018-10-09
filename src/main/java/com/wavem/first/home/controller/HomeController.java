@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +29,23 @@ public class HomeController {
 	private HomeService homeService;
 	
 	@RequestMapping(value="/main", method = RequestMethod.GET)
-	public ModelAndView home() throws Exception {
+	public ModelAndView home(HttpSession session) throws Exception {
 		
 		ModelAndView mv = new ModelAndView("/main");
+		String userid = session.getAttribute("SS_USER_ID").toString();
 		
-		List<Map<String, Object>> result_bmtListEvent = homeService.getBmtListEvent("userid");
+		System.out.println("userid ::: >>>> " + userid);
+
+		Map<String, String> param = new HashMap<String, String>();
+		
+		if (session.getAttribute("SS_USER_ID").toString().isEmpty()
+				|| session.getAttribute("SS_CP").toString().isEmpty()
+				|| session.getAttribute("SS_CAR_INFO").toString().isEmpty()
+				|| session.getAttribute("SS_AUCODE").toString().isEmpty()) {
+			mv.setViewName("redirect:/");
+		}
+		param.put("userid", userid);
+		List<Map<String, Object>> result_bmtListEvent = homeService.getBmtListEvent(param);
 
 		// ----------------------- modify 2018-08-20 ys880526 start ----------------------------------
 		// 아래의 로직은 result_bmtListEvent 에서 가져오는 데이터가 정렬 되어 있다는 가정하에 작업

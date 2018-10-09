@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface HomeDao {
 
-	List<Map<String, Object>> selectBmtListEvent(String userid);
+	List<Map<String, Object>> selectBmtListEvent(Map<String, String> param);
 }

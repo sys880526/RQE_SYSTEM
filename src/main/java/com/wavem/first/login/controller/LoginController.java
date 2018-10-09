@@ -52,39 +52,36 @@ public class LoginController {
 		logger.info("========LoginController.doLoginUser 시작=======");
 
 		ModelAndView mav = new ModelAndView();
-
 		UserInfoVo userInfo = new UserInfoVo();
+
+		List<UserInfoVo> userInfoList = null; // 초기화
+		HttpSession session = request.getSession();
 
 		userInfo.setUserId(request.getParameter("userId"));
 		userInfo.setUserPass(request.getParameter("userPass"));
 
-		List<UserInfoVo> userInfoList = null; // 초기화
-
 		userInfoList = loginService.login(userInfo);
+		Map<String, Object> msg = new HashMap<String, Object>();
+		
 		if (userInfoList.size() > 0) {
-
 			userInfo = userInfoList.get(0);
 
 			// session setting
-			HttpSession session = request.getSession();
 			session.setAttribute("SS_USER_ID", userInfo.getUserId()); // 사용자ID
 			session.setAttribute("SS_CP", userInfo.getCp()); // 사용자CP
 			session.setAttribute("SS_CAR_INFO", userInfo.getCarinfo()); // 사용자 차량정보
 			session.setAttribute("SS_AUCODE", userInfo.getAucode()); // AU코드
 			mav.addObject("userInfoList", userInfoList);
-			
-			 // 세션에 존재하는 Locale을 새로운 언어로 변경해준다.
-			Locale locales = null;
-			locales = Locale.KOREAN;
-			session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locales);
-
-			mav.addObject("loginflag", "true");
-//			System.out.println("loginflag >>>>>>> " + mav);
+			System.out.println("권한 >>>>> " + session.getAttribute("SS_AUCODE").toString());
 			mav.setViewName("redirect:/main");
 		} else {
-			mav.addObject("loginflag", "false");
-//			System.out.println("loginflag >>>>>>> " + mav);
-			mav.setViewName("redirect:/");
+			msg.put("msg", "입력하신 아이디, 패스워드가 정확하지 않습니다.");
+//			mav.addObject("msg", msg);
+			
+//			mav.setViewName("redirect:/");
+			
+			mav.addObject("loginflag","false");
+			mav.setViewName("/login/login");
 		}
 		logger.info("========LoginController.doLoginUser 종료=======");
 		return mav;
@@ -96,12 +93,6 @@ public class LoginController {
 		logger.info("========LoginController.doLoginUser 시작=======");
 
 		ModelAndView mav = new ModelAndView();
-		
-		Locale locale = request.getLocale();
-		String localeLanguage = locale.getLanguage();
-		
-		mav.addObject("loginflag", "");
-//		mav.addObject("msg_logout","로그아웃 하셨습니다.");
 		
 		// session setting
 		HttpSession session = request.getSession();

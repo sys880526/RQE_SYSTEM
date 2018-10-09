@@ -3,12 +3,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+	, target-densitydpi=device-dpi />		
 	<title>건수/거리/요금/시간 집계</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
     <script type="text/javascript" src="../js/style.js"></script>
+    <script type="text/javascript" src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
     
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../css/import.css" />
@@ -17,36 +25,32 @@
     <link rel="stylesheet" type="text/css" href="../css/default.css" />
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />    
     <link rel="stylesheet" type="text/css" href="../css/modal.css" />
     
     <!-- Google Chart -->
   	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
-	<!-- #container -->
-	<div id="container" class="gnb">
+	<div id=wrap>
 		<!-- #header -->
 		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
 		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
 			<!-- #snbArea -->
 			<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
 			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<!-- .titContents -->
-				<div class="titContents">
-					<h2>건수/거리/요금/시간 집계</h2>
-					<p>
-						종합데이터 > 
-						<strong>건수/거리/요금/시간 집계</strong>
-					</p>
+			<section id="contents" style="width: 95%;">
+				<div class="tit-page">
+					<span>건수/거리/요금/시간 집계</span>
+					<ul class="path">
+						<li>종합 데이터</li>
+						<li>건수/거리/요금/시간 집계</li>
+					</ul>
+					<!-- .path -->
 				</div>
-				<!-- \.titContents -->
+				<!-- tit-page -->
 				<!-- .contents -->
-                <div class="contents" style="width:100%">
+                <div class="contents">
                     <!-- .search -->
                     <!--
                         board.css : box-sizing: content-box 추가
@@ -132,11 +136,17 @@
                     </div>
                 </div>
                 <!-- /.contents -->
-			</div>
-			<!-- \#contentArea -->
-		</div>
-		<!-- \.body clearFix -->
 	</div>
+	</section>
+	<!-- /.contents -->
+	</section>
+	<!--  #container -->
+		<footer>
+				<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+					reserved.</p>
+		</footer>	
+	</div>
+	<!-- wrap -->
 </body>
 <script src="/js/common.js"></script>
 <script>

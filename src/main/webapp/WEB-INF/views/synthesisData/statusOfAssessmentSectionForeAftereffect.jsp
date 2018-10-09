@@ -1,147 +1,163 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+	, target-densitydpi=device-dpi />
+	
 	<title>평가 구간 현황 및 선후착 집계</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/import.css" />
-    <link rel="stylesheet" type="text/css" href="../css/board.css" />
-    <link rel="stylesheet" type="text/css" href="../css/common.css" />
-    <link rel="stylesheet" type="text/css" href="../css/default.css" />
-    <link rel="stylesheet" type="text/css" href="../css/layout.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css" />
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />    
-    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
+	
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript"
+		src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/import.css" />
+	<link rel="stylesheet" type="text/css" href="../css/board.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/default.css" />
+	<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="../css/login.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
+
 </head>
 <body>
-	<!-- #container -->
-	<div id="container" class="gnb">
+	<div id=wrap>
 		<!-- #header -->
-		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
+		<jsp:include page="/WEB-INF/views/layouts/header.jsp" />
 		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
-			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp"/>
-			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<div class="titContents">
-					<h2>평가 구간 현황 및 선후착 집계</h2>
-					<p>
-						종합데이터 > 
-						<strong>평가 구간 현황 및 선후착 집계</strong>
-					</p>
-				</div>
-				<!-- \.titContents -->
-				<!-- .contents -->
-                <div class="contents" width=100%>
-                	<!-- .search -->
-                	<div class="search">
-                        <form id="search-bmt">
-                            <span class="pd">시작 날짜</span>
-                            <input type="text" class="text date" id="bmt-start-date" name="bmt-start-date" />
-                            <span class="pd">~</span>
-                            <span class="pd">종료 날짜</span>
-                            <input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" />
-                            <a href="javascript:statusOfAssessmentSectionForeAftereffect()" class="btnSearch">
-                                <img src="../images/board/btn_search.gif" alt="search" />
-                            </a>
-                        </form>
-                	</div>
-                	<!-- /.search -->
-                	<!-- table -->               
-                    <div style="margin-bottom: 25px">
-                    	<table id="tbl-evaluation-day">
-                            <thead style="background-color: #e6f2ff">
-                                <tr>
-                                    <th colspan="10" style="height: 25PX;">평가 구간 현황(요일별)</th> 
-                                </tr>
-                                <tr>
-                                    <th rowspan="2" style="height: 25PX;">평가 대상명(단위:개)</th>
-                                    <th style="height: 25PX;">월</th>
-                                    <th style="height: 25PX;">화</th>
-                                    <th style="height: 25PX;">수</th>
-                                    <th style="height: 25PX;">목</th>
-                                    <th style="height: 25PX;">금</th>
-                                    <th style="height: 25PX;">토</th>
-                                    <th style="height: 25PX;">일</th>
-                                    <th rowspan="2" style="height: 25PX;">정상주행</th>
-                                    <th rowspan="2" style="height: 25PX;">총 구간</th>
-                                </tr>
-                                <tr>
-                                    <th colspan="7" style="height: 25PX;">정상 주행 구간(총 구간)</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>   
-                    </div>
-                    <div style="margin-bottom: 25px">
-                        <table id="tbl-evaluation-time">
-                            <thead style="background-color: #e6f2ff">
-                                <tr>
-                                    <th colspan="10" style="height: 25PX;">평가 구간 현황(시간대별)</th> 
-                                </tr>
-                                <tr>
-                                    <th rowspan="3" style="height: 25PX;">평가 대상명(단위:개)</th>
-                                    <th colspan="4" style="height: 25PX;">주중</th>
-                                    <th colspan="2" style="height: 25PX;">주말</th>
-                                    <th rowspan="3" style="height: 25PX;">정상주행</th>
-                                    <th rowspan="3" style="height: 25PX;">총 구간</th>
-                                </tr>
-                                <tr>
-                                    <th style="height: 25PX;">오전 첨두</th>
-                                    <th style="height: 25PX;">오전 비첨두</th>
-                                    <th style="height: 25PX;">오후 비첨두</th>
-                                    <th style="height: 25PX;">오후 첨두</th>
-                                    <th style="height: 25PX;">오전</th>
-                                    <th style="height: 25PX;">오후</th>
-                                </tr>
-                                <tr>
-                                    <th colspan="6" style="height: 25PX;">정상 주행 구간(총 구간)</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>                        
-                    </div>
-                    <div style="margin-bottom: 25px">
-                        <table id="tbl-fore-after">
-                            <thead style="background-color: #e6f2ff">
-                            	<tr>
-                            		<th colspan="7">선후착 집계(건)</th>
-                            	</tr>                                
-                                <tr>
-                                    <th colspan="5" style="height: 25PX;">정상 주행</th>
-                                    <th style="height: 25PX;">기타(경로 이탈 등)</th>
-                                    <th style="height: 25PX;">총 구간</th>
-                                </tr>
-                                <tr>
-                                    <th style="height: 25PX;">CP</th>
-                                    <th style="height: 25PX;">총 구간</th>
-                                    <th style="height: 25PX;">선착률</th>
-                                    <th style="height: 25PX;">동시도착률</th>
-                                    <th style="height: 25PX;">후착률</th>
-                                    <th style="height: 25PX;">단위 : 개</th>
-                                    <th style="height: 25PX;">단위 : 개</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>                        
-                    </div>
-                    <!-- \table -->       
-                </div>
+		<!-- #snbArea -->
+		<jsp:include page="/WEB-INF/views/layouts/synthesisData_subMenu.jsp" />
+		<!-- \#snbArea -->
+		<section id="contents" style="width: 95%;">
+			<div class="tit-page">
+				<span>평가 구간 현황 및 선후착 집계</span>
+				<ul class="path">
+					<li>종합 데이터</li>
+					<li>평가 구간 현황 및 선후착 집계</li>
+				</ul>
+				<!-- .path -->
 			</div>
-		</div>
-		<!-- \.body clearFix -->
+			<!-- tit-page -->
+			<!-- .contents -->
+			<div class="contents">
+				<!-- .search -->
+				<div class="search">
+					<form id="search-bmt">
+						<span class="pd">시작 날짜</span> <input type="text" class="text date"
+							id="bmt-start-date" name="bmt-start-date" /> <span class="pd">~</span>
+						<span class="pd">종료 날짜</span> <input type="text" class="text date"
+							id="bmt-end-date" name="bmt-end-date" /> <a
+							href="javascript:statusOfAssessmentSectionForeAftereffect()"
+							class="btnSearch"> <img src="../images/board/btn_search.gif"
+							alt="search" />
+						</a>
+					</form>
+				</div>
+				<!-- /.search -->
+				<!-- table -->
+				<div style="margin-bottom: 25px">
+					<table id="tbl-evaluation-day">
+						<thead style="background-color: #e6f2ff">
+							<tr>
+								<th colspan="10" style="height: 25PX;">평가 구간 현황(요일별)</th>
+							</tr>
+							<tr>
+								<th rowspan="2" style="height: 25PX;">평가 대상명(단위:개)</th>
+								<th style="height: 25PX;">월</th>
+								<th style="height: 25PX;">화</th>
+								<th style="height: 25PX;">수</th>
+								<th style="height: 25PX;">목</th>
+								<th style="height: 25PX;">금</th>
+								<th style="height: 25PX;">토</th>
+								<th style="height: 25PX;">일</th>
+								<th rowspan="2" style="height: 25PX;">정상주행</th>
+								<th rowspan="2" style="height: 25PX;">총 구간</th>
+							</tr>
+							<tr>
+								<th colspan="7" style="height: 25PX;">정상 주행 구간(총 구간)</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<div style="margin-bottom: 25px">
+					<table id="tbl-evaluation-time">
+						<thead style="background-color: #e6f2ff">
+							<tr>
+								<th colspan="9" style="height: 25PX;">평가 구간 현황(시간대별)</th>
+							</tr>
+							<tr>
+								<th rowspan="3" style="height: 25PX;">평가 대상명(단위:개)</th>
+								<th colspan="4" style="height: 25PX;">주중</th>
+								<th colspan="2" style="height: 25PX;">주말</th>
+								<th rowspan="3" style="height: 25PX;">정상주행</th>
+								<th rowspan="3" style="height: 25PX;">총 구간</th>
+							</tr>
+							<tr>
+								<th style="height: 25PX;">오전 첨두</th>
+								<th style="height: 25PX;">오전 비첨두</th>
+								<th style="height: 25PX;">오후 비첨두</th>
+								<th style="height: 25PX;">오후 첨두</th>
+								<th style="height: 25PX;">오전</th>
+								<th style="height: 25PX;">오후</th>
+							</tr>
+							<tr>
+								<th colspan="6" style="height: 25PX;">정상 주행 구간(총 구간)</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<div style="margin-bottom: 25px">
+					<table id="tbl-fore-after">
+						<thead style="background-color: #e6f2ff">
+							<tr>
+								<th colspan="7">선후착 집계(건)</th>
+							</tr>
+							<tr>
+								<th colspan="5" style="height: 25PX;">정상 주행</th>
+								<th style="height: 25PX;">기타(경로 이탈 등)</th>
+								<th style="height: 25PX;">총 구간</th>
+							</tr>
+							<tr>
+								<th style="height: 25PX;">CP</th>
+								<th style="height: 25PX;">총 구간</th>
+								<th style="height: 25PX;">선착률</th>
+								<th style="height: 25PX;">동시도착률</th>
+								<th style="height: 25PX;">후착률</th>
+								<th style="height: 25PX;">단위 : 개</th>
+								<th style="height: 25PX;">단위 : 개</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<!-- \table -->
+			</div>
+		</section>
+		<!-- /.contents -->
+		</section>
+		<!--  #container -->
+		<footer>
+			<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+				reserved.</p>
+		</footer>
 	</div>
-	<!-- \#container -->
+	<!-- wrap -->
 </body>
 <script>
 	$(document).ready(function() {
@@ -258,13 +274,13 @@
 					var html1 = [
 						'<tr>',
 						'<td>', items.cp, '</td>',
-						'<td>', items.monday_nomal, '(', items.monday_total, ')', '</td>',
-						'<td>', items.tuesday_nomal, '(', items.tuesday_total, ')', '</td>',
-						'<td>', items.wednesday_nomal, '(', items.wednesday_total, ')', '</td>',
-						'<td>', items.thursday_nomal, '(', items.thursday_total, ')', '</td>',
-						'<td>', items.friday_nomal, '(', items.friday_total, ')', '</td>',
-						'<td>', items.saturday_nomal, '(', items.saturday_total, ')', '</td>',
-						'<td>', items.sunday_nomal, '(', items.sunday_total, ')', '</td>',
+						'<td>', items.monday_nomal, ' (', items.monday_total, ') ', '</td>',
+						'<td>', items.tuesday_nomal, ' (', items.tuesday_total, ') ', '</td>',
+						'<td>', items.wednesday_nomal, ' (', items.wednesday_total, ') ', '</td>',
+						'<td>', items.thursday_nomal, ' (', items.thursday_total, ') ', '</td>',
+						'<td>', items.friday_nomal, ' (', items.friday_total, ') ', '</td>',
+						'<td>', items.saturday_nomal, ' (', items.saturday_total, ') ', '</td>',
+						'<td>', items.sunday_nomal, ' (', items.sunday_total, ') ', '</td>',
 						'<td>', items.state_condition_y, '</td>',
 						'<td>', items.except_info_y, '</td>',
 						'</tr>'
@@ -273,12 +289,12 @@
 					var html2 = [
 						'<tr>',
 						'<td>', items.cp, '</td>',
-						'<td>', items.am_peak_normal, '(', items.am_peak_total, ')', '</td>',
-						'<td>', items.am_non_peak_normal, '(', items.am_non_peak_total, ')', '</td>',
-						'<td>', items.pm_non_peak_normal, '(', items.pm_non_peak_total, ')', '</td>',
-						'<td>', items.pm_peak_normal, '(', items.pm_peak_total, ')', '</td>',
-						'<td>', items.am_normal, '(', items.am_total, ')', '</td>',
-						'<td>', items.pm_normal, '(', items.pm_total, ')', '</td>',
+						'<td>', items.am_peak_normal, ' (', items.am_peak_total, ') ', '</td>',
+						'<td>', items.am_non_peak_normal, ' (', items.am_non_peak_total, ') ', '</td>',
+						'<td>', items.pm_non_peak_normal, ' (', items.pm_non_peak_total, ') ', '</td>',
+						'<td>', items.pm_peak_normal, ' (', items.pm_peak_total, ') ', '</td>',
+						'<td>', items.am_normal, ' (', items.am_total, ') ', '</td>',
+						'<td>', items.pm_normal, ' (', items.pm_total, ') ', '</td>',
 						'<td>', items.state_condition_y, '</td>',
 						'<td>', items.except_info_y, '</td>',
 						'</tr>'

@@ -1,97 +1,102 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
+"
 <head>
-	<title>Welcome to RQE System (Route Quality Evaluation)</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- import.css -->
-    <link rel="stylesheet" type="text/css" href="../css/import.css" />
-    
-    <!-- js -->
-    <script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
-    
-	<!-- fullCalendar js -->
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no", target-densitydpi=device-dpi />
+<title>실차평가시스템</title>
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="../js/placeholder.js"></script>
+<script type="text/javascript" src="../js/ui.js"></script>
+<!-- fullCalendar js -->
     <script type="text/javascript" src="../js/moment.min.js"></script>
  	<script type="text/javascript" src="../js/fullcalendar.js"></script>
  	<script type="text/javascript" src="../js/locale-all.js"></script>
-
-
- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"></script>
-	
-
-    <!-- fullCalendar css -->
-	<link rel="stylesheet" type="text/css" href="../css/fullcalendar.css" />
-	
- 	
 </head>
 
 <body>
-
-    <!--
-    layout.css : body, #wrap 주석처리 및 #wrap 사용(X)
-    -->
-    <!-- #container -->
-    <div id="container" class="gnb">
-        <!-- #header -->
-        <%@ include file = "../views/layouts/header.jsp" %>
-        <!-- /#header -->
-        <div class="body clearFix">
-            <!-- #snbArea -->
+	<div id=wrap>
+		<!-- #header -->
+		<%@ include file="../views/layouts/header.jsp"%>
+	<div id="container" class="gnb">
+		<!-- /#header -->
+		<div class="body clearFix">
+			<!-- #snbArea -->
 			<!--  HOME 화면은 subMenu가 필요없어서 주석처리 -->
-<%--         	<%@ include file = "../views/layouts/bmtList_subMenu.jsp" %>     --%>
-            <!-- /#snbArea -->
-            <div id="contentsArea">
-                <div class="titContents" style="width: 1300px;">
-                    <h2>HOME</h2>
-                    <p>
-                        <strong>HOME</strong>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /#container -->
-    <div style="margin-left: 240px; margin-right: 250px;     text-align: center;">
-    	<input type="button" id="prevBtn" value="<<" style="float: left;  width: 34px; height: 29px;">
-    	<span id="yearText" style="font: bold italic 2.0em/1.0em 돋움체;"></span>
-    	<input type="button" id="nextBtn" value=">>" style="float:  right; width: 34px; height: 29px;">
+			<%--         	<%@ include file = "../views/layouts/bmtList_subMenu.jsp" %>     --%>
+			<!-- /#snbArea -->
+			<div id="contentsArea">
+				<div class="titContents" style="width: 1300px;">
+<!-- 					<h2>HOME</h2> -->
+<!-- 					<p> -->
+<!-- 						<strong>HOME</strong> -->
+<!-- 					</p> -->
+				</div>
+			</div>
+		</div>
 	</div>
-    <div id ="calendar_body" style="margin-left: 240px; margin-right: 250px;">
+	<!-- /#container -->
+	<div
+		style="margin-left: 240px; margin-right: 250px; text-align: center;">
+		<input type="button" id="prevBtn" value="<<" style=" float:left;  width: 34px; height: 29px;">
+		<span id="yearText" style="font: bold italic 2.0em/1.0em 돋움체;"></span>
+		<input type="button" id="nextBtn" value=">>"
+			style="float: right; width: 34px; height: 29px;">
+	</div>
+	<div id="calendar_body"
+		style="margin-left: 240px; margin-right: 250px;">
 		<table>
-				<thead>
-					<div id="calendar_head"></div>
-				</thead>
-				<tbody>
-					<tr>
-						<td id="calendar_1" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_2" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_3" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_4" style="width: 250px; height: 350px; padding: 5px"></td>
-					</tr>
-					<tr>
-						<td id="calendar_5" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_6" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_7" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_8" style="width: 250px; height: 350px; padding: 5px"></td>
-					</tr>
-					<tr>
-						<td id="calendar_9" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_10" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_11" style="width: 250px; height: 350px; padding: 5px"></td>
-						<td id="calendar_12" style="width: 250px; height: 350px; padding: 5px"></td>
-					</tr>
-				</tbody>
+			<thead>
+				<div id="calendar_head"></div>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="calendar_1"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_2"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_3"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_4"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+				</tr>
+				<tr>
+					<td id="calendar_5"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_6"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_7"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_8"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+				</tr>
+				<tr>
+					<td id="calendar_9"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_10"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_11"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+					<td id="calendar_12"
+						style="width: 250px; height: 350px; padding: 5px"></td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
-	
+
 	<!-- #footer -->
-	<div id=footer>
-		ⓒ 2018. WaveM Co. ALL RIGHTS RESERVED.
+	<footer>
+	    <p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights reserved.</p>
+    </footer>
+	
 	</div>
 	
 	<script>
@@ -231,7 +236,6 @@
 		 }
 		 // end
 		 
-		 
 	 		$('#'+div).fullCalendar({
 	 		      defaultDate: year + '-' + month + '-10',
 	 		      contentHeight:310,
@@ -256,7 +260,7 @@
 	 
 	 
 	</script>
-	
+
 </body>
 <script>
 </script>

@@ -3,8 +3,133 @@
 
 <mapper namespace="systemUserManagement">
 
-	<select id="getUserManagementData" parameterType="hashmap"  resultType="hashmap">
+	<select id="getUserManagementDefaultData" parameterType="hashmap"  resultType="hashmap">
+			
+	SELECT
+	   pre_arrival, -- 동시도착 조건 ( " "분 이하 )
+	   -- 주중
+	   am_peak_start, -- 오전 첨두 시작 시간 ( "hh:mm:ss" 이상 )
+	   am_non_peak_start, -- 오전 첨두 종료 시간 ( "hh:mm:ss" 미만 )
+	   pm_non_peak_start, -- 오전 오후 경계 시간 ( "hh:mm:ss" 부터 오후 )
+	   pm_peak_start, -- 오후 첨두 시작 시간 ( "hh:mm:ss" 이상)
+	   pm_peak_end + '00:00:01' as pm_peak_end, -- 오후 첨두 종료 시간 ( "hh:mm:ss" 미만 )
+	   -- 주말
+	   pm_start, -- 오전 오후 경계 시간 ( "hh:mm:ss" 부터 오후 )
+	   -- 거리
+	   shortest_distance_end, -- 최단거리 ( " "km 이하 )
+	   short_distance_end, -- 단거리 ( " "km 이하 )
+	   medium_distance_end, -- 중거리 ( " "km 이하 )
+	   long_distance_end -- 장거리 ( " "km 이하 )
+	   
+	--    adminid,
+	--    pre_arrival,
+	--    am_peak_start,
+	--    am_peak_end, -- am_non_peak_start -1초
+	--    am_non_peak_start,
+	--    am_non_peak_end, -- pm_non_peak_start -1초
+	--    pm_non_peak_start,
+	--    pm_non_peak_end, -- pm_peak_start -1 초
+	--    pm_peak_start,
+	--    pm_peak_end,
+	--    am_start,
+	--    am_end, -- pm_start -1초
+	--    pm_start,
+	--    pm_end,
+	--    shortest_distance_start,
+	--    shortest_distance_end,
+	--    short_distance_start, -- shortest_distance_end + 0.01
+	--    short_distance_end,
+	--    medium_distance_start, -- short_distance_end + 0.01
+	--    medium_distance_end,
+	--    long_distance_start, -- medium_distance_end + 0.01
+	--    long_distance_end,
+	--    longest_distance_start -- long_distance_end + 0.01
+	FROM
+	   setting_value
+	where
+	adminid = 'admin00'
+		
+	</select>
+	
+	<select id="getUserManagementUpdateData" parameterType="hashmap"  resultType="hashmap">
+			
+	update setting_value
+		set 
+		   pre_arrival = cast(#{pre_arrival} as int), -- pre_arrival
+		   am_peak_start = to_timestamp(#{am_peak_start}, 'hh24:mi:ss'), -- am_peak_start
+		   am_peak_end = to_timestamp(#{am_non_peak_start}, 'hh24:mi:ss') + '-1sec', -- am_non_peak_start
+		   am_non_peak_start = to_timestamp(#{am_non_peak_start}, 'hh24:mi:ss'), -- am_non_peak_start
+		   am_non_peak_end = to_timestamp(#{pm_non_peak_start}, 'hh24:mi:ss') + '-1sec', -- pm_non_peak_start
+		   pm_peak_start = to_timestamp(#{pm_peak_start}, 'hh24:mi:ss'), -- pm_peak_start
+		   pm_peak_end = to_timestamp(#{pm_peak_end}, 'hh24:mi:ss') + '-1sec', -- pm_peak_end
+		   pm_non_peak_start = to_timestamp(#{pm_start}, 'hh24:mi:ss'), -- pm_start
+		   pm_non_peak_end = to_timestamp(#{pm_peak_start}, 'hh24:mi:ss') + '-1sec', -- pm_peak_start
+		   am_start = to_timestamp('00:00:00', 'hh24:mi:ss'), -- 고정
+		   am_end = to_timestamp(#{pm_start}, 'hh24:mi:ss') + '-1sec', -- pm_start 
+		   pm_start = to_timestamp(#{pm_start}, 'hh24:mi:ss'), -- pm_start
+		   pm_end = to_timestamp('23:59:59', 'hh24:mi:ss'), -- 고정
+		   shortest_distance_start = CAST('0' AS int), -- 고정
+		   shortest_distance_end = CAST(#{shortest_distance_end} AS int), -- shortest_distance_end
+		  short_distance_start = CAST(#{shortest_distance_end} AS int) + 0.01, -- shortest_distance_end
+		   short_distance_end = CAST(#{short_distance_end} AS int), -- short_distance_end
+		   medium_distance_start = CAST(#{short_distance_end} AS int) + 0.01, -- short_distance_end
+		   medium_distance_end = CAST(#{medium_distance_end} AS int), -- medium_distance_end
+		   long_distance_start = CAST(#{medium_distance_end} AS int) + 0.01, -- medium_distance_end
+		   long_distance_end = CAST(#{long_distance_end} AS int), -- long_distance_end
+		   longest_distance_start = CAST(#{long_distance_end} AS int) + 0.01 -- long_distance_end
+		where adminid = #{userid}
 
 		
 	</select>
+
+	<select id="getUserManagementData" parameterType="hashmap"  resultType="hashmap">
+			
+	SELECT
+	   pre_arrival, -- 동시도착 조건 ( " "분 이하 )
+	   -- 주중
+	   am_peak_start, -- 오전 첨두 시작 시간 ( "hh:mm:ss" 이상 )
+	   am_non_peak_start, -- 오전 첨두 종료 시간 ( "hh:mm:ss" 미만 )
+	   pm_non_peak_start, -- 오전 오후 경계 시간 ( "hh:mm:ss" 부터 오후 )
+	   pm_peak_start, -- 오후 첨두 시작 시간 ( "hh:mm:ss" 이상)
+	   pm_peak_end + '00:00:01' as pm_peak_end, -- 오후 첨두 종료 시간 ( "hh:mm:ss" 미만 )
+	   -- 주말
+	   pm_start, -- 오전 오후 경계 시간 ( "hh:mm:ss" 부터 오후 )
+	   -- 거리
+	   shortest_distance_end, -- 최단거리 ( " "km 이하 )
+	   short_distance_end, -- 단거리 ( " "km 이하 )
+	   medium_distance_end, -- 중거리 ( " "km 이하 )
+	   long_distance_end -- 장거리 ( " "km 이하 )
+	   
+	--    adminid,
+	--    pre_arrival,
+	--    am_peak_start,
+	--    am_peak_end, -- am_non_peak_start -1초
+	--    am_non_peak_start,
+	--    am_non_peak_end, -- pm_non_peak_start -1초
+	--    pm_non_peak_start,
+	--    pm_non_peak_end, -- pm_peak_start -1 초
+	--    pm_peak_start,
+	--    pm_peak_end,
+	--    am_start,
+	--    am_end, -- pm_start -1초
+	--    pm_start,
+	--    pm_end,
+	--    shortest_distance_start,
+	--    shortest_distance_end,
+	--    short_distance_start, -- shortest_distance_end + 0.01
+	--    short_distance_end,
+	--    medium_distance_start, -- short_distance_end + 0.01
+	--    medium_distance_end,
+	--    long_distance_start, -- medium_distance_end + 0.01
+	--    long_distance_end,
+	--    longest_distance_start -- long_distance_end + 0.01
+	FROM
+	   setting_value
+	where
+	adminid = #{userid}
+		
+	</select>
+	
+	
+	
 </mapper>

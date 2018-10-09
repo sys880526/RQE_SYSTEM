@@ -3,192 +3,215 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+	, target-densitydpi=device-dpi />
+	
 	<title>선/후착 및 도착 지연 시간</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	<script type="text/javascript"
+		src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	
+	<!-- Google Chart -->
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+	
+	<!-- chart.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+		    
     <script type = "text/javascript">google.charts.load('current', {packages: ['corechart']});</script>
+	
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/import.css" />
+	<link rel="stylesheet" type="text/css" href="../css/board.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/default.css" />
+	<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="../css/login.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
     
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/import.css" />
-    <link rel="stylesheet" type="text/css" href="../css/board.css" />
-    <link rel="stylesheet" type="text/css" href="../css/common.css" />
-    <link rel="stylesheet" type="text/css" href="../css/default.css" />
-    <link rel="stylesheet" type="text/css" href="../css/layout.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css" />
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />    
-    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
 </head>
 <body>
-<!-- #container -->
-	<div id="container" class="gnb">
-		<!-- #header -->
-		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
-		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
-			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
-			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<div class="titContents">
-					<h2>선/후착 및 도착 지연 시간</h2>
-					<p>
-						상세데이터 > 
-						<strong>선/후착 및 도착 지연 시간</strong>
-					</p>
-				</div>
-				<!-- \.titContents -->
-				<!-- .contents -->
-                <div class="contents" width=100%>
-                	<!-- .search -->
-                	<jsp:include page="/WEB-INF/views/layouts/checkbox.jsp"/>
-                	<!-- /.search -->
-                	<!-- .row -->   
-                	<div class="row" style="margin-bottom: 25px">
-	                	<!-- table -->               
-                    	<table id="tbl-delay-info" style="border-style: none;">
-                            <thead>
-                            	<tr>
-                                    <th colspan="2" style="background-color: #e6e6ff;">선후착 집계(정상 비율)</th> 
-                                    <th colspan="7" style="background-color: white;border-style: none"></th>
-                                </tr>                               
-                                <tr>
-                                    <th colspan="5">목적지 선후착</th>
-                                    <th colspan="4">도착 지연 시간(후착 구간)</th>
-                                </tr>
-                                <tr>
-                                	<th>CP</th>
-                                	<th>총 구간</th>
-                                	<th>선착률</th>
-                                	<th>동시도착률</th>
-                                	<th>후착률</th>
-                                	<th>구간</th>
-                                	<th>평균 지연 시간</th>
-                                	<th>최대 지연 시간</th>
-                                	<th>표준 편차</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>   
-	                    <!-- \table -->  
-                	</div>
-                	<!-- /.row --> 
-                	
-                	<div class="row" style="border-style: none;">
-						<!-- 목적지 선후착률(전체구간) -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="first_later_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 최선착 대비 도착 지연 시간 분포 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="delay_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오전 첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오전 비첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_non_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오후 비첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_non_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주중 오후 첨두 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_peak_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주말 오전 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="am_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                	<div class="row">
-						<!-- 주말 오후 선후착률 -->
-	                    <table style="border-style: none;">
-	                    	<tbody style="border-style: none;">
-		                    	<tr style="border-style: none;">
-		                    		<td style="border-style: none;">
-		                    			<div id="pm_score"></div>
-		                    		</td>
-		                    	</tr>
-	                    	</tbody>
-	                    </table>
-                	</div>
-                	
-                </div>
-			</div>
+	<div id=wrap>
+			<!-- #header -->
+			<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
+			<!-- \#header -->
+				<!-- #snbArea -->
+				<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
+				<!-- \#snbArea -->
+				<section id="contents" style="width: 95%;">
+					<div class="tit-page">
+						<span>선/후착 및 도착 지연 시간</span>
+						<ul class="path">
+							<li>상세 데이터</li>
+							<li>선/후착 및 도착 지연 시간</li>
+						</ul>
+						<!-- .path -->
+					</div>
+					<!-- tit-page -->
+					<!-- .contents -->
+	                <div class="contents">
+	                	<!-- .search -->
+	                	<jsp:include page="/WEB-INF/views/layouts/checkbox.jsp"/>
+	                	<!-- /.search -->
+	                	<!-- .row -->   
+	                	<div class="row" style="margin-bottom: 25px">
+		                	<!-- table -->               
+	                    	<table id="tbl-delay-info" style="border-style: none;">
+	                            <thead>
+	                            	<tr>
+	                                    <th colspan="2" style="background-color: #e6e6ff;">선후착 집계(정상 비율)</th> 
+	                                    <th colspan="7" style="background-color: white;border-style: none"></th>
+	                                </tr>                               
+	                                <tr>
+	                                    <th colspan="5">목적지 선후착</th>
+	                                    <th colspan="4">도착 지연 시간(후착 구간)</th>
+	                                </tr>
+	                                <tr>
+	                                	<th>CP</th>
+	                                	<th>총 구간</th>
+	                                	<th>선착률</th>
+	                                	<th>동시도착률</th>
+	                                	<th>후착률</th>
+	                                	<th>구간</th>
+	                                	<th>평균 지연 시간</th>
+	                                	<th>최대 지연 시간</th>
+	                                	<th>표준 편차</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody></tbody>
+	                        </table>   
+		                    <!-- \table -->  
+	                	</div>
+	                	<!-- /.row --> 
+	                	
+	                	<div class="row" style="border-style: none;">
+							<!-- 목적지 선후착률(전체구간) -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="first_later_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 최선착 대비 도착 지연 시간 분포 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="delay_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주중 오전 첨두 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="am_peak_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주중 오전 비첨두 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="am_non_peak_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주중 오후 비첨두 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="pm_non_peak_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주중 오후 첨두 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="pm_peak_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주말 오전 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="am_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+	                	
+	                	<div class="row">
+							<!-- 주말 오후 선후착률 -->
+		                    <table style="border-style: none;">
+		                    	<tbody style="border-style: none;">
+			                    	<tr style="border-style: none;">
+			                    		<td style="border-style: none;">
+			                    			<div id="pm_score"></div>
+			                    		</td>
+			                    	</tr>
+		                    	</tbody>
+		                    </table>
+	                	</div>
+		    </section>
+			<!-- /.contents -->
+			</section>
+			<!--  #container -->
+			<footer>
+				<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+					reserved.</p>
+			</footer>        
+			
 		</div>
-		<!-- \.body clearFix -->
+	    <!-- .contents -->            
 	</div>
-	<!-- \#container -->
+	<!-- .wrap -->
 </body>
 <script src="/js/common.js"></script>
 <script>

@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface HomeService {
 
-	public List<Map<String, Object>> getBmtListEvent(String userid);
+	public List<Map<String, Object>> getBmtListEvent(Map<String, String> param);
 }

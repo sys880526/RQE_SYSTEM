@@ -3,51 +3,60 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+	, target-densitydpi=device-dpi />
+	
 	<title>BMT ID 기준 특이사항</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
+	
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+	<script type="text/javascript"
+		src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
     
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/import.css" />
-    <link rel="stylesheet" type="text/css" href="../css/board.css" />
-    <link rel="stylesheet" type="text/css" href="../css/common.css" />
-    <link rel="stylesheet" type="text/css" href="../css/default.css" />
-    <link rel="stylesheet" type="text/css" href="../css/layout.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css" />
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />    
-    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
-    <link rel="stylesheet" type="text/css" href="../css/imageModal.css" />
+    
+   	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/import.css" />
+	<link rel="stylesheet" type="text/css" href="../css/board.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/default.css" />
+	<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="../css/login.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
+	
 </head>
 <body>
-<!-- #container -->
-	<div id="container" class="gnb">
+	<div id=wrap>
 		<!-- #header -->
 		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
 		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
 			<!-- #snbArea -->
 			<jsp:include page="/WEB-INF/views/layouts/detailsData_subMenu.jsp"/>
 			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<div class="titContents">
-					<h2>BMT ID 기준 특이사항</h2>
-					<p>
-						상세데이터 > 
-						<strong>BMT ID 기준 특이사항</strong>
-					</p>
-				</div>
-				<!-- \.titContents -->
+			<section id="contents" style="width: 95%;">
+			<div class="tit-page">
+				<span>BMT ID 기준 특이사항</span>
+				<ul class="path">
+					<li>상세 데이터</li>
+					<li>BMT ID 기준 특이사항</li>
+				</ul>
+				<!-- .path -->
+			</div>
+			<!-- tit-page -->	
 				<!-- .contents -->
-                <div class="contents" width=100%>
-                	<!-- .search -->
-                	<jsp:include page="/WEB-INF/views/layouts/checkbox.jsp"/>
-                	<!-- /.search -->
-                	<div class="row">
+	               <div class="contents" width=100%>
+	               	<!-- .search -->
+	               	<jsp:include page="/WEB-INF/views/layouts/checkbox.jsp"/>
+	               	<!-- /.search -->
+	               	<div class="row">
 	                	<!-- table -->               
 	                    <div style="display: inline-block;vertical-align : top;width: 250px;margin-right: 30px;overflow: scroll;height: 500px">
 	                    	<table id="tbl-specific-list">
@@ -97,14 +106,19 @@
 	                       </table>
 	                    </div> 
 	                    <!-- \table -->
-                	</div>
-                </div>
-			</div>
-		</div>
-		<!-- \.body clearFix -->
+	               	</div>
+	         	</div>
+	          </section>
+				<!-- /.contents -->
+		</section>
+		<!--  #container -->
+		<footer>
+			<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+					reserved.</p>
+		</footer>             	
 	</div>
-	<!-- \#container -->
-	
+	<!-- .wrap -->
+		
 	<!-- The Modal -->
 	<div id="myModal" class="modal">
 		<button class="rotation" id="image_rotation" style="cursor: pointer;">회전 </button>

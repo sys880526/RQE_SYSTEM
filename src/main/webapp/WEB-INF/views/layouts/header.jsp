@@ -1,6 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="org.springframework.web.servlet.i18n.SessionLocaleResolver"%>
-<%@ page import="java.util.Locale" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page
+	import="org.springframework.web.servlet.i18n.SessionLocaleResolver"%>
+<%@ page import="java.util.Locale"%>
 <%@ taglib uri="jstl-c" prefix="c"%>
 <%@ taglib uri="jstl-fmt" prefix="fmt"%>
 <%@ taglib uri="jstl-fn" prefix="fn"%>
@@ -10,81 +12,127 @@
 <%
 	String userId = (String)session.getAttribute("SS_USER_ID");
 	String cp = (String)session.getAttribute("SS_CP");
-	String carinfo = (String)session.getAttribute("SS_CARINFO");
+	String carinfo = (String)session.getAttribute("SS_CAR_INFO");
+	String au = (String)session.getAttribute("SS_AUCODE");
 %>
-	<div id="header">
-          <a href="/main">
-              <img src="../images/common/logo.gif" alt="wavem_logo" />
-          </a>
-<!--           <ul class="util"> -->
-<%--               <li class="name"><strong><%=userId%></strong>님</li> --%>
-<!--               <li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li> -->
-<!--           </ul> -->
-		<div class="util">
-			<div style="border:1px solid blue">
-				<li class="name"><strong><%=userId %></strong>님</li>
-				<li><a href="/login/logoutUser"><img src="../images/common/util_logout.gif" alt="logout" /></a></li>
-			</div>
-		</div>
-          <div class="row">                
-              <ul id="gnb" class="gnb">
-<%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_1.gif" alt="home" /></a></li> --%>
-<%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li> --%>
-<%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a></li> --%>
-<%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li> --%>
-<%--                     <li><a href="#" <c:if test="${Depth1 == '' }" var="result">class="active"</c:if>><img src="../images/common/gnb_5.gif" alt="system" /></a></li> --%>
-            <c:choose>
-            	<c:when test="${control eq 'main'}">
-            		<li><a href="/main" class="active"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
-            	</c:when>
-            	<c:otherwise>
-            		<li><a href="/main"><img src="../images/common/gnb_1.gif" alt="home" /></a></li>
-            	</c:otherwise>
-            </c:choose>            
-            <c:choose>
-            	<c:when test="${control eq 'bmtListRegistration'}">
-	            	<li><a href="/bmtListRegistration/bmtListRegistration" class="active"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
-            	</c:when>
-            	<c:otherwise>
-	            	<li><a href="/bmtListRegistration/bmtListRegistration"><img src="../images/common/gnb_2.gif" alt="bmt_list" /></a></li>
-            	</c:otherwise>
-            </c:choose>
-            <c:choose>
-            	<c:when test="${control eq 'progressData'}">
-	            	<li><a href="/progressData/eachEvaluationSectionCurrentSituation" class="active"><img src="../images/common/gnb_6.gif" alt="bmt_list" /></a></li>
-            	</c:when>
-            	<c:otherwise>
-	            	<li><a href="/progressData/eachEvaluationSectionCurrentSituation"><img src="../images/common/gnb_6.gif" alt="bmt_list" /></a></li>
-            	</c:otherwise>
-            </c:choose>    
-            <c:choose>
-            	<c:when test="${control eq 'synthesisData'}">
-            		<li>
-            			<a href="/synthesisData/datasheet" class="active"><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
-           			</li>
-            	</c:when>
-            	<c:otherwise>
-		            <li>
-		            	<a href="/synthesisData/datasheet" ><img src="../images/common/gnb_3.gif" alt="synthesisData" /></a>
-	            	</li>
-            	</c:otherwise>
-            </c:choose>
-            <c:choose>
-            	<c:when test="${control eq 'detailsData'}">
-            		<li><a href="/detailsData/pathDistance" class="active"><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>	
-            	</c:when>
-            	<c:otherwise>
-            		<li><a href="/detailsData/pathDistance" ><img src="../images/common/gnb_4.gif" alt="detailsData" /></a></li>
-            	</c:otherwise>
-            </c:choose>            
-            <c:choose>
-            	<c:when test="${control eq 'userManagement'}">
-            		<li><a href="/system/userManagement" class="active"><img src="../images/common/gnb_5.gif" alt="system" /></a></li>	
-            	</c:when>
-            	<c:otherwise>
-            		<li><a href="/system/userManagement" ><img src="../images/common/gnb_5.gif" alt="system" /></a></li>
-            	</c:otherwise>
-            </c:choose>            
-        </ul>
-  	  </div>
+<header>
+	<h1>
+		<a href="/main"><img src="../images/common/img_logo.png" alt="" /></a>
+	</h1>
+	<nav id="gnb">
+		<c:set value="<%=au %>" var="au" />
+		<c:if test="${au eq '사용자'}">
+			<c:choose>
+				<c:when test="${control eq 'bmtListRegistration'}">
+					<li class="bmt active"><a
+						href="/bmtListRegistration/bmtListRegistration">BMT LIST 등록</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="bmt"><a
+						href="/bmtListRegistration/bmtListRegistration">BMT LIST 등록</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'progressData'}">
+					<li class="progress active"><a
+						href="/progressData/eachEvaluationSectionCurrentSituation">진행 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="progress"><a
+						href="/progressData/eachEvaluationSectionCurrentSituation">진행 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'synthesisData'}">
+					<li class="synthesis active"><a href="/synthesisData/datasheet">종합 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="synthesis"><a href="/synthesisData/datasheet">종합 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'detailsData'}">
+					<li class="detail active"><a href="/detailsData/pathDistance">상세 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="detail"><a href="/detailsData/pathDistance">상세 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+		<c:if test="${au eq '관리자'}">
+			<c:choose>
+				<c:when test="${control eq 'bmtListRegistration'}">
+					<li class="bmt active"><a
+						href="/bmtListRegistration/bmtListRegistration">BMT LIST 등록</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="bmt"><a
+						href="/bmtListRegistration/bmtListRegistration">BMT LIST 등록</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'progressData'}">
+					<li class="progress active"><a
+						href="/progressData/eachEvaluationSectionCurrentSituation">진행 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="progress"><a
+						href="/progressData/eachEvaluationSectionCurrentSituation">진행 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'synthesisData'}">
+					<li class="synthesis active"><a href="/synthesisData/datasheet">종합 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="synthesis"><a href="/synthesisData/datasheet">종합 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'detailsData'}">
+					<li class="detail active"><a href="/detailsData/pathDistance">상세 데이터</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="detail"><a href="/detailsData/pathDistance">상세 데이터</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${control eq 'userManagement'}">
+					<li class="system active"><a href="/system/userManagement">시스템 관리</a></li>
+				</c:when>
+				<c:otherwise>
+					<li class="system"><a href="/system/userManagement">시스템 관리</a></li>
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+		</ul>
+	</nav>
+	<!-- #gnb -->
+
+	<div class="user-info">
+		<ul>
+			<li class="user"><%=userId %>님</li>
+
+			<c:set value="<%=cp %>" var="cp" />
+			<c:if test="${cp eq '관리자'}">
+				<c:choose>
+					<c:when test="${cp eq '관리자'}">
+						<li class="cp"><%=cp %></li>
+					</c:when>
+				</c:choose>
+			</c:if>
+
+			<c:set value="<%=au %>" var="cp1" />
+			<c:if test="${cp1 eq '사용자'}">
+				<c:choose>
+					<c:when test="${cp1 eq '사용자' }">
+						<li class="cp"><%=cp %></li>
+						<li class="car"><%=carinfo %></li>
+					</c:when>
+				</c:choose>
+			</c:if>
+		</ul>
+		<a href="/login/logoutUser" class="btn logout">로그아웃</a>
 	</div>
+</header>
+	<!-- .user-info -->

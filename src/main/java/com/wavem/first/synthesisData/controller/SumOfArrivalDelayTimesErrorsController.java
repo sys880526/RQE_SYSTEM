@@ -41,14 +41,16 @@ public class SumOfArrivalDelayTimesErrorsController {
 	}
 	
 	@RequestMapping(value = "/synthesisData/getSumOfArrivalDelayTimesErrorData", method = RequestMethod.POST)
-	public ModelAndView getSumOfArrivalDelayTimesErrorData(HttpServletRequest request) {
+	public ModelAndView getSumOfArrivalDelayTimesErrorData(HttpServletRequest request,HttpSession session) {
 		ModelAndView mav =  new ModelAndView("jsonView");
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+		String userid = session.getAttribute("SS_USER_ID").toString();
+		
 		Map<String, Object> input = new HashMap<String, Object>();
 		input.put("start_date", startDate);
 		input.put("end_date", endDate);
-		input.put("userid", "user01");
+		input.put("userid", userid);
 		List<Map<String, Object>> arrivalDelay = sumOfArrivalDelayTimesErrorsService.getSumOfArrivalDelayTimesErrors(input);
 		List<Map<String, Object>> arrivalSchedule = sumOfArrivalDelayTimesErrorsService.getArrivalScheduledErrorCount(input);
 		mav.addObject("arrivalDelay", arrivalDelay);

@@ -43,14 +43,16 @@ public class BmtListRegistrationController {
 	public ModelAndView getBmtHistoryList(HttpServletRequest request, HttpSession session) {
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("code", "0");
+		
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
-		String userid = request.getParameter("userid");
+		String userid = session.getAttribute("SS_USER_ID").toString();
+//		String userid = request.getParameter("userid");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "0");
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
-		map.put("userid", "user01");
+		map.put("userid", userid);
 		List<Map<String, Object>> out = bmtListRegistrationService.getBmtHistoryList(map);
 		mav.addObject("list", out);
 		return mav;

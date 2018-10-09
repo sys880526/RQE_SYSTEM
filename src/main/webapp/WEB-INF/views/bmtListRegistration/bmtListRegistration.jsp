@@ -1,17 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>BMT LIST 이력 조회</title>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../js/style.js"></script>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/modal.css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<!-- , target-densitydi=device-dpi >>>> target-densitydpi 는 아이폰에서는 지원하지 않으므로 공통으로 처리할 수 있는 기준을 지원하기 위해 지원하지 않도록 하는 것 같다 -->
+<title>BMT LIST 이력 조회</title>
+	<!-- JS -->
+	<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="../js/placeholder.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../js/ui.js"></script>
+	<script type="text/javascript" src="../js/style.js"></script>
+
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="../css/modal.css" />
     <link rel="stylesheet" type="text/css" href="../css/import.css" />
     <link rel="stylesheet" type="text/css" href="../css/board.css" />
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
@@ -19,118 +30,121 @@
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
+
 </head>
 <body>
-	<!-- #container -->
-	<div id="container" class="gnb">
+	<div id=wrap>
 		<!-- #header -->
-		<jsp:include page="/WEB-INF/views/layouts/header.jsp"/>
+		<jsp:include page="/WEB-INF/views/layouts/header.jsp" />
 		<!-- \#header -->
-		<!-- .body clearFix -->
-		<div class="body clearFix">
-			<!-- #snbArea -->
-			<jsp:include page="/WEB-INF/views/layouts/bmtListRegistraion_subMenu.jsp"/>
-			<!-- \#snbArea -->
-			<!-- #contentArea -->
-			<div id="contentsArea">
-				<!-- .titContents -->
-				<div class="titContents">
-					<h2>BMT LIST 이력 조회</h2>
-					<p>
-						BMT LIST 사전 등록 > 
-						<strong>BMT LIST 이력 조회</strong>
-					</p>
-				</div>
-				<!-- \.titContents -->
-				<!-- .contents -->
-                <div class="contents" width=100%>
-                    <!-- .search -->
-                    <!--
-                        board.css : box-sizing: content-box 추가
-                    -->
-                    <div class="search">
-                        <form id="search-bmt">
-                            <span class="pd">시작 날짜</span>
-                            <input type="text" class="text date" id="bmt-start-date" name="bmt-start-date" />
-                            <span class="pd">~</span>
-                            <span class="pd">종료 날짜</span>
-                            <input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" />
-                            <a href="javascript:getList()" class="btnSearch">
-                                <img src="../images/board/btn_search.gif" alt="search" />
-                            </a>
-                           	
-                            <a href="#" class="btnNewReg" id="btnNewReg" style="float : right;">
-                                <img src="../images/board/btn_regist_2.gif" alt="newReg" />
-                            </a>
-                           	
-                            
-                        </form>
-                    </div>
-                    <!-- /.search -->
-                    <div>
-                        <table id="tbl-data-sheet" class="boardListStyle" cellspacing="0" width="100%" border="0">
-                          	<colcolgroup>
-                          		<col width="10%">
-                          		<col width="12%">
-                          		<col width="*">
-                          		<col width="*">
-                          		<col width="12%">
-                          	</colcolgroup>
-                           	<thead>
-                                <tr>
-                                    <th>BMT ID</th>
-                                    <th>정상주행 cp 수 / 총 cp 수</th>
-                                    <th>출발지명</th>
-                                    <th>도착지명</th>
-                                    <th>신규 리스트 반영 선택</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- /.contents -->
+
+		<!-- #subMenu -->
+		<jsp:include
+			page="/WEB-INF/views/layouts/bmtListRegistraion_subMenu.jsp" />
+		<!-- #subMenu -->
+		<section id="contents" style="width: 95%;">
+			<div class="tit-page">
+				<span>BMT LIST 이력 조회</span>
+				<ul class="path">
+					<li>BMT LIST 등록</li>
+					<li>BMT LIST 이력 조회</li>
+				</ul>
+				<!-- .path -->
 			</div>
-			<!-- \#contentArea -->
-			
-			<!-- The Modal -->
-			<div id="modal-data-detail" class="modal" >
-				<!-- Modal content -->
-				<div class="modal-content">
-					<div class="modal-header">
-						<span class="close">&times;</span>
-						<span class="tooltiptext">닫기</span>
-					</div>
-					<div class="modal-body">
-						<input type="text" class="text date" id="bmt-date" name="bmt-date" />
-						<table id="tbl-modal-data1" style="margin-bottom: 10px">
-							<colcolgroup>
-                          		<col width="10%">
-                          		<col width="*">
-                          		<col width="*">
-                          	</colcolgroup>
-							<thead>
-								<th>순번</th>
+			<!-- .tit-page -->
+
+			<div class="contents">
+				<!-- .search -->
+				<!--
+              board.css : box-sizing: content-box 추가
+          -->
+				<div class="search">
+					<form id="search-bmt">
+						<span class="pd">시작 날짜</span> 
+							<input type="text" class="text date" id="bmt-start-date" name="bmt-start-date" /> 
+						<span class="pd">~</span>
+						<span class="pd">종료 날짜</span> 
+							<input type="text" class="text date" id="bmt-end-date" name="bmt-end-date" /> 
+								<a href="javascript:getList()" class="btnSearch"> 
+									<img src="../images/board/btn_search.gif" alt="search" /></a> 
+									<!--  style="margin-left: 0px; margin-right: 0px;"  --> 
+								<a href="#" class="btnNewReg" id="btnNewReg" style="float: right;"> 
+									<img src="../images/board/btn_regist_2.gif" alt="newReg" /></a>
+					</form>
+				</div>
+				<!-- /.search -->
+
+				<div>
+					<table id="tbl-data-sheet" class="boardListStyle" cellspacing="0"
+						width="100%" border="0">
+						<colcolgroup>
+						<col width="10%">
+						<col width="12%">
+						<col width="*">
+						<col width="*">
+						<col width="12%">
+						</colcolgroup>
+						<thead>
+							<tr>
+								<th>BMT ID</th>
+								<th>정상주행 cp 수 / 총 cp 수</th>
 								<th>출발지명</th>
 								<th>도착지명</th>
-							</thead>
-		                    <tbody>
-		                    </tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="javascript:#" class="btnNewBmtSave" id="btnNewBmtSave" style="float : right;">
-	               	        <img src="../images/board/btn_regist_2.gif" alt="btnNewBmtSave" />
-	                    </a>
-                    </div>
+								<th>신규 리스트 반영 선택</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
 				</div>
-				<!-- \Modal content -->
 			</div>
-			<!-- \The Modal -->		
+			<!-- /.contents -->
+<!-- 	</div> -->
+	<!-- \#contentArea -->
+
+	<!-- The Modal -->
+	<div id="modal-data-detail" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<span class="close">&times;</span> <span class="tooltiptext">닫기</span>
+			</div>
+			<div class="modal-body">
+				<input type="text" class="text date" id="bmt-date" name="bmt-date" />
+				<table id="tbl-modal-data1" style="margin-bottom: 10px">
+					<colcolgroup>
+					<col width="10%">
+					<col width="*">
+					<col width="*">
+					</colcolgroup>
+					<thead>
+						<th>순번</th>
+						<th>출발지명</th>
+						<th>도착지명</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<a href="javascript:#" class="btnNewBmtSave" id="btnNewBmtSave"
+					style="float: right;"> <img
+					src="../images/board/btn_regist_2.gif" alt="btnNewBmtSave" />
+				</a>
+			</div>
 		</div>
-		<!-- \.body clearFix -->
+		<!-- \Modal content -->
 	</div>
-	<!-- \#container -->
+	<!-- \The Modal -->
+	</section>
+	<!-- /.contents -->
+	</section>
+	<!--  #container -->
+	<footer>
+		<p class="copyright">Copyright ⓒ 2018. WaveM Co. All rights
+			reserved.</p>
+	</footer>
+	</div>
+	<!-- wrap -->
 </body>
 <script>
 	$(document).ready(function() {
@@ -326,7 +340,7 @@
 		if (start == null || start == '' || end == null || end == '') {
 			return false;
 		}
-		var jsonStr = JSON.stringify($('#search-bmt').serialize());
+		var jsonStr = JSON.stringify($('#search-bmt').serialize());		
 
 		$.ajax({
 			url : '/bmtListRegistration/getBmtHistoryList'

@@ -16,11 +16,11 @@ public class HomeServiceImpl implements HomeService {
 	private HomeDao homeDao;
 	
 	@Override
-	public List<Map<String, Object>> getBmtListEvent(String userid) {
+	public List<Map<String, Object>> getBmtListEvent(Map<String, String> param) {
 		
 		System.out.println("SampleServiceImpl");
 		
-		return homeDao.selectBmtListEvent(userid);
+		return homeDao.selectBmtListEvent(param);
 	}
 	
 }

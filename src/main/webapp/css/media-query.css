@@ -1,0 +1,31 @@
+/* 1367~1600px 15인치대 노트북 */
+@media (max-width:1600px) {
+    .user-info {position: fixed; top:80px; left:200px; width:auto; background-color: #fdfdfe; border-bottom: solid 1px #f0f3f6; height:60px; transform:translate(0, 0);}
+    .user-info ul {position: absolute; top:50%; left:40px; transform:translate(0, -50%);}
+    .user-info li {color:#26292f;}
+    .btn.logout {position: absolute; top:50%; right:40px; transform:translate(0, -50%); background-color: #ceced8; color:#ffffff;}
+}
+
+/* 1367~1600px 11인치대 노트북 */
+@media (max-width: 1368px) {
+}
+
+/* 0~1280px 작은모니터 */
+@media (max-width:1280px){
+}
+
+/* 1024px 이하 모바일 / 태블릿 */
+@media (max-width:1024px){
+}
+
+/* 767px 이하 모바일 */
+@media (max-width:767px){
+}
+
+/* 480px 이하 모바일 */
+@media (max-width:480px){
+}
+
+/* 360px 이하 모바일 */
+@media (max-width:360px){
+}

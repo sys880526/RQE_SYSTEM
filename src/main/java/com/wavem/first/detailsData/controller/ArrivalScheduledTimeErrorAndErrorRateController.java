@@ -52,9 +52,10 @@ public class ArrivalScheduledTimeErrorAndErrorRateController {
 		
 		String startDate = request.getParameter("bmt-start-date");
 		String endDate = request.getParameter("bmt-end-date");
+		String userid = session.getAttribute("SS_USER_ID").toString();
 		map.put("start_date", startDate);
 		map.put("end_date", endDate);
-		map.put("userid", "user01");
+		map.put("userid", userid);
 		
 		//bmt id 기준 특이사항 by_time sql 		
 		ArrayList<String> list_time = new ArrayList<String>();

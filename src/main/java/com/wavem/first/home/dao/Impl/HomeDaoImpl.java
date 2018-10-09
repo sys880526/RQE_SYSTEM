@@ -1,6 +1,5 @@
 package com.wavem.first.home.dao.Impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +16,8 @@ public class HomeDaoImpl implements HomeDao {
 	private SqlSessionTemplate sqlSession;
 	
 	@Override
-	public List<Map<String, Object>> selectBmtListEvent(String userid) {
-		// TODO Auto-generated method stub
-		Map<String, String> param = new HashMap<String, String>();
-		
-		param.put("userid", "user01");
-		
+	public List<Map<String, Object>> selectBmtListEvent(Map<String, String> param) {
 		return sqlSession.selectList("mapper.bmtListEvent", param);
-		
 	}
 
 }

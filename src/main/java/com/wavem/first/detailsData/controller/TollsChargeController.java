@@ -53,6 +53,8 @@ public class TollsChargeController {
 
 			String startDate = request.getParameter("bmt-start-date");
 			String endDate = request.getParameter("bmt-end-date");
+			String userid = session.getAttribute("SS_USER_ID").toString();
+			
 			//시간대 특성 파라미터 셋팅
 			List timeList = new ArrayList();
 
@@ -99,7 +101,7 @@ public class TollsChargeController {
 			map.put("code", "0");
 			map.put("start_date", startDate);
 			map.put("end_date", endDate);
-			map.put("userid", "user01");
+			map.put("userid", userid);
 
 			if (timeList.size() != 0){
 				map.put("time_list", timeList);

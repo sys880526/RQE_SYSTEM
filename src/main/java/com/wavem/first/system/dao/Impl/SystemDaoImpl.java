@@ -25,4 +25,16 @@ public class SystemDaoImpl implements SystemDao {
 		return sqlSessionTemplate.selectList("systemUserManagement.getUserManagementData", input);
 	}
 
+	@Override
+	public List<Map<String, Object>> getUserManagementDefaultData(Map<String, Object> input) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.selectList("systemUserManagement.getUserManagementDefaultData", input);
+	}
+
+	@Transactional
+	public void getUserManagementUpdateData(Map<String, Object> updateData) {
+		// TODO Auto-generated method stub
+		sqlSessionTemplate.insert("systemUserManagement.getUserManagementUpdateData", updateData);
+	}
+
 }
